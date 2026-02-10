@@ -1,6 +1,9 @@
+
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -9,13 +12,66 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+--
+
+-- *not* creating schema, since initdb creates it
+
+
 ALTER SCHEMA public OWNER TO cat_bot;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: cat_bot
+--
+
 COMMENT ON SCHEMA public IS '';
 
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: blacklist; Type: TABLE; Schema: public; Owner: cat_bot
+--
+
+CREATE TABLE public.blacklist (
+    id integer NOT NULL,
+    blacklist_type text NOT NULL,
+    target_id bigint NOT NULL,
+    reason text DEFAULT 'No reason provided'::text,
+    blacklisted_at bigint NOT NULL,
+    blacklisted_by bigint NOT NULL
+);
+
+
+ALTER TABLE public.blacklist OWNER TO cat_bot;
+
+--
+-- Name: blacklist_id_seq; Type: SEQUENCE; Schema: public; Owner: cat_bot
+--
+
+CREATE SEQUENCE public.blacklist_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.blacklist_id_seq OWNER TO cat_bot;
+
+--
+-- Name: blacklist_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cat_bot
+--
+
+ALTER SEQUENCE public.blacklist_id_seq OWNED BY public.blacklist.id;
+
+
+--
+-- Name: channel; Type: TABLE; Schema: public; Owner: cat_bot
+--
 
 CREATE TABLE public.channel (
     channel_id bigint NOT NULL,
@@ -36,6 +92,9 @@ CREATE TABLE public.channel (
 
 ALTER TABLE public.channel OWNER TO cat_bot;
 
+--
+-- Name: prism; Type: TABLE; Schema: public; Owner: cat_bot
+--
 
 CREATE TABLE public.prism (
     id integer NOT NULL,
@@ -50,6 +109,10 @@ CREATE TABLE public.prism (
 
 ALTER TABLE public.prism OWNER TO cat_bot;
 
+--
+-- Name: prism_id_seq; Type: SEQUENCE; Schema: public; Owner: cat_bot
+--
+
 CREATE SEQUENCE public.prism_id_seq
     AS integer
     START WITH 1
@@ -59,17 +122,24 @@ CREATE SEQUENCE public.prism_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.prism_id_seq OWNER TO cat_bot;
+ALTER SEQUENCE public.prism_id_seq OWNER TO cat_bot;
 
+--
+-- Name: prism_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cat_bot
+--
 
 ALTER SEQUENCE public.prism_id_seq OWNED BY public.prism.id;
 
+
+--
+-- Name: profile; Type: TABLE; Schema: public; Owner: cat_bot
+--
 
 CREATE TABLE public.profile (
     id integer NOT NULL,
     user_id bigint NOT NULL,
     guild_id bigint NOT NULL,
-    "time" real DEFAULT 99999999999999,
+    "time" real DEFAULT '99999999999999'::bigint,
     timeslow real DEFAULT 0,
     timeout bigint DEFAULT 0,
     catnip_active bigint DEFAULT 0,
@@ -293,11 +363,26 @@ CREATE TABLE public.profile (
     bounties_complete integer DEFAULT 0,
     cutscene smallint DEFAULT 0,
     snowflakes integer DEFAULT 0,
-    pack_christmas integer DEFAULT 0
+    pack_christmas integer DEFAULT 0,
+    cat_snacc bigint DEFAULT 0 NOT NULL,
+    cat_kittuh bigint DEFAULT 0 NOT NULL,
+    "cat_Snacc" bigint DEFAULT 0 NOT NULL,
+    "cat_Kittuh" bigint DEFAULT 0 NOT NULL,
+    "cat_Water" bigint DEFAULT 0 NOT NULL,
+    "cat_Space" bigint DEFAULT 0 NOT NULL,
+    "cat_ItzF34R.mp4" bigint DEFAULT 0 NOT NULL,
+    cat_eboy bigint DEFAULT 0 NOT NULL,
+    "cat_eBoy" bigint DEFAULT 0 NOT NULL,
+    "cat_Unknown" bigint DEFAULT 0 NOT NULL,
+    "cat_Bloodmoon" bigint DEFAULT 0 NOT NULL
 );
 
 
 ALTER TABLE public.profile OWNER TO cat_bot;
+
+--
+-- Name: profile_id_seq; Type: SEQUENCE; Schema: public; Owner: cat_bot
+--
 
 CREATE SEQUENCE public.profile_id_seq
     AS integer
@@ -308,9 +393,18 @@ CREATE SEQUENCE public.profile_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.profile_id_seq OWNER TO cat_bot;
+ALTER SEQUENCE public.profile_id_seq OWNER TO cat_bot;
+
+--
+-- Name: profile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cat_bot
+--
 
 ALTER SEQUENCE public.profile_id_seq OWNED BY public.profile.id;
+
+
+--
+-- Name: reminder; Type: TABLE; Schema: public; Owner: cat_bot
+--
 
 CREATE TABLE public.reminder (
     id integer NOT NULL,
@@ -322,6 +416,10 @@ CREATE TABLE public.reminder (
 
 ALTER TABLE public.reminder OWNER TO cat_bot;
 
+--
+-- Name: reminder_id_seq; Type: SEQUENCE; Schema: public; Owner: cat_bot
+--
+
 CREATE SEQUENCE public.reminder_id_seq
     AS integer
     START WITH 1
@@ -331,9 +429,30 @@ CREATE SEQUENCE public.reminder_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.reminder_id_seq OWNER TO cat_bot;
+ALTER SEQUENCE public.reminder_id_seq OWNER TO cat_bot;
+
+--
+-- Name: reminder_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cat_bot
+--
 
 ALTER SEQUENCE public.reminder_id_seq OWNED BY public.reminder.id;
+
+
+--
+-- Name: server; Type: TABLE; Schema: public; Owner: cat_bot
+--
+
+CREATE TABLE public.server (
+    server_id bigint NOT NULL,
+    do_reactions boolean DEFAULT true
+);
+
+
+ALTER TABLE public.server OWNER TO cat_bot;
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: cat_bot
+--
 
 CREATE TABLE public."user" (
     user_id bigint NOT NULL,
@@ -357,64 +476,192 @@ CREATE TABLE public."user" (
     blessings_anonymous boolean DEFAULT false,
     rain_minutes_bought integer DEFAULT 0,
     username character varying(255) DEFAULT ''::character varying,
-    dm_channel_id bigint DEFAULT 0
+    dm_channel_id bigint DEFAULT 0,
+    total_rain_minutes integer GENERATED ALWAYS AS ((rain_minutes + rain_minutes_bought)) STORED
 );
+
 
 ALTER TABLE public."user" OWNER TO cat_bot;
 
-CREATE TABLE public.server (
-    server_id bigint NOT NULL,
-    do_reactions boolean DEFAULT true
-);
+--
+-- Name: blacklist id; Type: DEFAULT; Schema: public; Owner: cat_bot
+--
 
-ALTER TABLE public.server OWNER TO cat_bot;
+ALTER TABLE ONLY public.blacklist ALTER COLUMN id SET DEFAULT nextval('public.blacklist_id_seq'::regclass);
+
+
+--
+-- Name: prism id; Type: DEFAULT; Schema: public; Owner: cat_bot
+--
 
 ALTER TABLE ONLY public.prism ALTER COLUMN id SET DEFAULT nextval('public.prism_id_seq'::regclass);
 
+
+--
+-- Name: profile id; Type: DEFAULT; Schema: public; Owner: cat_bot
+--
+
 ALTER TABLE ONLY public.profile ALTER COLUMN id SET DEFAULT nextval('public.profile_id_seq'::regclass);
+
+
+--
+-- Name: reminder id; Type: DEFAULT; Schema: public; Owner: cat_bot
+--
 
 ALTER TABLE ONLY public.reminder ALTER COLUMN id SET DEFAULT nextval('public.reminder_id_seq'::regclass);
 
 
+--
+-- Name: blacklist blacklist_blacklist_type_target_id_key; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
+
+ALTER TABLE ONLY public.blacklist
+    ADD CONSTRAINT blacklist_blacklist_type_target_id_key UNIQUE (blacklist_type, target_id);
+
+
+--
+-- Name: blacklist blacklist_pkey; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
+
+ALTER TABLE ONLY public.blacklist
+    ADD CONSTRAINT blacklist_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: channel channel_pkey; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
+
 ALTER TABLE ONLY public.channel
     ADD CONSTRAINT channel_pkey PRIMARY KEY (channel_id);
+
+
+--
+-- Name: prism prism_pkey; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
 
 ALTER TABLE ONLY public.prism
     ADD CONSTRAINT prism_pkey PRIMARY KEY (id);
 
+
+--
+-- Name: profile profile_pkey; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
+
 ALTER TABLE ONLY public.profile
     ADD CONSTRAINT profile_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reminder reminder_pkey; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
 
 ALTER TABLE ONLY public.reminder
     ADD CONSTRAINT reminder_pkey PRIMARY KEY (id);
 
-ALTER TABLE ONLY public."user"
-    ADD CONSTRAINT user_pkey PRIMARY KEY (user_id);
+
+--
+-- Name: server server_pkey; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
 
 ALTER TABLE ONLY public.server
     ADD CONSTRAINT server_pkey PRIMARY KEY (server_id);
 
 
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: cat_bot
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: idx_gambles_partial; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
+CREATE INDEX idx_gambles_partial ON public.profile USING btree (gambles) WHERE (gambles > 0);
+
+
+--
+-- Name: idx_guild_id; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
 CREATE INDEX idx_guild_id ON public.profile USING btree (guild_id);
+
+
+--
+-- Name: idx_partial_blessings; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
+CREATE INDEX idx_partial_blessings ON public."user" USING btree (rain_minutes_bought) WHERE (blessings_enabled = true);
+
+
+--
+-- Name: idx_slot_big_wins_partial; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
+CREATE INDEX idx_slot_big_wins_partial ON public.profile USING btree (slot_big_wins) WHERE (slot_big_wins > 0);
+
+
+--
+-- Name: idx_slot_spins_partial; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
+CREATE INDEX idx_slot_spins_partial ON public.profile USING btree (slot_spins) WHERE (slot_spins > 0);
+
+
+--
+-- Name: idx_slot_wins_partial; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
+CREATE INDEX idx_slot_wins_partial ON public.profile USING btree (slot_wins) WHERE (slot_wins > 0);
+
+
+--
+-- Name: idx_yet_to_spawn; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
+CREATE INDEX idx_yet_to_spawn ON public.channel USING btree (yet_to_spawn);
+
+
+--
+-- Name: prism_guild_id; Type: INDEX; Schema: public; Owner: cat_bot
+--
 
 CREATE INDEX prism_guild_id ON public.prism USING btree (guild_id);
 
+
+--
+-- Name: prism_user_id_guild_id; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
 CREATE INDEX prism_user_id_guild_id ON public.prism USING btree (user_id, guild_id);
+
+
+--
+-- Name: profile_user_id_guild_id; Type: INDEX; Schema: public; Owner: cat_bot
+--
 
 CREATE UNIQUE INDEX profile_user_id_guild_id ON public.profile USING btree (user_id, guild_id);
 
+
+--
+-- Name: reminder_time; Type: INDEX; Schema: public; Owner: cat_bot
+--
+
 CREATE INDEX reminder_time ON public.reminder USING btree ("time");
 
-CREATE INDEX idx_partial_blessings ON public."user" (rain_minutes_bought) WHERE blessings_enabled = true;
 
-CREATE INDEX idx_slot_spins_partial ON public.profile (slot_spins) WHERE slot_spins > 0;
-
-CREATE INDEX idx_slot_big_wins_partial ON public.profile (slot_big_wins) WHERE slot_big_wins > 0;
-
-CREATE INDEX idx_slot_wins_partial ON public.profile (slot_wins) WHERE slot_wins > 0;
-
-CREATE INDEX idx_gambles_partial ON public.profile (gambles) WHERE gambles > 0;
-
-CREATE INDEX idx_yet_to_spawn ON public.channel (yet_to_spawn);
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: cat_bot
+--
 
 REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict uUzyNpu3rW825lSpMpKNxBCEKYx9auRnScFHNmR9Kped5TwiwjqNne7ustT4skN
+

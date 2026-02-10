@@ -191,7 +191,7 @@ vote_button_texts = [
 # various hints/fun facts
 hints = [
     "cattito has a wiki! <https://cattito.fun>",
-    "cattito is open source! <https://github.com/milenakos/cat-bot>",
+    "cattito is open source! <https://github.com/F34R23232323/cattito>",
     "View all cats and rarities with /catalogue",
     "Unlike the normal one, Cat's /8ball isn't rigged",
     "/rate says /rate is 100% correct",
@@ -7639,7 +7639,8 @@ async def catnip(message: discord.Interaction):
         
         # Award rain minutes on level up
         rain_earned = max(1, user.catnip_level // 2)
-        global_user_for_rain = await User.get_or_create(user_id=interaction.user.id)
+        global_user_for_rain = await User.get_or_create(user_id=message.user.id)
+
         global_user_for_rain.rain_minutes += rain_earned
         await global_user_for_rain.save()
         logging.debug("User earned %d rain minutes from catnip level %d", rain_earned, user.catnip_level)
@@ -7652,7 +7653,8 @@ async def catnip(message: discord.Interaction):
     else:
         user.catnip_active += 86400
         # Award bonus rain for reaching level 10
-        global_user_for_rain = await User.get_or_create(user_id=interaction.user.id)
+        global_user_for_rain = await User.get_or_create(user_id=message.user.id)
+
         global_user_for_rain.rain_minutes += 5
         await global_user_for_rain.save()
         logging.debug("User earned 5 rain minutes from reaching catnip level 10")
@@ -9025,43 +9027,8 @@ async def on_error(*args, **kwargs):
 
 # this is for stats, useless otherwise
 async def on_interaction(ctx):
-    """Handle interactions - check blacklist before processing"""
-    # Check if this is a slash command (application command)
-    if ctx.type == discord.InteractionType.application_command:
-        # Check blacklist BEFORE logging or processing
-        try:
-            # Check user blacklist
-            if await is_blacklisted(user_id=ctx.user.id):
-                logging.warning(f"Blacklisted user {ctx.user.id} tried slash command {ctx.command.name if ctx.command else 'unknown'}")
-                try:
-                    await ctx.response.send_message("You are blacklisted from using this bot.", ephemeral=True)
-                except discord.errors.InteractionResponded:
-                    pass  # Already responded, ignore
-                return
-            
-            # Check guild blacklist
-            if ctx.guild and await is_blacklisted(guild_id=ctx.guild.id):
-                logging.warning(f"Blacklisted guild {ctx.guild.id} tried slash command {ctx.command.name if ctx.command else 'unknown'}")
-                try:
-                    await ctx.response.send_message("This server is blacklisted from using this bot.", ephemeral=True)
-                except discord.errors.InteractionResponded:
-                    pass  # Already responded, ignore
-                return
-            
-            # Check channel blacklist
-            if await is_blacklisted(channel_id=ctx.channel.id):
-                logging.warning(f"Blacklisted channel {ctx.channel.id} tried slash command {ctx.command.name if ctx.channel else 'unknown'}")
-                try:
-                    await ctx.response.send_message("This channel is blacklisted from using this bot.", ephemeral=True)
-                except discord.errors.InteractionResponded:
-                    pass  # Already responded, ignore
-                return
-        
-        except discord.errors.InteractionResponded:
-            # Interaction was already acknowledged elsewhere
-            return
-        except Exception as e:
-            logging.error(f"Error checking slash command blacklist: {e}")
+    if ctx.command:
+        logging.debug("Command %s was used", ctx.command.name)
     
     # Original logging
     if ctx.command:
