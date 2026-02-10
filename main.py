@@ -69,21 +69,13 @@ type_dict = {
     "Sus": 150,
     "Water": 120,
     "Brave": 100,
-
     "Unknown": 90,    
-
-    "Unknown": 90,   
-
     "Rickroll": 80,
     "Reverse": 60,
     "Superior": 45,
     "Trash": 35,
     "Legendary": 25,
-
     "Bloodmoon": 18, 
-
-    "Bloodmoon": 18,  
-
     "Mythic": 15,
     "8bit": 12,
     "Corrupt": 10,
