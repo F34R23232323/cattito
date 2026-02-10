@@ -69,13 +69,21 @@ type_dict = {
     "Sus": 150,
     "Water": 120,
     "Brave": 100,
+
     "Unknown": 90,    
+
+    "Unknown": 90,   
+
     "Rickroll": 80,
     "Reverse": 60,
     "Superior": 45,
     "Trash": 35,
     "Legendary": 25,
+
     "Bloodmoon": 18, 
+
+    "Bloodmoon": 18,  
+
     "Mythic": 15,
     "8bit": 12,
     "Corrupt": 10,
@@ -3201,77 +3209,44 @@ async def news(message: discord.Interaction):
             await send_yippee(interaction)
         elif news_id == 10:
             embed = Container(
-                "## 🏆 nominate cattito for top.gg awards",
-                "(this is outdated, nominations are over. you can [vote for cattito as finalist in Labor of Love category](https://nominations.top.gg/))"
-                "holy cat top.gg is doing annual awards now",
-                "you know [what to do](https://top.gg/bot/1387860417706987590)...\nyou can also leave a review while you are there if you havent yet :3",
-                discord.ui.MediaGallery(discord.MediaGalleryItem("https://i.imgur.com/YgQ0flQ.png")),
-                Button(label="Vote for cattito", url="https://nominations.top.gg/", emoji="🏆"),
-                "-# <t:1759513848>",
+                "## 🐟 Cattito Discovers Magical Fish Pond",
+                "Exciting mews! While exploring the enchanted forest, Cattito cats discovered a **Magical Fish Pond** filled with rainbow-colored fish and sparkling water.\n\nCats are mesmerized by the glowing fish, and some even brought tiny leaf boats to float around the pond. Who knows what secrets this magical place holds? 🐾",
+                "-# <t:1770000000>",
             )
             view.add_item(embed)
             view.add_item(back_row)
             await interaction.edit_original_response(view=view)
+
         elif news_id == 11:
             embed = Container(
-                f"## {get_emoji('catnip')} Welcome to the Cat Mafia",
-                f"""after the dog mafia got arrested for selling cataine, cats got inspired and started their own mafia!
-
-- cataine is replaced by {get_emoji("catnip")} catnip
-- the biggest update ever (probably)
-- this is a new late-game complex mechanic with *leveling, bounties and perks*
-- it can be accessed and managed via /catnip
-- discover **10 new cats** - the members of the mafia who have tough challenges for you
-- getting through all of it is a very tough challenge, **the hardest thing in cattito**
-- old cataine is completely gone, all process you had in it will be reset
-
-👉 okay now let me explain:
-at each level you will have some bounties you have to complete within a time frame. if you complete the bounties and pay the price, you will be able to choose one of 3 different perks of random rarities {get_emoji("common")}{get_emoji("uncommon")}{get_emoji("rare")}{get_emoji("epic")}{get_emoji("legendary")}. the perks will stack while catnip is active! failing to complete the bounties will bring you one level down and you will lose your last perk. higher levels are harder but give you better perks!""",
-                "-# <t:1761325200>",
+                "## 😴 Record-Breaking Catnap Marathon Achieved!",
+                "Breaking snooze news! Cattito residents just completed the **Longest Catnap Marathon** in history. Highlights:\n- Over 500 cats napped simultaneously\n- Total nap time: 3,472 hours collectively\n- Purring volume reached a record 98 dB\n\nParticipants received special golden pillows and honorary yawning certificates! 💤",
+                "-# <t:1770500000>",
             )
             view.add_item(embed)
             view.add_item(back_row)
             await interaction.edit_original_response(view=view)
+
         elif news_id == 12:
             embed = Container(
-                "## ❤️ vote for cattito in top.gg awards",
-                'cattito is finalist in "Labor of Love" category on top.gg awards!',
-                "make sure to [vote for it](https://nominations.top.gg/) and perhaps attend the awards ceremony on january 3rd",
-                discord.ui.MediaGallery(discord.MediaGalleryItem("https://i.imgur.com/7EW2I4P.png")),
-                Button(label="Vote for cattito", url="https://nominations.top.gg/", emoji="🏆"),
-                "-# <t:1765747278>",
+                "## 🎭 Cattito Hosts a Fancy Cat Costume Ball",
+                "Glamour and whiskers everywhere! The **Fancy Cat Costume Ball** was a roaring success:\n- Cats dressed as tiny royalty, pirates, and superheroes\n- A dance floor made of soft velvet\n- Contest for the fluffiest tail and the fanciest hat\n\nThe ball ended with a glittering fireworks display shaped like fish and yarn balls. Truly a night to remember! ✨",
+                "-# <t:1771000000>",
             )
             view.add_item(embed)
             view.add_item(back_row)
             await interaction.edit_original_response(view=view)
+
         elif news_id == 13:
             embed = Container(
-                f"## {get_emoji('christmaspack')} cattito Christmas 2025",
-                f"""Merry Christmas!
-
-{get_emoji("christmaspack")} **Christmas Packs**
-Christmas packs are a new pack type with a twist: when opening them the upgrade chances are 70% instead of 30%!
-They start below Wooden with base value of 30. Their average value is ~225.
-You can trade, gift, and open them as usual even after the event ends.
-You will be able to collect them until <t:1767297600> using 2 methods:
-- You get 1 when completing the Vote quest, or
-- You get 1 for every 500 snowflakes you earn.
-
-❄️ **Snowflakes**
-You can get them by catching cats. The amount will be determined by the value of the catch (excluding all boosts), where 1 value = 1 ❄️.
-This means catching an eGirl cat will give you 4 Christmas packs!
-
-🎅 **Christmas Sale**
--20% sale starts now on the cattito Store!
-:point_right: **[catbot.shop](<https://catbot.shop>)**""",
-                ActionRow(
-                    Button(label="cattito Store", url="https://catbot.shop"),
-                ),
-                "-# <t:1766433600>",
+                "## 🦸 New Cat Hero Saves a Lost Kitten",
+                "Heroic mews! A brave new cat, known as **Whiskerflash**, rescued a tiny lost kitten from the treetops. 🌳\n\nThe daring rescue included:\n- Scaling the tallest oak\n- Distracting a flock of noisy birds\n- Leading the kitten safely back home\n\nCitizens celebrated with a festival of cat treats and a banner: 'Every Paw Matters!' 🐾",
+                "-# <t:1771500000>",
             )
             view.add_item(embed)
             view.add_item(back_row)
             await interaction.edit_original_response(view=view)
+
 
     async def regen_buttons():
         nonlocal buttons
