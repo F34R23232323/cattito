@@ -3083,7 +3083,7 @@ async def news(message: discord.Interaction):
         if news_id == 0:
             embed = Container(
                 "## 💻 Xyron Development Switches to Hetzner!",
-                "Exciting update from the dev world! Xyron Development has officially migrated its servers from OVH to **Hetzner** to improve performance and reliability. 🚀\n\nNew server specs:\n- **8 vCPU**\n- **16 GB RAM**\n- **160 GB local disk**\n\nThis upgrade means faster bot response times, smoother dashboard performance, and a more stable experience for everyone using Xyron services. The migration went smoothly, and all systems are online and running perfectly!\n\n-# <t:1731168230>",
+                "Exciting update from the dev world! Xyron Development has officially migrated its servers from OVH to **Hetzner** to improve performance and reliability. 🚀\n\nNew server specs:\n- **8 vCPU**\n- **16 GB RAM**\n- **160 GB local disk**\n\nThis upgrade means faster bot response times, smoother dashboard performance, and a more stable experience for everyone using Xyron services. The migration went smoothly, and all systems are online and running perfectly!\n\n-# <t:1738929600:F>",
             )
             view.add_item(embed)
             view.add_item(back_row)
@@ -3093,7 +3093,7 @@ async def news(message: discord.Interaction):
         elif news_id == 1:
             embed = Container(
                 "## 😸 Mayor Whiskers Declares Nap Day",
-                "Attention all felines! Mayor Whiskers has officially declared **Nap Day**. Every cat is encouraged to snooze from dawn till dusk.\n\nSpecial cozy spots have been set up across the city for optimal napping, and purring bonuses may appear randomly for those who nap in style!\n\n-# <t:1732377932>",
+                "Attention all felines! Mayor Whiskers has officially declared **Nap Day**. Every cat is encouraged to snooze from dawn till dusk.\n\nSpecial cozy spots have been set up across the city for optimal napping, and purring bonuses may appear randomly for those who nap in style!\n\n-# <t:1738929600:F>",
             )
             view.add_item(embed)
             view.add_item(back_row)
@@ -3102,7 +3102,7 @@ async def news(message: discord.Interaction):
         elif news_id == 2:
             embed = Container(
                 "## 🎉 Cattito's Kitten Parade Wows the Town",
-                "Cattito hosted the annual **Kitten Parade 2024**, and it was a spectacle of whiskers, tails, and tiny paws! Highlights include:\n- 🐾 Over 500 kittens dressed in sparkly hats\n- 🎨 A rainbow cat float\n- 🎶 Live meow-sic from the Cat Band\n\nCitizens lined the streets cheering for the fluffiest parade ever!\n\n-# <t:1734458962>",
+                "Cattito hosted the annual **Kitten Parade 2024**, and it was a spectacle of whiskers, tails, and tiny paws! Highlights include:\n- 🐾 Over 500 kittens dressed in sparkly hats\n- 🎨 A rainbow cat float\n- 🎶 Live meow-sic from the Cat Band\n\nCitizens lined the streets cheering for the fluffiest parade ever!\n\n-# <t:1738929600:F>",
             )
             view.add_item(embed)
             view.add_item(back_row)
@@ -3111,7 +3111,7 @@ async def news(message: discord.Interaction):
         elif news_id == 3:
             embed = Container(
                 "## 🌿 Mysterious Catnip Rain Hits the City",
-                """Alert, cats! A mysterious catnip rain fell across Cattito this morning. Residents report:\n- Sudden bursts of playful energy\n- 100% increase in zoomies\n- Several cats floating (safely) on giant leaf rafts\n\nAuthorities recommend enjoying the catnip safely and sharing the fun with friends.\n\n-# <t:1735689601>""",
+                """Alert, cats! A mysterious catnip rain fell across Cattito this morning. Residents report:\n- Sudden bursts of playful energy\n- 100% increase in zoomies\n- Several cats floating (safely) on giant leaf rafts\n\nAuthorities recommend enjoying the catnip safely and sharing the fun with friends.\n\n-# <t:1738929600:F>""",
             )
             view.add_item(embed)
             view.add_item(back_row)
@@ -3120,7 +3120,7 @@ async def news(message: discord.Interaction):
         elif news_id == 4:
             embed = Container(
                 f"## ☕ Cattito Opens the First Feline Café",
-                f"""Meowmazing news! Cattito's first-ever **Feline Café** has opened. Menu highlights:\n- Tuna lattes\n- Salmon sushi rolls\n- Catnip tea\n\nEvery visitor gets a complimentary paw print cookie. Special purring spots available for VIP cats.\n\n-# <t:1740787200>""",
+                f"""Meowmazing news! Cattito's first-ever **Feline Café** has opened. Menu highlights:\n- Tuna lattes\n- Salmon sushi rolls\n- Catnip tea\n\nEvery visitor gets a complimentary paw print cookie. Special purring spots available for VIP cats.\n\n-# <t:1738929600:F>""",
             )
             view.add_item(embed)
             view.add_item(back_row)
@@ -3129,7 +3129,7 @@ async def news(message: discord.Interaction):
         elif news_id == 5:
             embed = Container(
                 "## 🏗️ The Great Cat Tower Construction Begins",
-                """Cattito is building the tallest **Cat Tower** ever seen! Details:\n- 12 stories of scratching posts\n- Observation decks on every floor\n- Secret tunnels for adventurous kittens\n\nConstruction will take a few weeks, but the cats are already climbing with excitement!\n\n-# <t:1743454803>""",
+                """Cattito is building the tallest **Cat Tower** ever seen! Details:\n- 12 stories of scratching posts\n- Observation decks on every floor\n- Secret tunnels for adventurous kittens\n\nConstruction will take a few weeks, but the cats are already climbing with excitement!\n\n-# <t:1738929600:F>""",
             )
             view.add_item(embed)
             view.add_item(back_row)
@@ -3138,7 +3138,7 @@ async def news(message: discord.Interaction):
         elif news_id == 6:
             embed = Container(
                 "## 🏆 Cattito Wins Best Purring Contest",
-                """Purrfection achieved! Cattito has won the **Best Purring Contest** for 2025. Judges were impressed by:\n- 99 dB sustained purring\n- Harmonious vibrato sequences\n- Coordinated group purrs by kittens\n\nCelebratory catnip confetti will be distributed in all participating cities!\n\n-# <t:1745242856>""",
+                """Purrfection achieved! Cattito has won the **Best Purring Contest** for 2025. Judges were impressed by:\n- 99 dB sustained purring\n- Harmonious vibrato sequences\n- Coordinated group purrs by kittens\n\nCelebratory catnip confetti will be distributed in all participating cities!\n\n-# <t:1738929600:F>""",
             )
             view.add_item(embed)
             view.add_item(back_row)
@@ -3147,7 +3147,7 @@ async def news(message: discord.Interaction):
         elif news_id == 7:
             embed = Container(
                 "## 🕵️‍♂️ Adventurous Cat Crew Explores the Attic",
-                """Mystery unfolds! The Cattito Adventure Crew ventured into the old attic and discovered:\n- Antique cat toys\n- Forgotten golden yarn balls\n- A tiny secret diary of an ancient feline mayor\n\nExpect exciting new quests inspired by these discoveries soon!\n\n-# <t:1751252181>""",
+                """Mystery unfolds! The Cattito Adventure Crew ventured into the old attic and discovered:\n- Antique cat toys\n- Forgotten golden yarn balls\n- A tiny secret diary of an ancient feline mayor\n\nExpect exciting new quests inspired by these discoveries soon!\n\n-# <t:1738929600:F>""",
                 ActionRow(
                     Button(label="Join the Adventure", url="https://discord.gg/staring"),
                     Button(label="Cattito Hub", url="https://catbot.shop"),
@@ -3160,7 +3160,7 @@ async def news(message: discord.Interaction):
         elif news_id == 8:
             embed = Container(
                 "## 🎨 Cattito Paints a Giant Mural of Cats",
-                """Creative mews! Cattito has painted a giant mural in the city center, featuring:\n- 50 cats doing funny poses\n- Rainbow backgrounds\n- Hidden catnip symbols for the sharp-eyed observer\n\nFans are encouraged to visit and take selfies with their favorite cats in the mural.\n\n-# <t:1752689941>""",
+                """Creative mews! Cattito has painted a giant mural in the city center, featuring:\n- 50 cats doing funny poses\n- Rainbow backgrounds\n- Hidden catnip symbols for the sharp-eyed observer\n\nFans are encouraged to visit and take selfies with their favorite cats in the mural.\n\n-# <t:1738929600:F>""",
                 Button(label="View Mural!", disabled=True),
             )
             view.add_item(embed)
