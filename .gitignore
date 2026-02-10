@@ -159,3 +159,6 @@ config.py
 .DS_Store
 .idea/
 .vscode/
+database.py
+config.py
+
