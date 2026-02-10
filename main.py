@@ -371,7 +371,7 @@ async def fetch_dm_channel(user: User) -> discord.PartialMessageable:
 
 # news stuff
 news_list = [
-    {"title": "Cattito Discovers a Secret Yarn Factory!", "emoji": "🧶"},
+    {"title": "Xyron Dev Moves to Hetzner!", "emoji": "💻"},
     {"title": "Mayor Whiskers Declares Nap Day", "emoji": "😸"},
     {"title": "Cattito's Kitten Parade Wows the Town", "emoji": "🎉"},
     {"title": "Mysterious Catnip Rain Hits the City", "emoji": "🌿"},
@@ -2908,7 +2908,7 @@ async def on_guild_join(guild):
         if ch.permissions_for(guild.me).send_messages:
             await ch.send(
                 unofficial_note
-                + "Thanks for adding me!\nTo start, use `/setup` and `/help` to learn more!\nJoin the support server here: https://discord.gg/staring\nHave a nice day :)"
+                + "Thanks for adding me!\nTo start, use `/setup` and `/help` to learn more!\nJoin the support server here: https://discord.gg/kyynVDzcJs\nHave a nice day :)"
             )
     except Exception:
         pass
@@ -2941,7 +2941,7 @@ async def help(message):
         )
         .add_field(
             name="Other features",
-            value="cattito has extra fun commands which you will discover along the way.\nAnything unclear? Check out [our wiki](https://catbot.wiki) or drop us a line at our [Discord server](https://discord.gg/staring).",
+            value="cattito has extra fun commands which you will discover along the way.\nAnything unclear? Check out [our wiki](https://cattito.fun) or drop us a line at our [Discord server](https://discord.gg/kyynVDzcJs).",
             inline=False,
         )
         .set_footer(
@@ -3022,19 +3022,19 @@ async def wiki(message: discord.Interaction):
     embed = discord.Embed(title="cattito Wiki", color=Colors.brown)
     embed.description = "\n".join(
         [
-            "Main Page: https://catbot.wiki/",
+            "Main Page: https://cattito.fun/",
             "",
-            "[cattito](https://catbot.wiki/cat-bot)",
-            "[Cat Spawning](https://catbot.wiki/spawning)",
-            "[Commands](https://catbot.wiki/commands)",
-            "[Cat Types](https://catbot.wiki/cat-types)",
-            "[Cattlepass](https://catbot.wiki/cattlepass)",
-            "[Achievements](https://catbot.wiki/achievements)",
-            "[Packs](https://catbot.wiki/packs)",
-            "[Trading](https://catbot.wiki/trading)",
-            "[Gambling](https://catbot.wiki/gambling)",
-            "[Catnip](https://catbot.wiki/catnip)",
-            "[Prisms](https://catbot.wiki/prisms)",
+            "[cattito](https://cattito.fun/cat-bot)",
+            "[Cat Spawning](https://ccattito.fun/spawning)",
+            "[Commands](https://cattito.fun/commands)",
+            "[Cat Types](https://cattito.fun/cat-types)",
+            "[Cattlepass](https://cattito.fun/cattlepass)",
+            "[Achievements](https://cattito.fun/achievements)",
+            "[Packs](https://cattito.fun/packs)",
+            "[Trading](https://cattito.fun/trading)",
+            "[Gambling](https://cattito.fun/gambling)",
+            "[Catnip](https://cattito.fun/catnip)",
+            "[Prisms](https://cattito.fun/prisms)",
         ]
     )
     await message.response.send_message(embed=embed)
@@ -3079,14 +3079,16 @@ async def news(message: discord.Interaction):
 
         logging.debug("Read news #%d", news_id)
 
+        # Updated embed for news_id 0
         if news_id == 0:
             embed = Container(
-                "## 🧶 Cattito Discovers a Secret Yarn Factory!",
-                "Breaking mews! Cattito has uncovered a secret yarn factory hidden under the city! Cats everywhere are purring with excitement as endless yarn balls appear for play.\n\nSome brave kittens even sneaked inside and returned with tales of rainbow-colored yarn. Who knows what surprises await?\n\n-# <t:1731168230>",
+                "## 💻 Xyron Development Switches to Hetzner!",
+                "Exciting update from the dev world! Xyron Development has officially migrated its servers from OVH to **Hetzner** to improve performance and reliability. 🚀\n\nNew server specs:\n- **8 vCPU**\n- **16 GB RAM**\n- **160 GB local disk**\n\nThis upgrade means faster bot response times, smoother dashboard performance, and a more stable experience for everyone using Xyron services. The migration went smoothly, and all systems are online and running perfectly!\n\n-# <t:1731168230>",
             )
             view.add_item(embed)
             view.add_item(back_row)
             await interaction.edit_original_response(view=view)
+
 
         elif news_id == 1:
             embed = Container(
