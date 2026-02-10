@@ -1,5 +1,5 @@
-# Cat Bot - A Discord bot about catching cats.
-# Copyright (C) 2026 Lia Milenakos & Cat Bot Contributors
+# cattito - A Discord bot about catching cats.
+# Copyright (C) 2026 Lia Milenakos & cattito Contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -69,13 +69,13 @@ type_dict = {
     "Sus": 150,
     "Water": 120,
     "Brave": 100,
-    "Unknown": 90,    
+    "Unknown": 90,   
     "Rickroll": 80,
     "Reverse": 60,
     "Superior": 45,
     "Trash": 35,
     "Legendary": 25,
-    "Bloodmoon": 18, 
+    "Bloodmoon": 18,  
     "Mythic": 15,
     "8bit": 12,
     "Corrupt": 10,
@@ -3186,10 +3186,10 @@ async def news(message: discord.Interaction):
                 btn = Button(label=f"yippee! ({temp_cookie_storage[cookie_id]:,})", emoji=get_emoji("yippee"), style=ButtonStyle.primary)
                 btn.callback = add_yippee
                 embed = Container(
-                    "## cattito is now top 5 on top.gg",
+                    "## cattito is now happy",
                     "thanks for voting",
                     discord.ui.MediaGallery(discord.MediaGalleryItem("https://i.imgur.com/MSZF3ly.png")),
-                    "also pls still [go vote](https://top.gg/bot/1387860417706987590/vote) incase OwO will rebeat us!!",
+                    "also pls still [go vote](https://top.gg/bot/1387860417706987590/vote)",
                     "===",
                     btn,
                     "-# <t:1757794211>",
@@ -3211,9 +3211,9 @@ async def news(message: discord.Interaction):
 
         elif news_id == 11:
             embed = Container(
-                "## 😴 Record-Breaking Catnap Marathon Achieved!",
-                "Breaking snooze news! Cattito residents just completed the **Longest Catnap Marathon** in history. Highlights:\n- Over 500 cats napped simultaneously\n- Total nap time: 3,472 hours collectively\n- Purring volume reached a record 98 dB\n\nParticipants received special golden pillows and honorary yawning certificates! 💤",
-                "-# <t:1770500000>",
+                "## 🦸 New Cat Hero Saves a Lost Kitten",
+                "Heroic mews! A brave new cat, known as **Whiskerflash**, rescued a tiny lost kitten from the treetops. 🌳\n\nThe daring rescue included:\n- Scaling the tallest oak\n- Distracting a flock of noisy birds\n- Leading the kitten safely back home\n\nCitizens celebrated with a festival of cat treats and a banner: 'Every Paw Matters!' 🐾",
+                "-# <t:1771500000>",
             )
             view.add_item(embed)
             view.add_item(back_row)
