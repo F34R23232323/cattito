@@ -7577,64 +7577,98 @@ async def catnip(message: discord.Interaction):
 
     async def pay_catnip(interaction):
         nonlocal user, cat_type, amount
+
         await user.refresh_from_db()
+
         if not interaction.response.is_done():
             await interaction.response.defer()
+
         if level != user.catnip_level:
             await interaction.followup.send("nice try", ephemeral=True)
             return
+
         for i in range(user.bounties):
             if (
                 (i == 0 and user.bounty_progress_one < user.bounty_total_one)
                 or (i == 1 and user.bounty_progress_two < user.bounty_total_two)
                 or (i == 2 and user.bounty_progress_three < user.bounty_total_three)
             ):
-                await interaction.followup.send("You haven't completed your bounties yet!", ephemeral=True)
+                await interaction.followup.send(
+                    "You haven't completed your bounties yet!",
+                    ephemeral=True,
+                )
                 return
+
         if user.catnip_price:
             if user[f"cat_{user.catnip_price}"] < user.catnip_amount:
                 need_more = user.catnip_amount - user[f"cat_{user.catnip_price}"]
-                await interaction.followup.send(f"You don't have enough cats to pay up!\nYou need {need_more} more {user.catnip_price} cats.", ephemeral=True)
+                await interaction.followup.send(
+                    f"You don't have enough cats to pay up!\n"
+                    f"You need {need_more} more {user.catnip_price} cats.",
+                    ephemeral=True,
+                )
                 return
             user[f"cat_{user.catnip_price}"] -= user.catnip_amount
+
         if not user.perk_selected:
-            await interaction.followup.send("You haven't selected a perk from your previous level yet!", ephemeral=True)
+            await interaction.followup.send(
+                "You haven't selected a perk from your previous level yet!",
+                ephemeral=True,
+            )
             return
 
         trigger_cutscene = False
-    if user.catnip_level != 10:
-        user.catnip_level += 1
-        user.hibernation = True
-        
-        # Award rain minutes on level up
-        rain_earned = max(1, user.catnip_level // 2)
-        global_user_for_rain = await User.get_or_create(user_id=message.user.id)
 
-        global_user_for_rain.rain_minutes += rain_earned
-        await global_user_for_rain.save()
-        logging.debug("User earned %d rain minutes from catnip level %d", rain_earned, user.catnip_level)
-        
-        if user.catnip_level == 1:
-            user.catnip_active = int(time.time()) + 3600
-            user.perk_selected = True
+        # ---------------- LEVEL LOGIC ---------------- #
+
+        if user.catnip_level != 10:
+            user.catnip_level += 1
+            user.hibernation = True
+
+            # Award rain minutes
+            rain_earned = max(1, user.catnip_level // 2)
+            global_user_for_rain = await User.get_or_create(
+                user_id=interaction.user.id
+            )
+
+            global_user_for_rain.rain_minutes += rain_earned
+            await global_user_for_rain.save()
+
+            logging.debug(
+                "User earned %d rain minutes from catnip level %d",
+                rain_earned,
+                user.catnip_level,
+            )
+
+            if user.catnip_level == 1:
+                user.catnip_active = int(time.time()) + 3600
+                user.perk_selected = True
+            else:
+                user.perk_selected = False
+
         else:
-            user.perk_selected = False
-    else:
-        user.catnip_active += 86400
-        # Award bonus rain for reaching level 10
-        global_user_for_rain = await User.get_or_create(user_id=message.user.id)
+            user.catnip_active += 86400
 
-        global_user_for_rain.rain_minutes += 5
-        await global_user_for_rain.save()
-        logging.debug("User earned 5 rain minutes from reaching catnip level 10")
-        trigger_cutscene = True
-        user.catnip_bought += 1
-        user.catnip_total_cats = 0
-        user.first_quote_seen = False
-        user.reroll = True
+            # Bonus rain at level 10
+            global_user_for_rain = await User.get_or_create(
+                user_id=interaction.user.id
+            )
 
-        if user.catnip_level > user.highest_catnip_level:
-            user.highest_catnip_level = user.catnip_level
+            global_user_for_rain.rain_minutes += 5
+            await global_user_for_rain.save()
+
+            logging.debug(
+                "User earned 5 rain minutes from reaching catnip level 10"
+            )
+
+            trigger_cutscene = True
+            user.catnip_bought += 1
+            user.catnip_total_cats = 0
+            user.first_quote_seen = False
+            user.reroll = True
+
+            if user.catnip_level > user.highest_catnip_level:
+                user.highest_catnip_level = user.catnip_level
 
         await user.save()
         await set_bounties(user.catnip_level, user)
@@ -7642,19 +7676,25 @@ async def catnip(message: discord.Interaction):
 
         logging.debug("Levelled up to %d", user.catnip_level)
 
+        # ---------------- CUTSCENES / FLOW ---------------- #
+
         if user.catnip_level == 8 and user.cutscene == 0:
             await mafia_cutscene(interaction, user)
+
         elif user.catnip_level == 10 and not trigger_cutscene:
             text = """The point of catnip IS NOT TO KEEP LEVELLING UP FOREVER.
-You are meant to go up and down levels.
-You get absolutely no benefit from completing level 10.
-You can stop. That's okay. Seriously.
-"""
+    You are meant to go up and down levels.
+    You get absolutely no benefit from completing level 10.
+    You can stop. That's okay. Seriously.
+    """
             await interaction.followup.send(content=text, ephemeral=True)
+
         elif trigger_cutscene and user.cutscene <= 1:
             await mafia_cutscene2(interaction, user)
+
         elif user.catnip_level > 1:
             await perk_screen(interaction)
+
         else:
             await interaction.followup.send("Catnip started!", ephemeral=True)
             await main_message.edit(view=await gen_main())
@@ -7892,6 +7932,7 @@ You can stop. That's okay. Seriously.
         await main_message.edit(view=await gen_main())
 
     async def gen_main():
+        desc = "\n"
         await user.refresh_from_db()
         level = user.catnip_level
         level_data = catnip_list["levels"][level]
@@ -7910,7 +7951,6 @@ You can stop. That's okay. Seriously.
         bonus_complete = False
         name = ""
 
-        desc = "\n"
         if user.hibernation:
             desc += "\nThe timer for leveling up will **not start** until you begin your bounties.\n"
 
