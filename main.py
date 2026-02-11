@@ -1739,7 +1739,7 @@ async def on_message(message: discord.Message):
         try:
             person = await fetch_dm_channel(user)
             await person.send(
-                f"**You have recieved {rain_duration} minutes of Cat Rain!** ☔\n\nThanks for your support!\nYou can start a rain with `/rain`. By buying you also get access to `/editprofile` and `/customcat` commands as well as a role in [our Discord server](<https://discord.gg/staring>)!\n\nEnjoy your goods!"
+                f"**You have recieved {rain_duration} minutes of Cat Rain!** ☔\n\nThanks for your support!\nYou can start a rain with `/rain`. By buying you also get access to `/editprofile` and `/customcat` commands as well as a role in [our Discord server](<https://discord.gg/b2r4Brq7d4>)!\n\nEnjoy your goods!"
             )
         except Exception:
             pass
@@ -2594,18 +2594,18 @@ async def on_message(message: discord.Message):
                         url="https://top.gg/bot/1387860417706987590/vote",
                     )
                 elif random.randint(0, 20) == 0:
-                    button = Button(label="Join our Discord!", url="https://discord.gg/staring")
+                    button = Button(label="Join our Discord!", url="https://discord.gg/b2r4Brq7d4")
                 elif random.randint(0, 500) == 0:
-                    button = Button(label="John Discord 🤠", url="https://discord.gg/staring")
+                    button = Button(label="John Discord 🤠", url="https://discord.gg/b2r4Brq7d4")
                 elif random.randint(0, 50000) == 0:
                     button = Button(
                         label="DAVE DISCORD 😀💀⚠️🥺",
-                        url="https://discord.gg/staring",
+                        url="https://discord.gg/b2r4Brq7d4",
                     )
                 elif random.randint(0, 5000000) == 0:
                     button = Button(
                         label="JOHN AND DAVE HAD A SON 💀🤠😀⚠️🥺",
-                        url="https://discord.gg/staring",
+                        url="https://discord.gg/b2r4Brq7d4",
                     )
 
                 if button:
@@ -3149,7 +3149,7 @@ async def news(message: discord.Interaction):
                 "## 🕵️‍♂️ Adventurous Cat Crew Explores the Attic",
                 """Mystery unfolds! The Cattito Adventure Crew ventured into the old attic and discovered:\n- Antique cat toys\n- Forgotten golden yarn balls\n- A tiny secret diary of an ancient feline mayor\n\nExpect exciting new quests inspired by these discoveries soon!\n\n-# <t:1738929600:F>""",
                 ActionRow(
-                    Button(label="Join the Adventure", url="https://discord.gg/staring"),
+                    Button(label="Join the Adventure", url="https://discord.gg/b2r4Brq7d4"),
                     Button(label="Cattito Hub", url="https://catbot.shop"),
                 ),
             )
@@ -8852,7 +8852,7 @@ async def reset(message: discord.Interaction, person_id: discord.User):
                     p.guild_id = og.id
                     await p.save()
                 await interaction.edit_original_response(
-                    content=f"Done! rip {person_id.mention}. f's in chat.\njoin our discord to rollback: <https://discord.gg/staring>", view=None
+                    content=f"Done! rip {person_id.mention}. f's in chat.\njoin our discord to rollback: <https://discord.gg/b2r4Brq7d4>", view=None
                 )
             except Exception:
                 await interaction.edit_original_response(
@@ -8919,11 +8919,11 @@ async def nuke(message: discord.Interaction):
 
                 try:
                     await interaction.edit_original_response(
-                        content="Done. If you want to roll this back, please contact us in our discord: <https://discord.gg/staring>.",
+                        content="Done. If you want to roll this back, please contact us in our discord: <https://discord.gg/b2r4Brq7d4>.",
                         view=None,
                     )
                 except Exception:
-                    await interaction.followup.send("Done. If you want to roll this back, please contact us in our discord: <https://discord.gg/staring>.")
+                    await interaction.followup.send("Done. If you want to roll this back, please contact us in our discord: <https://discord.gg/b2r4Brq7d4>.")
             else:
                 view = await gen(counter)
                 try:
