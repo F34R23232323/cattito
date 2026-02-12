@@ -612,6 +612,41 @@ async def on_message_dev_commands(message: discord.Message):
         
         await message.reply(f"✅ Stopped rain! ({old_rain_count} cats remaining were canceled)")
         logging.info(f"Rain stopped in channel {message.channel.id} by {message.author} (was {old_rain_count} cats left)")
+        if text.lower().startswith("cat!rainstatus"):
+    # Fetch the channel info
+            channel = await Channel.get_or_none(channel_id=message.channel.id)
+        if not channel:
+            await message.reply("This channel is not setup.")
+            return
+
+        # Check if there is an active rain
+        if channel.cat_rains <= 0:
+            await message.reply("No active rain in this channel.")
+            return
+
+        # Calculate remaining time
+        # Assuming you have a 'rain_end_time' field storing a datetime of when the rain ends
+        import datetime
+        now = datetime.datetime.utcnow()
+        if hasattr(channel, "rain_end_time") and channel.rain_end_time:
+            remaining = channel.rain_end_time - now
+            if remaining.total_seconds() < 0:
+                remaining_str = "less than a second"
+            else:
+                minutes, seconds = divmod(int(remaining.total_seconds()), 60)
+                hours, minutes = divmod(minutes, 60)
+                remaining_str = f"{hours}h {minutes}m {seconds}s"
+        else:
+            remaining_str = "Unknown"
+
+        # Reply with status
+        await message.reply(
+            f"🌧️ Rain status:\n"
+            f" - Cats remaining: {channel.cat_rains}\n"
+            f" - Time left: {remaining_str}"
+        )
+        logging.info(f"Rain status checked in channel {message.channel.id} by {message.author}")
+
     
     # Blacklist user
     elif text.lower().startswith("cat!blacklist user "):
@@ -1732,6 +1767,7 @@ async def on_message(message: discord.Message):
         ["-.-. .- -", "exact", "morse_cat"],
         ["tac", "exact", "reverse"],
         ["cat!n4lltvuCOKe2iuDCmc6JsU7Jmg4vmFBj8G8l5xvoDHmCoIJMcxkeXZObR6HbIV6", "veryexact", "dataminer"],
+        ["meow", "silly", "meow"]
     ]
 
     reactions = [
