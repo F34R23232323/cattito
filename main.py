@@ -889,6 +889,14 @@ async def generate_quest(user: Profile, quest_type: str):
         user.misc_reward = random.randint(quest_data["xp_min"] // 10, quest_data["xp_max"] // 10) * 10
         user.misc_quest = quest
         user.misc_cooldown = 0
+    elif quest_type == "extra1":
+        user.extra1_reward = random.randint(quest_data["xp_min"] // 10, quest_data["xp_max"] // 10) * 10
+        user.extra1_quest = quest
+        user.extra1_cooldown = 0
+    elif quest_type == "extra2":
+        user.extra2_reward = random.randint(quest_data["xp_min"] // 10, quest_data["xp_max"] // 10) * 10
+        user.extra2_quest = quest
+        user.extra2_cooldown = 0
     await user.save()
 
 
@@ -914,6 +922,16 @@ async def refresh_quests(user):
         user.misc_cooldown = 1
         user.misc_reward = 0
 
+        user.extra1_quest = ""
+        user.extra1_progress = 0
+        user.extra1_cooldown = 1
+        user.extra1_reward = 0
+
+        user.extra2_quest = ""
+        user.extra2_progress = 0
+        user.extra2_cooldown = 1
+        user.extra2_reward = 0
+
         user.season = full_months_passed
         await user.save()
     if 12 * 3600 < user.vote_cooldown + 12 * 3600 < time.time():
@@ -922,6 +940,10 @@ async def refresh_quests(user):
         await generate_quest(user, "catch")
     if 12 * 3600 < user.misc_cooldown + 12 * 3600 < time.time():
         await generate_quest(user, "misc")
+    if 12 * 3600 < user.extra1_cooldown + 12 * 3600 < time.time():
+        await generate_quest(user, "extra1")
+    if 12 * 3600 < user.extra2_cooldown + 12 * 3600 < time.time():
+        await generate_quest(user, "extra2")
 
 
 async def progress(message: discord.Message | discord.Interaction, user: Profile, quest: str, is_belated: Optional[bool] = False):
@@ -971,6 +993,26 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
             current_xp = user.progress + user.misc_reward
             user.misc_progress = 0
             user.reminder_misc = 1
+    elif user.extra1_quest == quest:
+        if user.extra1_cooldown != 0:
+            return
+        quest_data = battle["quests"]["extra1"][quest]
+        user.extra1_progress += 1
+        if user.extra1_progress >= quest_data["progress"]:
+            quest_complete = True
+            user.extra1_cooldown = int(time.time())
+            current_xp = user.progress + user.extra1_reward
+            user.extra1_progress = 0
+    elif user.extra2_quest == quest:
+        if user.extra2_cooldown != 0:
+            return
+        quest_data = battle["quests"]["extra2"][quest]
+        user.extra2_progress += 1
+        if user.extra2_progress >= quest_data["progress"]:
+            quest_complete = True
+            user.extra2_cooldown = int(time.time())
+            current_xp = user.progress + user.extra2_reward
+            user.extra2_progress = 0
     else:
         return
 
@@ -4938,6 +4980,7 @@ async def battlepass(message: discord.Interaction):
             description += f"{streak_string}\n"
 
         # catch
+# catch
         catch_quest = battle["quests"]["catch"][user.catch_quest]
         if user.catch_cooldown != 0:
             description += f"✅ ~~{catch_quest['title']}~~\n- Refreshes <t:{int(user.catch_cooldown + 12 * 3600 if user.catch_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n"
@@ -4957,12 +5000,34 @@ async def battlepass(message: discord.Interaction):
         # misc
         misc_quest = battle["quests"]["misc"][user.misc_quest]
         if user.misc_cooldown != 0:
-            description += f"✅ ~~{misc_quest['title']}~~\n- Refreshes <t:{int(user.misc_cooldown + 12 * 3600 if user.misc_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n\n"
+            description += f"✅ ~~{misc_quest['title']}~~\n- Refreshes <t:{int(user.misc_cooldown + 12 * 3600 if user.misc_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n"
         else:
             progress_string = ""
             if misc_quest["progress"] != 1:
                 progress_string = f" ({user.misc_progress}/{misc_quest['progress']})"
-            description += f"{get_emoji(misc_quest['emoji'])} {misc_quest['title']}{progress_string}\n- Reward: {user.misc_reward} XP\n\n"
+            description += f"{get_emoji(misc_quest['emoji'])} {misc_quest['title']}{progress_string}\n- Reward: {user.misc_reward} XP\n"
+
+        # extra1
+        if user.extra1_quest:
+            extra1_quest = battle["quests"]["extra1"][user.extra1_quest]
+            if user.extra1_cooldown != 0:
+                description += f"✅ ~~{extra1_quest['title']}~~\n- Refreshes <t:{int(user.extra1_cooldown + 12 * 3600 if user.extra1_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n"
+            else:
+                progress_string = ""
+                if extra1_quest["progress"] != 1:
+                    progress_string = f" ({user.extra1_progress}/{extra1_quest['progress']})"
+                description += f"{get_emoji(extra1_quest['emoji'])} {extra1_quest['title']}{progress_string}\n- Reward: {user.extra1_reward} XP\n"
+
+        # extra2
+        if user.extra2_quest:
+            extra2_quest = battle["quests"]["extra2"][user.extra2_quest]
+            if user.extra2_cooldown != 0:
+                description += f"✅ ~~{extra2_quest['title']}~~\n- Refreshes <t:{int(user.extra2_cooldown + 12 * 3600 if user.extra2_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n\n"
+            else:
+                progress_string = ""
+                if extra2_quest["progress"] != 1:
+                    progress_string = f" ({user.extra2_progress}/{extra2_quest['progress']})"
+                description += f"{get_emoji(extra2_quest['emoji'])} {extra2_quest['title']}{progress_string}\n- Reward: {user.extra2_reward} XP\n\n"
 
         if user.battlepass >= len(battle["seasons"][str(user.season)]):
             description += f"**Extra Rewards** [{user.progress}/1500 XP]\n"
