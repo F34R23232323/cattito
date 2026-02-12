@@ -13,6 +13,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: cat_bot
 --
 
 -- *not* creating schema, since initdb creates it
@@ -374,7 +375,16 @@ CREATE TABLE public.profile (
     cat_eboy bigint DEFAULT 0 NOT NULL,
     "cat_eBoy" bigint DEFAULT 0 NOT NULL,
     "cat_Unknown" bigint DEFAULT 0 NOT NULL,
-    "cat_Bloodmoon" bigint DEFAULT 0 NOT NULL
+    "cat_Bloodmoon" bigint DEFAULT 0 NOT NULL,
+    catnip_rain_reward integer DEFAULT 0 NOT NULL,
+    extra1_quest character varying DEFAULT ''::character varying,
+    extra1_progress integer DEFAULT 0,
+    extra1_cooldown integer DEFAULT 1,
+    extra1_reward integer DEFAULT 0,
+    extra2_quest character varying DEFAULT ''::character varying,
+    extra2_progress integer DEFAULT 0,
+    extra2_cooldown integer DEFAULT 1,
+    extra2_reward integer DEFAULT 0
 );
 
 
@@ -663,5 +673,4 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict uUzyNpu3rW825lSpMpKNxBCEKYx9auRnScFHNmR9Kped5TwiwjqNne7ustT4skN
 
