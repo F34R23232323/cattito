@@ -99,15 +99,17 @@ for i in cattypes:
     allowedemojis.append(i.lower() + "cat")
 
 pack_data = [
-    {"name": "Christmas", "value": 30, "upgrade": 70, "totalvalue": 225},
-    {"name": "Wooden", "value": 65, "upgrade": 30, "totalvalue": 75},
-    {"name": "Stone", "value": 90, "upgrade": 30, "totalvalue": 100},
-    {"name": "Bronze", "value": 100, "upgrade": 30, "totalvalue": 130},
-    {"name": "Silver", "value": 115, "upgrade": 30, "totalvalue": 200},
-    {"name": "Gold", "value": 230, "upgrade": 30, "totalvalue": 400},
-    {"name": "Platinum", "value": 630, "upgrade": 30, "totalvalue": 800},
-    {"name": "Diamond", "value": 860, "upgrade": 30, "totalvalue": 1200},
-    {"name": "Celestial", "value": 2000, "upgrade": 0, "totalvalue": 2000},  # is that a madeline celeste reference????
+    {"name": "Christmas", "value": 30, "upgrade": 70, "totalvalue": 225, "special": True},
+    {"name": "Valentine", "value": 30, "upgrade": 70, "totalvalue": 225, "special": True},
+    #
+    {"name": "Wooden", "value": 65, "upgrade": 30, "totalvalue": 75, "special": False},
+    {"name": "Stone", "value": 90, "upgrade": 30, "totalvalue": 100, "special": False},
+    {"name": "Bronze", "value": 100, "upgrade": 30, "totalvalue": 130, "special": False},
+    {"name": "Silver", "value": 115, "upgrade": 30, "totalvalue": 200, "special": False},
+    {"name": "Gold", "value": 230, "upgrade": 30, "totalvalue": 400, "special": False},
+    {"name": "Platinum", "value": 630, "upgrade": 30, "totalvalue": 800, "special": False},
+    {"name": "Diamond", "value": 860, "upgrade": 30, "totalvalue": 1200, "special": False},
+    {"name": "Celestial", "value": 2000, "upgrade": 0, "totalvalue": 2000, "special": False},  # is that a madeline celeste reference????
 ]
 
 prism_names_start = [
@@ -279,7 +281,7 @@ class Colors:
 
 
 # rain shill message for footers
-rain_shill = "☔ Get tons of cats /rain"
+rain_shill = "💝 Valentine's Sale! -20% /rain"
 
 # timeout for views
 # higher one means buttons work for longer but uses more ram to keep track of them
@@ -1016,6 +1018,11 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
         streak_data = get_streak_reward(global_user.vote_streak)
         if streak_data["reward"]:
             user[f"pack_{streak_data['reward']}"] += 1
+        user.pack_valentine += 1
+        if user.valentine_user:
+            valentine_user = await Profile.get_or_create(user_id=user.valentine_user, guild_id=user.guild_id)
+            valentine_user.pack_valentine += 1
+            await valentine_user.save()
 
         current_xp = user.progress + user.vote_reward
         quest_complete = True
@@ -1176,6 +1183,13 @@ async def progress_embed(message, user, level_data, current_xp, old_xp, quest_da
         streak_reward = f"\n🔥 **Streak Bonus!** +1 {streak_data['emoji']} {streak_data['reward'].capitalize()} pack"
     else:
         streak_reward = ""
+
+    if "top.gg" in quest_data["title"]:
+        streak_reward += f"\n💝 **Valentine's Event!** +1 {get_emoji('valentinepack')} Valentine pack!"
+        if not user.valentine_user:
+            streak_reward += "\n💔 find a /valentine - both get a pack when either votes!"
+        else:
+            streak_reward += f"\n💞 and +1 {get_emoji('valentinepack')} for your valentine!"
 
     return discord.Embed(
         title=f"✅ {title}",
@@ -1409,7 +1423,7 @@ async def background_loop():
     reactions_ratelimit = {}
     catchcooldown = {}
     fakecooldown = {}
-    await bot.change_presence(activity=discord.CustomActivity(name=f"Catting in {len(bot.guilds):,} servers"))
+    await bot.change_presence(activity=discord.CustomActivity(name=f"Spreading love in {len(bot.guilds):,} servers"))
 
     # update cookies
     temp_temp_cookie_storage = temp_cookie_storage.copy()
@@ -2612,10 +2626,27 @@ async def on_message(message: discord.Message):
 
                 if random.randint(0, 7) == 0:
                     # shill rains
-                    suffix_string += f"\n☔ get tons of cats and have fun: </rain:{RAIN_ID}>"
+                    suffix_string += f"\n💝 valentines sale! -20% </rain:{RAIN_ID}>"
                 if random.randint(0, 19) == 0:
                     # diplay a hint/fun fact
                     suffix_string += "\n💡 " + random.choice(hints)
+
+                # VALENTINES 💝💝💝💝💞💞💞💞💞💞
+                if not user.valentine_user:
+                    suffix_string += "\n💔 find a /valentine to get event packs!"
+                else:
+                    valentine_user = await Profile.get_or_create(guild_id=message.guild.id, user_id=user.valentine_user)
+                    user.valentine_progress += 1
+                    valentine_user.valentine_progress = user.valentine_progress
+                    if user.valentine_progress >= 50:
+                        user.pack_valentine += 1
+                        valentine_user.pack_valentine += 1
+                        user.valentine_progress -= 50
+                        valentine_user.valentine_progress -= 50
+                        suffix_string += f"\n💞 +1 {get_emoji('valentinepack')}! next: {user.valentine_progress}/50"
+                    else:
+                        suffix_string += f"\n💞 {user.valentine_progress}/50 until {get_emoji('valentinepack')}"
+                    await valentine_user.save()
 
                 custom_cough_strings = {
                     "Corrupt": "{username} coought{type} c{emoji}at!!!!404!\nYou now BEEP {count} cats of dCORRUPTED!!\nthis fella wa- {time}!!!!",
@@ -6936,6 +6967,72 @@ async def roll(message: discord.Interaction, sides: Optional[int]):
     await progress(message, user, "roll")
 
 
+@bot.tree.command(description="will u... be my valentine?~ 🥺👉👈")
+@discord.app_commands.describe(user="Person you want to ask out to be your valentine.")
+async def valentine(message: discord.Interaction, user: discord.Member):
+    if user == bot.user:
+        await message.response.send_message("no go away")
+        return
+
+    if user.bot or user == message.user:
+        await message.response.send_message("😭🙏")
+        return
+
+    profile = await Profile.get_or_create(user_id=message.user.id, guild_id=message.guild.id)
+    other_profile = await Profile.get_or_create(user_id=user.id, guild_id=message.guild.id)
+    if profile.valentine_user:
+        await message.response.send_message(f"You are already valentines with <@{profile.valentine_user}>!", ephemeral=True)
+        return
+    if other_profile.valentine_user:
+        await message.response.send_message(f"{user.mention} already has a valentine! :(", ephemeral=True)
+        return
+
+    async def accept_valentine(interaction: discord.Interaction):
+        if interaction.user != user:
+            await do_funny(interaction)
+            return
+        await interaction.response.defer()
+
+        await other_profile.refresh_from_db()
+        await profile.refresh_from_db()
+
+        if profile.valentine_user or other_profile.valentine_user:
+            await interaction.followup.send("you were too slow", ephemeral=True)
+            return
+
+        profile.valentine_user = user.id
+        other_profile.valentine_user = message.author.id
+        other_profile.valentine_user = message.user.id
+        await profile.save()
+        await other_profile.save()
+
+        await interaction.edit_original_response(
+            content=f"💞 {message.user.mention} and {user.mention} are now valentines!\nYou both will earn a Valentine Pack for every 50 combined catches, as well as when either of you votes.",
+            view=None,
+        )
+
+    async def decline_valentine(interaction: discord.Interaction):
+        if interaction.user != user:
+            await do_funny(interaction)
+            return
+        await interaction.response.defer()
+        await interaction.edit_original_response(content=f"💔 {user.mention} declined {message.user.mention}'s valentine request.", view=None)
+
+    view = View(timeout=VIEW_TIMEOUT)
+
+    button = Button(label="Accept", style=discord.ButtonStyle.green)
+    button.callback = accept_valentine
+    view.add_item(button)
+
+    button = Button(label="Reject", style=discord.ButtonStyle.red)
+    button.callback = decline_valentine
+    view.add_item(button)
+
+    await message.response.send_message(
+        f"{user.mention}, {message.user.mention} is asking you to be their valentine!", view=view, allowed_mentions=discord.AllowedMentions(users=True)
+    )
+
+
 @bot.tree.command(description="get a super accurate rating of something")
 @discord.app_commands.describe(thing="The thing or person to check", stat="The stat to check")
 async def rate(message: discord.Interaction, thing: str, stat: str):
@@ -9100,14 +9197,20 @@ async def nuke(message: discord.Interaction):
 
 
 async def recieve_vote(request):
-    if request.headers.get("authorization", "") != config.WEBHOOK_VERIFY:
+    signature = request.headers.get("x-topgg-signature", "")
+    try:
+        signature_parts = {i.split("=")[0]: i.split("=")[1] for i in signature.split(",")}
+        raw_body = await request.read()
+        body = f"{signature_parts['t']}.{raw_body.decode()}".encode("utf-8")
+        key = config.WEBHOOK_VERIFY.encode("utf-8")
+        if hmac.new(key, body, hashlib.sha256).hexdigest() != signature_parts["v1"]:
+            raise ValueError
+    except Exception:
         return web.Response(text="bad", status=403)
-    request_json = await request.json()
+    request_data = json.loads(raw_body)["data"]
 
-    user = await User.get_or_create(user_id=int(request_json["user"]))
-    if user.vote_time_topgg + 43100 > time.time():
-        # top.gg is NOT realiable with their webhooks, but we politely pretend they are
-        return web.Response(text="you fucking dumb idiot", status=200)
+    user = await User.get_or_create(user_id=int(request_data["user"]["platform_id"]))
+    created_at = datetime.datetime.fromisoformat(request_data["created_at"]).timestamp()
 
     if user.vote_streak < 10:
         extend_time = 24
@@ -9123,7 +9226,7 @@ async def recieve_vote(request):
     user.reminder_vote = 1
     user.total_votes += 1
     freeze_note = ""
-    if user.vote_time_topgg + extend_time * 3600 <= time.time():
+    if user.vote_time_topgg + extend_time * 3600 <= created_at:
         # streak end
         if user.streak_freezes < 1:
             if user.max_vote_streak < user.vote_streak:
@@ -9138,7 +9241,8 @@ async def recieve_vote(request):
             freeze_note = "\n🧊 Streak Freeze Used!"
     else:
         user.vote_streak += 1
-    user.vote_time_topgg = time.time()
+
+    user.vote_time_topgg = created_at
 
     try:
         channeley = await fetch_dm_channel(user)
@@ -9160,13 +9264,16 @@ async def recieve_vote(request):
         if special_reward not in range(user.vote_streak, user.vote_streak + 9):
             streak_progress += f"\nNext Special Reward: {get_streak_reward(special_reward)['emoji']} at {special_reward} streak"
 
+        streak_top_position = await User.count("vote_streak > $1", user.vote_streak) + 1
+        top_text = f"(top #{streak_top_position}!) " if streak_top_position < 1000 else ""
+
         await channeley.send(
             "\n".join(
                 [
                     "Thanks for voting! To claim your rewards, run `/battlepass` in every server you want.",
-                    f"You can vote again <t:{int(time.time()) + 43200}:R>.",
+                    f"You can vote again <t:{int(created_at) + 43200}:R>.",
                     "",
-                    f":fire: **Streak:** {user.vote_streak:,} (expires <t:{int(time.time()) + extend_time * 3600}:R>){freeze_note}",
+                    f":fire: **Streak:** {user.vote_streak:,}{top_text} expires <t:{int(created_at) + extend_time * 3600}:R>{freeze_note}",
                     f"{streak_progress}",
                 ]
             )
