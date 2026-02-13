@@ -980,13 +980,15 @@ async def refresh_quests(user):
     if 12 * 3600 < user.extra2_cooldown + 12 * 3600 < time.time():
         await generate_quest(user, "extra2")
 
-
 async def progress(message: discord.Message | discord.Interaction, user: Profile, quest: str, is_belated: Optional[bool] = False):
     await refresh_quests(user)
     await user.refresh_from_db()
 
     # progress
     quest_complete = False
+    current_xp = 0
+    quest_data = None
+    
     if user.catch_quest == quest:
         if user.catch_cooldown != 0:
             return
@@ -1038,6 +1040,10 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
             user.extra1_cooldown = int(time.time())
             current_xp = user.progress + user.extra1_reward
             user.extra1_progress = 0
+        else:
+            # Save progress even if quest not complete
+            await user.save()
+            return
     elif user.extra2_quest == quest:
         if user.extra2_cooldown != 0:
             return
@@ -1048,6 +1054,10 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
             user.extra2_cooldown = int(time.time())
             current_xp = user.progress + user.extra2_reward
             user.extra2_progress = 0
+        else:
+            # Save progress even if quest not complete
+            await user.save()
+            return
     else:
         return
 
@@ -1141,7 +1151,6 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
         await message.channel.send(f"<@{user.user_id}>", embeds=level_complete_embeds + [embed_progress])
     else:
         await message.channel.send(f"<@{user.user_id}>", embed=embed_progress)
-
 
 async def progress_embed(message, user, level_data, current_xp, old_xp, quest_data, diff, level_text) -> discord.Embed:
     percentage_before = int(old_xp / level_data["xp"] * 10)
@@ -4591,6 +4600,95 @@ if config.DONOR_CHANNEL_ID:
                 "When enabled, random cattito users will have their cats blessed by you - and their catches will be doubled! Your bless chance increases by *0.0001%* per minute of rain bought.",
                 "===",
                 f"Cats you blessed: **{user.cats_blessed:,}**\nYour bless chance is **{user_bless_chance:.4f}%**\nGlobal bless chance is **{global_bless_chance:.4f}%**",
+                "===",
+                Section(bbutton, f"Your blessings are currently **{'enabled' if user.blessings_enabled else 'disabled'}**."),
+            )
+
+            if user.premium:
+                abutton = Button(
+                    emoji="🕵️",
+                    label=f"{'Disable' if user.blessings_anonymous else 'Enable'} Anonymity",
+                    style=ButtonStyle.red if user.blessings_anonymous else ButtonStyle.green,
+                )
+                abutton.callback = toggle_anon
+
+                container.add_item(Section(abutton, f"{'' if user.blessings_enabled else '*(disabled)* '}{blesser} blessed your catch and it got doubled!"))
+
+            view.add_item(container)
+
+            if do_edit:
+                await message.edit_original_response(view=view)
+            else:
+                await message.response.send_message(view=view)
+
+        await regen(message)
+
+    @bot.tree.command(description="(SUPPORTER) Bless random cattito users with doubled cats!")
+    async def bless(message: discord.Interaction):
+        user = await User.get_or_create(user_id=message.user.id)
+        do_edit = False
+
+        if user.blessings_enabled and user.username != message.user.name:
+            user.username = message.user.name
+            await user.save()
+
+        async def toggle_bless(interaction):
+            if interaction.user.id != message.user.id:
+                await do_funny(interaction)
+                return
+            nonlocal do_edit, user
+            do_edit = True
+            await interaction.response.defer()
+            await user.refresh_from_db()
+            if not user.premium:
+                return
+            user.blessings_enabled = not user.blessings_enabled
+            user.username = message.user.name
+            await user.save()
+            await regen(interaction)
+
+        async def toggle_anon(interaction):
+            if interaction.user.id != message.user.id:
+                await do_funny(interaction)
+                return
+            nonlocal do_edit, user
+            do_edit = True
+            await interaction.response.defer()
+            await user.refresh_from_db()
+            user.blessings_anonymous = not user.blessings_anonymous
+            await user.save()
+            await regen(interaction)
+
+        async def regen(interaction):
+            if user.blessings_anonymous:
+                blesser = "💫 Anonymous Supporter"
+            else:
+                blesser = f"{user.emoji or '💫'} {message.user.name}"
+
+            # Calculate bless chance based on current rain minutes (1% per 10 rains, max 25%)
+            user_bless_chance = min(25, (user.rain_minutes / 10) * 1)
+            
+            # Calculate global bless chance from all users with blessings enabled
+            global_sum = await User.sum("rain_minutes", "blessings_enabled = true")
+            global_bless_chance = min(25, (global_sum / 10) * 1) if global_sum else 0
+
+            view = View(timeout=VIEW_TIMEOUT)
+            if not user.premium:
+                bbutton = Button(label="Supporter Required!", url="https://catbot.shop", emoji="👑")
+            else:
+                bbutton = Button(
+                    emoji="🌟",
+                    label=f"{'Disable' if user.blessings_enabled else 'Enable'} Blessings",
+                    style=ButtonStyle.red if user.blessings_enabled else ButtonStyle.green,
+                )
+                bbutton.callback = toggle_bless
+
+            view = LayoutView(timeout=VIEW_TIMEOUT)
+            container = Container(
+                "## :stars: Cat Blessings",
+                "When enabled, random cattito users will have their cats blessed by you - and their catches will be doubled! Your bless chance increases by *1%* per 10 rain minutes you have.",
+                "===",
+                f"Cats you blessed: **{user.cats_blessed:,}**\nYour bless chance is **{user_bless_chance:.2f}%**\nGlobal bless chance is **{global_bless_chance:.2f}%**",
                 "===",
                 Section(bbutton, f"Your blessings are currently **{'enabled' if user.blessings_enabled else 'disabled'}**."),
             )
