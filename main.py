@@ -4538,9 +4538,19 @@ if config.DONOR_CHANNEL_ID:
         embedVar, _ = await gen_inventory(message, message.user)
         await message.followup.send("Success! Here is a preview:", embed=embedVar, ephemeral=True)
 
+# FIXED BLESS COMMAND - Add this to main.py
+
     @bot.tree.command(description="(SUPPORTER) Bless random cattito users with doubled cats!")
     async def bless(message: discord.Interaction):
+        await message.response.defer()
+        
         user = await User.get_or_create(user_id=message.user.id)
+        profile = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
+        
+        # Refresh to get latest data
+        await user.refresh_from_db()
+        await profile.refresh_from_db()
+        
         do_edit = False
 
         if user.blessings_enabled and user.username != message.user.name:
@@ -4575,102 +4585,23 @@ if config.DONOR_CHANNEL_ID:
             await regen(interaction)
 
         async def regen(interaction):
+            # Always refresh user data
+            await user.refresh_from_db()
+            
             if user.blessings_anonymous:
                 blesser = "💫 Anonymous Supporter"
             else:
                 blesser = f"{user.emoji or '💫'} {message.user.name}"
 
-            user_bless_chance = user.rain_minutes_bought * 0.0001
-            global_bless_chance = await User.sum("rain_minutes_bought", "blessings_enabled = true") * 0.0001
-
-            view = View(timeout=VIEW_TIMEOUT)
-            if not user.premium:
-                bbutton = Button(label="Supporter Required!", url="https://catbot.shop", emoji="👑")
-            else:
-                bbutton = Button(
-                    emoji="🌟",
-                    label=f"{'Disable' if user.blessings_enabled else 'Enable'} Blessings",
-                    style=ButtonStyle.red if user.blessings_enabled else ButtonStyle.green,
-                )
-                bbutton.callback = toggle_bless
-
-            view = LayoutView(timeout=VIEW_TIMEOUT)
-            container = Container(
-                "## :stars: Cat Blessings",
-                "When enabled, random cattito users will have their cats blessed by you - and their catches will be doubled! Your bless chance increases by *0.0001%* per minute of rain bought.",
-                "===",
-                f"Cats you blessed: **{user.cats_blessed:,}**\nYour bless chance is **{user_bless_chance:.4f}%**\nGlobal bless chance is **{global_bless_chance:.4f}%**",
-                "===",
-                Section(bbutton, f"Your blessings are currently **{'enabled' if user.blessings_enabled else 'disabled'}**."),
-            )
-
-            if user.premium:
-                abutton = Button(
-                    emoji="🕵️",
-                    label=f"{'Disable' if user.blessings_anonymous else 'Enable'} Anonymity",
-                    style=ButtonStyle.red if user.blessings_anonymous else ButtonStyle.green,
-                )
-                abutton.callback = toggle_anon
-
-                container.add_item(Section(abutton, f"{'' if user.blessings_enabled else '*(disabled)* '}{blesser} blessed your catch and it got doubled!"))
-
-            view.add_item(container)
-
-            if do_edit:
-                await message.edit_original_response(view=view)
-            else:
-                await message.response.send_message(view=view)
-
-        await regen(message)
-
-    @bot.tree.command(description="(SUPPORTER) Bless random cattito users with doubled cats!")
-    async def bless(message: discord.Interaction):
-        user = await User.get_or_create(user_id=message.user.id)
-        do_edit = False
-
-        if user.blessings_enabled and user.username != message.user.name:
-            user.username = message.user.name
-            await user.save()
-
-        async def toggle_bless(interaction):
-            if interaction.user.id != message.user.id:
-                await do_funny(interaction)
-                return
-            nonlocal do_edit, user
-            do_edit = True
-            await interaction.response.defer()
-            await user.refresh_from_db()
-            if not user.premium:
-                return
-            user.blessings_enabled = not user.blessings_enabled
-            user.username = message.user.name
-            await user.save()
-            await regen(interaction)
-
-        async def toggle_anon(interaction):
-            if interaction.user.id != message.user.id:
-                await do_funny(interaction)
-                return
-            nonlocal do_edit, user
-            do_edit = True
-            await interaction.response.defer()
-            await user.refresh_from_db()
-            user.blessings_anonymous = not user.blessings_anonymous
-            await user.save()
-            await regen(interaction)
-
-        async def regen(interaction):
-            if user.blessings_anonymous:
-                blesser = "💫 Anonymous Supporter"
-            else:
-                blesser = f"{user.emoji or '💫'} {message.user.name}"
-
-            # Calculate bless chance based on current rain minutes (1% per 10 rains, max 25%)
-            user_bless_chance = min(25, (user.rain_minutes / 10) * 1)
+            # Calculate bless chance based on current rain_minutes
+            # Formula: 1% per 10 rains, max 25%
+            user_rain = user.rain_minutes if user.rain_minutes else 0
+            user_bless_chance = min(25.0, (user_rain / 10.0))
             
             # Calculate global bless chance from all users with blessings enabled
             global_sum = await User.sum("rain_minutes", "blessings_enabled = true")
-            global_bless_chance = min(25, (global_sum / 10) * 1) if global_sum else 0
+            global_sum = global_sum if global_sum else 0
+            global_bless_chance = min(25.0, (global_sum / 10.0))
 
             view = View(timeout=VIEW_TIMEOUT)
             if not user.premium:
@@ -4685,12 +4616,12 @@ if config.DONOR_CHANNEL_ID:
 
             view = LayoutView(timeout=VIEW_TIMEOUT)
             container = Container(
-                "## :stars: Cat Blessings",
-                "When enabled, random cattito users will have their cats blessed by you - and their catches will be doubled! Your bless chance increases by *1%* per 10 rain minutes you have.",
+                "## ⭐ Cat Blessings",
+                "When enabled, random cattito users will have their cats blessed by you - and their catches will be doubled! Your bless chance increases by **1%** per **10 rain minutes** you currently have (max 25%).",
                 "===",
-                f"Cats you blessed: **{user.cats_blessed:,}**\nYour bless chance is **{user_bless_chance:.2f}%**\nGlobal bless chance is **{global_bless_chance:.2f}%**",
+                f"**Cats you blessed:** {user.cats_blessed:,}\n**Your rain:** {user_rain:,} minutes\n**Your bless chance:** {user_bless_chance:.2f}%\n**Global bless chance:** {global_bless_chance:.2f}%",
                 "===",
-                Section(bbutton, f"Your blessings are currently **{'enabled' if user.blessings_enabled else 'disabled'}**."),
+                Section(bbutton, f"Your blessings are currently **{'enabled ✅' if user.blessings_enabled else 'disabled ❌'}**."),
             )
 
             if user.premium:
@@ -4706,11 +4637,43 @@ if config.DONOR_CHANNEL_ID:
             view.add_item(container)
 
             if do_edit:
-                await message.edit_original_response(view=view)
+                await interaction.edit_original_response(view=view)
             else:
-                await message.response.send_message(view=view)
+                await message.edit_original_response(view=view)
 
         await regen(message)
+
+
+# DIAGNOSTIC COMMAND - Add this to check rain_minutes value
+    @bot.tree.command(description="[DEV] Check your rain_minutes value")
+    async def raincheck(message: discord.Interaction):
+        await message.response.defer(ephemeral=True)
+        
+        user = await User.get_or_create(user_id=message.user.id)
+        await user.refresh_from_db()
+        
+        profile = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
+        await profile.refresh_from_db()
+        
+        # Calculate bless chance
+        user_rain = user.rain_minutes if user.rain_minutes else 0
+        bless_chance = min(25.0, (user_rain / 10.0))
+        
+        embed = discord.Embed(
+            title="Rain Minutes Debug Info",
+            description=f"**User ID:** {message.user.id}\n**Guild ID:** {message.guild.id}",
+            color=Colors.green
+        )
+        
+        embed.add_field(name="Rain Minutes (User model)", value=f"`{user.rain_minutes}`", inline=False)
+        embed.add_field(name="Rain Minutes (Profile model)", value=f"`{profile.rain_minutes}`", inline=False)
+        embed.add_field(name="Calculated Bless Chance", value=f"`{bless_chance:.2f}%`", inline=False)
+        embed.add_field(name="Formula", value=f"`min(25, ({user_rain} / 10)) = {bless_chance}`", inline=False)
+        embed.add_field(name="Premium Status", value=f"`{user.premium}`", inline=False)
+        embed.add_field(name="Blessings Enabled", value=f"`{user.blessings_enabled}`", inline=False)
+        
+        await message.followup.send(embed=embed, ephemeral=True)
+
 
     @bot.tree.command(description="(SUPPORTER) Customize your profile!")
     @discord.app_commands.rename(provided_emoji="emoji")
