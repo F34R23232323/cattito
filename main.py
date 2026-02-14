@@ -7314,10 +7314,10 @@ async def valentine(message: discord.Interaction, user: discord.Member):
             return
 
         profile.valentine_user = user.id
-        other_profile.valentine_user = message.author.id
         other_profile.valentine_user = message.user.id
         await profile.save()
         await other_profile.save()
+
 
         await interaction.edit_original_response(
             content=f"💞 {message.user.mention} and {user.mention} are now valentines!\nYou both will earn a Valentine Pack for every 50 combined catches, as well as when either of you votes.",
