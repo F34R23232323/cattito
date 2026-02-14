@@ -2522,7 +2522,7 @@ async def on_message(message: discord.Message):
                     "blessings_enabled = true"
                 )
 
-                bless_chance = total_rain * 0.0001 * 0.01
+                bless_chance = total_rain * 0.0001  # Remove the * 0.01
                 if bless_chance > random.random():
                     # woo we got blessed thats pretty cool
                     blesser_l = await User.collect("blessings_enabled = true AND rain_minutes_bought > 0 ORDER BY -ln(random()) / rain_minutes_bought LIMIT 1")
