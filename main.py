@@ -2195,21 +2195,7 @@ async def on_message(message: discord.Message):
         except Exception:
             pass
         logging.debug("Response sent: %s", "cart")
-    if text.lower() == "cat!sex":
-        try:
-            await message.reply("really bro?")
-        except Exception:
-            pass
-    await achemb(message, "horny_bonk", "reply")
-    logging.debug("Response sent: %s", "really bro?")
-    if text.lower() == "67":
-        try:
-            await message.reply("touch grass")
-        except Exception:
-            pass
-    await achemb(message, "touch_grass", "reply")
-    logging.debug("Response sent: %s", "touch grass")
-
+    
     try:
         if (
             ("sus" in text.lower() or "amog" in text.lower() or "among" in text.lower() or "impost" in text.lower() or "report" in text.lower())
