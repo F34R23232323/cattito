@@ -343,7 +343,7 @@ emojis = {}
 RAIN_ID = 1270470307102195752
 
 # for dev commands, this is fetched in on_ready
-OWNER_ID = 1075077561454973020
+OWNER_IDS = 1075077561454973020
 
 # for funny stats, you can probably edit background_loop to restart every X of them
 loop_count = 0
@@ -594,7 +594,7 @@ async def on_message_dev_commands(message: discord.Message):
     if not message.content.startswith("cat!"):
         return
     
-    if message.author.id != OWNER_ID:
+    if message.author.id != OWNER_IDS:
         return
     
     text = message.content.strip()
@@ -1691,7 +1691,7 @@ async def on_ready():
             for emoji in await bot.fetch_application_emojis()
         }
 
-    logging.info(f"OWNER_ID hardcoded to {OWNER_ID}")
+    logging.info(f"OWNER_IDS hardcoded to {OWNER_IDS}")
 
 
     # fetch github contributors
@@ -2870,7 +2870,7 @@ async def on_message(message: discord.Message):
                         pass
 
     # only letting the owner of the bot access anything past this point
-    if message.author.id != OWNER_ID:
+    if message.author.id != OWNER_IDS:
         return
 
     # those are "owner" commands which are not really interesting
@@ -2949,7 +2949,7 @@ async def on_message(message: discord.Message):
     if text.lower().startswith("cat!custom"):
         stuff = text.split(" ")
         if stuff[1][0] not in "1234567890":
-            stuff.insert(1, message.channel.owner_id)
+            stuff.insert(1, message.channel.OWNER_IDS)
         user = await User.get_or_create(user_id=int(stuff[1]))
         cat_name = " ".join(stuff[2:])
         if stuff[2] != "None" and message.reference and message.reference.message_id:
