@@ -99,9 +99,11 @@ for i in cattypes:
     allowedemojis.append(i.lower() + "cat")
 
 pack_data = [
-    {"name": "Christmas", "value": 30, "upgrade": 70, "totalvalue": 225, "special": True},
-    {"name": "Valentine", "value": 30, "upgrade": 70, "totalvalue": 225, "special": True},
-    #
+    # Special packs – ultra rare, more valuable than Celestial
+    {"name": "Christmas", "value": 3000, "upgrade": 1000, "totalvalue": 5000, "special": True},
+    {"name": "Valentine", "value": 3000, "upgrade": 1000, "totalvalue": 5000, "special": True},
+
+    # Normal packs
     {"name": "Wooden", "value": 65, "upgrade": 30, "totalvalue": 75, "special": False},
     {"name": "Stone", "value": 90, "upgrade": 30, "totalvalue": 100, "special": False},
     {"name": "Bronze", "value": 100, "upgrade": 30, "totalvalue": 130, "special": False},
@@ -109,8 +111,9 @@ pack_data = [
     {"name": "Gold", "value": 230, "upgrade": 30, "totalvalue": 400, "special": False},
     {"name": "Platinum", "value": 630, "upgrade": 30, "totalvalue": 800, "special": False},
     {"name": "Diamond", "value": 860, "upgrade": 30, "totalvalue": 1200, "special": False},
-    {"name": "Celestial", "value": 2000, "upgrade": 0, "totalvalue": 2000, "special": False},  # is that a madeline celeste reference????
+    {"name": "Celestial", "value": 2000, "upgrade": 0, "totalvalue": 2000, "special": False},
 ]
+
 
 prism_names_start = [
     "Alpha",
@@ -2522,29 +2525,32 @@ async def on_message(message: discord.Message):
                 bless_chance = total_rain * 0.0001 * 0.01
                 if bless_chance > random.random():
                     # woo we got blessed thats pretty cool
-                    if silly_amount == 0:
-                        silly_amount += 1
-                    else:
-                        silly_amount *= 2
-
                     blesser_l = await User.collect("blessings_enabled = true AND rain_minutes_bought > 0 ORDER BY -ln(random()) / rain_minutes_bought LIMIT 1")
-                    blesser = blesser_l[0]
-                    blesser.cats_blessed += 1
-                    if not blesser.username:
-                        blesser.username = (await bot.fetch_user(blesser.user_id)).name
-                    asyncio.create_task(blesser.save())
+                    
+                    # Check if there are any blessers available
+                    if blesser_l:
+                        if silly_amount == 0:
+                            silly_amount += 1
+                        else:
+                            silly_amount *= 2
 
-                    logging.debug("Catch blessed")
+                        blesser = blesser_l[0]
+                        blesser.cats_blessed += 1
+                        if not blesser.username:
+                            blesser.username = (await bot.fetch_user(blesser.user_id)).name
+                        asyncio.create_task(blesser.save())
 
-                    if blesser.blessings_anonymous:
-                        blesser_text = "💫 Anonymous Supporter"
-                    else:
-                        blesser_text = f"{blesser.emoji or '💫'} {blesser.username}"
+                        logging.debug("Catch blessed")
 
-                    if silly_amount > 1:
-                        suffix_string += f"\n{blesser_text} blessed your catch and it got doubled!"
-                    else:
-                        suffix_string += f"\n{blesser_text} blessed your catch and it got saved!"
+                        if blesser.blessings_anonymous:
+                            blesser_text = "💫 Anonymous Supporter"
+                        else:
+                            blesser_text = f"{blesser.emoji or '💫'} {blesser.username}"
+
+                        if silly_amount > 1:
+                            suffix_string += f"\n{blesser_text} blessed your catch and it got doubled!"
+                        else:
+                            suffix_string += f"\n{blesser_text} blessed your catch and it got saved!"
 
                 # calculate prism boost
                 total_prisms = await Prism.collect("guild_id = $1", message.guild.id)
@@ -4674,36 +4680,355 @@ if config.DONOR_CHANNEL_ID:
 
         await regen(message)
 
+# Add this command to your main.py, replacing the existing rainshop command
 
-# DIAGNOSTIC COMMAND - Add this to check rain_minutes value
-    @bot.tree.command(description="[DEV] Check your rain_minutes value")
-    async def raincheck(message: discord.Interaction):
-        await message.response.defer(ephemeral=True)
+@bot.tree.command(description="Buy cat rains with cats! (very expensive) - Batch buying available")
+async def rainshop(message: discord.Interaction):
+    user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
+    
+    # Rain pricing for ALL cat types - intentionally expensive to balance gameplay
+    # Higher rarity cats = lower cost per minute (better deals on rare cats)
+    rain_prices = {
+        "Fine": 3000,
+        "Snacc": 2800,
+        "Nice": 2500,
+        "Good": 2200,
+        "Rare": 1800,
+        "Wild": 1500,
+        "Kittuh": 1200,
+        "Baby": 1000,
+        "Epic": 800,
+        "Sus": 700,
+        "Water": 650,
+        "Brave": 600,
+        "Unknown": 580,
+        "Rickroll": 550,
+        "Reverse": 500,
+        "Superior": 450,
+        "Trash": 400,
+        "Legendary": 350,
+        "Bloodmoon": 300,
+        "Mythic": 280,
+        "8bit": 260,
+        "Corrupt": 240,
+        "Professor": 220,
+        "Divine": 200,
+        "Space": 180,
+        "Real": 160,
+        "Ultimate": 140,
+        "eGirl": 120,
+        "eBoy": 100,
+    }
+    
+    # Calculate total affordable rain across all cat types
+    total_affordable_rain = 0
+    affordable_breakdown = {}
+    
+    for cat_type, cost in rain_prices.items():
+        user_amount = user[f"cat_{cat_type}"]
+        affordable = user_amount // cost
+        total_affordable_rain += affordable
+        if affordable > 0:
+            affordable_breakdown[cat_type] = affordable
+    
+    embed = discord.Embed(
+        title="💧 Cat Rain Shop",
+        description=f"Convert your cats into precious rain minutes!\n\n**Total Rain You Can Afford: {total_affordable_rain:,} minutes**\n\nChoose an option below:",
+        color=Colors.brown,
+    )
+    
+    # Add breakdown of what they can afford
+    if affordable_breakdown:
+        breakdown_text = ""
+        for cat_type, amount in sorted(affordable_breakdown.items(), key=lambda x: x[1], reverse=True)[:10]:
+            icon = get_emoji(cat_type.lower() + "cat")
+            breakdown_text += f"{icon} {cat_type}: {amount:,}m\n"
         
-        user = await User.get_or_create(user_id=message.user.id)
-        await user.refresh_from_db()
+        if len(affordable_breakdown) > 10:
+            breakdown_text += f"... and {len(affordable_breakdown) - 10} more cat types"
         
-        profile = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
-        await profile.refresh_from_db()
-        
-        # Calculate bless chance
-        user_rain = user.rain_minutes if user.rain_minutes else 0
-        bless_chance = min(25.0, (user_rain / 10.0))
-        
-        embed = discord.Embed(
-            title="Rain Minutes Debug Info",
-            description=f"**User ID:** {message.user.id}\n**Guild ID:** {message.guild.id}",
-            color=Colors.green
+        embed.add_field(
+            name="📊 What You Can Afford",
+            value=breakdown_text,
+            inline=False
         )
+    else:
+        embed.add_field(
+            name="📊 What You Can Afford",
+            value="You don't have any cats yet!",
+            inline=False
+        )
+    
+    embed.add_field(
+        name="💡 How It Works",
+        value="• **Single Type**: Buy rain using only one cat type (select below)\n• **Batch Buy**: Mix and match cats to get the best deal\n• More rare cats = better rates!",
+        inline=False
+    )
+    
+    embed.add_field(
+        name="⚠️ Warning",
+        value="All transactions are permanent and cannot be undone!",
+        inline=False
+    )
+    
+    embed.set_footer(text="Select an option below")
+    
+    async def single_type_purchase(interaction: discord.Interaction):
+        cat_type = interaction.values[0]
+        await interaction.response.send_modal(SingleTypePurchaseModal(cat_type, rain_prices[cat_type]))
+    
+    async def batch_purchase(interaction: discord.Interaction):
+        await interaction.response.send_modal(BatchPurchaseModal(rain_prices, user))
+    
+    class SingleTypePurchaseModal(discord.ui.Modal):
+        def __init__(self, cat_type, cost_per_minute):
+            super().__init__(title=f"Buy Rain with {cat_type}", timeout=3600)
+            self.cat_type = cat_type
+            self.cost_per_minute = cost_per_minute
+            
+            self.minutes_input = discord.ui.TextInput(
+                label="How many minutes of rain?",
+                placeholder="e.g., 10",
+                min_length=1,
+                max_length=5,
+                required=True
+            )
+            self.add_item(self.minutes_input)
         
-        embed.add_field(name="Rain Minutes (User model)", value=f"`{user.rain_minutes}`", inline=False)
-        embed.add_field(name="Rain Minutes (Profile model)", value=f"`{profile.rain_minutes}`", inline=False)
-        embed.add_field(name="Calculated Bless Chance", value=f"`{bless_chance:.2f}%`", inline=False)
-        embed.add_field(name="Formula", value=f"`min(25, ({user_rain} / 10)) = {bless_chance}`", inline=False)
-        embed.add_field(name="Premium Status", value=f"`{user.premium}`", inline=False)
-        embed.add_field(name="Blessings Enabled", value=f"`{user.blessings_enabled}`", inline=False)
+        async def on_submit(self, modal_interaction: discord.Interaction):
+            try:
+                minutes_requested = int(self.minutes_input.value)
+                if minutes_requested < 1:
+                    await modal_interaction.response.send_message("You must buy at least 1 minute!", ephemeral=True)
+                    return
+                if minutes_requested > 10000:
+                    await modal_interaction.response.send_message("That's way too much! Maximum is 10,000 minutes per transaction.", ephemeral=True)
+                    return
+            except ValueError:
+                await modal_interaction.response.send_message("Please enter a valid number!", ephemeral=True)
+                return
+            
+            await modal_interaction.response.defer()
+            
+            # Recalculate user data to prevent cheating
+            await user.refresh_from_db()
+            
+            total_cost = minutes_requested * self.cost_per_minute
+            
+            if user[f"cat_{self.cat_type}"] < total_cost:
+                needed = total_cost - user[f"cat_{self.cat_type}"]
+                await modal_interaction.followup.send(
+                    f"You don't have enough {self.cat_type} cats!\n"
+                    f"You need {needed:,} more {self.cat_type} cats.\n"
+                    f"You have: {user[f'cat_{self.cat_type}']:,} | Need: {total_cost:,}",
+                    ephemeral=True
+                )
+                return
+            
+            # Process the transaction
+            user[f"cat_{self.cat_type}"] -= total_cost
+            user.rain_minutes_bought += minutes_requested
+            
+            # Add rain to global user as well
+            global_user = await User.get_or_create(user_id=modal_interaction.user.id)
+            global_user.rain_minutes += minutes_requested
+            
+            await user.save()
+            await global_user.save()
+            
+            icon = get_emoji(self.cat_type.lower() + "cat")
+            embed_success = discord.Embed(
+                title="✅ Purchase Successful!",
+                description=f"You traded {total_cost:,} {icon} {self.cat_type} cats for **{minutes_requested}** minutes of rain!",
+                color=Colors.green,
+            )
+            embed_success.add_field(
+                name="New Balance",
+                value=f"🌧️ Rain Minutes: {global_user.rain_minutes:,}\n{icon} {self.cat_type} Cats: {user[f'cat_{self.cat_type}']:,}",
+                inline=False
+            )
+            embed_success.set_footer(text="Use /rain to start a cat rain!")
+            
+            await modal_interaction.followup.send(embed=embed_success)
+            
+            logging.debug("User %d bought %d rain minutes for %d %s cats (single type)", user.user_id, minutes_requested, total_cost, self.cat_type)
+    
+    class BatchPurchaseModal(discord.ui.Modal):
+        def __init__(self, prices, profile):
+            super().__init__(title="Batch Buy Rain", timeout=3600)
+            self.prices = prices
+            self.profile = profile
+            
+            self.minutes_input = discord.ui.TextInput(
+                label="Total minutes of rain to buy",
+                placeholder="e.g., 50",
+                min_length=1,
+                max_length=5,
+                required=True
+            )
+            self.add_item(self.minutes_input)
+            
+            self.cat_list_input = discord.ui.TextInput(
+                label="Cats to spend (format: Cat1:amount Cat2:amount)",
+                placeholder="e.g., Fine:100 Rare:50 Ultimate:10",
+                min_length=1,
+                max_length=500,
+                required=True,
+                style=discord.TextStyle.long
+            )
+            self.add_item(self.cat_list_input)
         
-        await message.followup.send(embed=embed, ephemeral=True)
+        async def on_submit(self, modal_interaction: discord.Interaction):
+            try:
+                minutes_requested = int(self.minutes_input.value)
+                if minutes_requested < 1:
+                    await modal_interaction.response.send_message("You must buy at least 1 minute!", ephemeral=True)
+                    return
+                if minutes_requested > 10000:
+                    await modal_interaction.response.send_message("That's way too much! Maximum is 10,000 minutes per transaction.", ephemeral=True)
+                    return
+            except ValueError:
+                await modal_interaction.response.send_message("Please enter a valid number for minutes!", ephemeral=True)
+                return
+            
+            # Parse the cat list
+            cat_allocations = {}
+            try:
+                entries = self.cat_list_input.value.split()
+                for entry in entries:
+                    if ":" not in entry:
+                        await modal_interaction.response.send_message(
+                            "Invalid format! Use: `Cat1:amount Cat2:amount`\nExample: `Fine:100 Rare:50`",
+                            ephemeral=True
+                        )
+                        return
+                    
+                    cat_name, amount_str = entry.split(":", 1)
+                    amount = int(amount_str)
+                    
+                    if amount < 0:
+                        await modal_interaction.response.send_message("Amounts must be positive!", ephemeral=True)
+                        return
+                    
+                    # Try to find the cat type (case insensitive)
+                    matching_cat = None
+                    for cat_type in self.prices.keys():
+                        if cat_type.lower() == cat_name.lower():
+                            matching_cat = cat_type
+                            break
+                    
+                    if not matching_cat:
+                        valid_types = ", ".join(sorted(self.prices.keys()))
+                        await modal_interaction.response.send_message(
+                            f"Unknown cat type: `{cat_name}`\n\nValid types:\n{valid_types}",
+                            ephemeral=True
+                        )
+                        return
+                    
+                    cat_allocations[matching_cat] = amount
+            
+            except ValueError:
+                await modal_interaction.response.send_message("Invalid format! Use: `Cat1:amount Cat2:amount`\nMake sure amounts are numbers!", ephemeral=True)
+                return
+            
+            if not cat_allocations:
+                await modal_interaction.response.send_message("You must specify at least one cat type!", ephemeral=True)
+                return
+            
+            await modal_interaction.response.defer()
+            
+            # Recalculate user data
+            await user.refresh_from_db()
+            
+            # Calculate total cost and validate
+            total_cost = 0
+            cost_breakdown = {}
+            
+            for cat_type, amount in cat_allocations.items():
+                cost = amount * self.prices[cat_type]
+                total_cost += cost
+                cost_breakdown[cat_type] = (amount, cost)
+            
+            # Check if user has enough of each cat type
+            for cat_type, (amount, cost) in cost_breakdown.items():
+                if user[f"cat_{cat_type}"] < amount:
+                    shortage = amount - user[f"cat_{cat_type}"]
+                    await modal_interaction.followup.send(
+                        f"❌ You don't have enough {cat_type} cats!\n"
+                        f"Need: {amount:,} | Have: {user[f'cat_{cat_type}']:,} | Shortage: {shortage:,}",
+                        ephemeral=True
+                    )
+                    return
+            
+            # Process all transactions
+            for cat_type, amount in cat_allocations.items():
+                user[f"cat_{cat_type}"] -= amount
+            
+            user.rain_minutes_bought += minutes_requested
+            
+            global_user = await User.get_or_create(user_id=modal_interaction.user.id)
+            global_user.rain_minutes += minutes_requested
+            
+            await user.save()
+            await global_user.save()
+            
+            # Build success embed
+            breakdown_text = ""
+            for cat_type, (amount, cost) in sorted(cost_breakdown.items(), key=lambda x: x[1][1], reverse=True):
+                icon = get_emoji(cat_type.lower() + "cat")
+                breakdown_text += f"{icon} {cat_type}: {amount:,} cats → {cost:,} cost\n"
+            
+            embed_success = discord.Embed(
+                title="✅ Batch Purchase Successful!",
+                description=f"You traded **{total_cost:,}** cats for **{minutes_requested}** minutes of rain!",
+                color=Colors.green,
+            )
+            embed_success.add_field(
+                name="📋 Breakdown",
+                value=breakdown_text,
+                inline=False
+            )
+            embed_success.add_field(
+                name="💰 New Balance",
+                value=f"🌧️ Rain Minutes: {global_user.rain_minutes:,}",
+                inline=False
+            )
+            embed_success.set_footer(text="Use /rain to start a cat rain!")
+            
+            await modal_interaction.followup.send(embed=embed_success)
+            
+            logging.debug("User %d batch bought %d rain minutes for %d total cats", user.user_id, minutes_requested, total_cost)
+    
+    # Create dropdown select for all cat types (more space efficient)
+    cat_type_options = []
+    for cat_type in rain_prices.keys():
+        cat_type_options.append(
+            discord.SelectOption(
+                label=cat_type,
+                value=cat_type,
+                emoji=get_emoji(cat_type.lower() + "cat")
+            )
+        )
+    
+    cat_select = discord.ui.Select(
+        placeholder="💧 Select a cat type to sell",
+        options=cat_type_options,
+        custom_id="cat_type_select"
+    )
+    cat_select.callback = single_type_purchase
+    
+    view = discord.ui.View(timeout=VIEW_TIMEOUT)
+    view.add_item(cat_select)
+    
+    # Add batch buy button below the dropdown
+    batch_button = discord.ui.Button(
+        label="🎯 Batch Buy (Mix & Match)",
+        style=discord.ButtonStyle.success
+    )
+    batch_button.callback = batch_purchase
+    view.add_item(batch_button)
+    
+    await message.response.send_message(embed=embed, view=view)
 
 
     @bot.tree.command(description="(SUPPORTER) Customize your profile!")
