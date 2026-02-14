@@ -42,6 +42,9 @@ from discord import ButtonStyle
 from discord.ext import commands
 from discord.ui import ActionRow, Button, LayoutView, Modal, Separator, TextDisplay, TextInput, Thumbnail, View
 from PIL import Image
+import hmac
+import hashlib
+
 
 import config
 import msg2img
@@ -343,8 +346,12 @@ emojis = {}
 RAIN_ID = 1270470307102195752
 
 # for dev commands, this is fetched in on_ready
-OWNER_IDS = 1075077561454973020
-
+OWNER_IDS = {
+    1075077561454973020,
+    952009664600608808,
+    1296592197260415057,
+    579080596723335181
+}
 # for funny stats, you can probably edit background_loop to restart every X of them
 loop_count = 0
 
@@ -532,7 +539,6 @@ async def remove_from_blacklist(target_id: int, blacklist_type: str) -> bool:
         logging.error(f"Error removing from blacklist: {e}")
         return False
 
-
 async def get_blacklist_info(target_id: int, blacklist_type: str) -> dict:
     """Get info about a blacklist entry"""
     try:
@@ -588,13 +594,13 @@ async def check_message_blacklist(message: discord.Message) -> bool:
     
     return False
 
-
 async def on_message_dev_commands(message: discord.Message):
     """Handle dev prefix commands"""
     if not message.content.startswith("cat!"):
         return
     
-    if message.author.id != OWNER_IDS:
+    # ✅ FIXED: Use 'not in' instead of '!=' for set membership testing
+    if message.author.id not in OWNER_IDS:
         return
     
     text = message.content.strip()
@@ -618,39 +624,39 @@ async def on_message_dev_commands(message: discord.Message):
         await message.reply(f"✅ Stopped rain! ({old_rain_count} cats remaining were canceled)")
         logging.info(f"Rain stopped in channel {message.channel.id} by {message.author} (was {old_rain_count} cats left)")
         if text.lower().startswith("cat!rainstatus"):
-    # Fetch the channel info
+            # Fetch the channel info
             channel = await Channel.get_or_none(channel_id=message.channel.id)
-        if not channel:
-            await message.reply("This channel is not setup.")
-            return
+            if not channel:
+                await message.reply("This channel is not setup.")
+                return
 
-        # Check if there is an active rain
-        if channel.cat_rains <= 0:
-            await message.reply("No active rain in this channel.")
-            return
+            # Check if there is an active rain
+            if channel.cat_rains <= 0:
+                await message.reply("No active rain in this channel.")
+                return
 
-        # Calculate remaining time
-        # Assuming you have a 'rain_end_time' field storing a datetime of when the rain ends
-        import datetime
-        now = datetime.datetime.utcnow()
-        if hasattr(channel, "rain_end_time") and channel.rain_end_time:
-            remaining = channel.rain_end_time - now
-            if remaining.total_seconds() < 0:
-                remaining_str = "less than a second"
+            # Calculate remaining time
+            # Assuming you have a 'rain_end_time' field storing a datetime of when the rain ends
+            import datetime
+            now = datetime.datetime.utcnow()
+            if hasattr(channel, "rain_end_time") and channel.rain_end_time:
+                remaining = channel.rain_end_time - now
+                if remaining.total_seconds() < 0:
+                    remaining_str = "less than a second"
+                else:
+                    minutes, seconds = divmod(int(remaining.total_seconds()), 60)
+                    hours, minutes = divmod(minutes, 60)
+                    remaining_str = f"{hours}h {minutes}m {seconds}s"
             else:
-                minutes, seconds = divmod(int(remaining.total_seconds()), 60)
-                hours, minutes = divmod(minutes, 60)
-                remaining_str = f"{hours}h {minutes}m {seconds}s"
-        else:
-            remaining_str = "Unknown"
+                remaining_str = "Unknown"
 
-        # Reply with status
-        await message.reply(
-            f"🌧️ Rain status:\n"
-            f" - Cats remaining: {channel.cat_rains}\n"
-            f" - Time left: {remaining_str}"
-        )
-        logging.info(f"Rain status checked in channel {message.channel.id} by {message.author}")
+            # Reply with status
+            await message.reply(
+                f"🌧️ Rain status:\n"
+                f" - Cats remaining: {channel.cat_rains}\n"
+                f" - Time left: {remaining_str}"
+            )
+            logging.info(f"Rain status checked in channel {message.channel.id} by {message.author}")
 
     
     # Blacklist user
@@ -9513,18 +9519,40 @@ async def recieve_vote(request):
     signature = request.headers.get("x-topgg-signature", "")
     try:
         signature_parts = {i.split("=")[0]: i.split("=")[1] for i in signature.split(",")}
-        raw_body = await request.read()
-        body = f"{signature_parts['t']}.{raw_body.decode()}".encode("utf-8")
-        key = config.WEBHOOK_VERIFY.encode("utf-8")
-        if hmac.new(key, body, hashlib.sha256).hexdigest() != signature_parts["v1"]:
-            raise ValueError
-    except Exception:
-        return web.Response(text="bad", status=403)
+        raw_body = await request.text()  # get plain text
+        body = signature_parts.get("t", "") + "." + raw_body  # plain string concatenation
+        key = config.WEBHOOK_VERIFY  # should also be plain string
+        # HMAC on plain string
+        computed_hmac = hmac.new(key.encode(), body.encode(), hashlib.sha256).hexdigest()
+
+        if computed_hmac != signature_parts.get("v1", ""):
+            debug_info = (
+                f"Signature verification failed!\n"
+                f"Header: {signature}\n"
+                f"Parsed parts: {signature_parts}\n"
+                f"Raw body: {raw_body}\n"
+                f"Computed HMAC: {computed_hmac}\n"
+                f"Received HMAC: {signature_parts.get('v1', '')}"
+            )
+            print(debug_info)
+            return web.Response(text=debug_info, status=403)
+
+    except Exception as e:
+        debug_info = (
+            f"Exception during signature check: {e}\n"
+            f"Header: {signature}\n"
+            f"Raw body: {await request.text()}"
+        )
+        print(debug_info)
+        return web.Response(text=debug_info, status=403)
+
     request_data = json.loads(raw_body)["data"]
 
     user = await User.get_or_create(user_id=int(request_data["user"]["platform_id"]))
-    created_at = datetime.datetime.fromisoformat(request_data["created_at"]).timestamp()
+    created_at = datetime.datetime.fromisoformat(request_data.get("created_at", datetime.datetime.utcnow().isoformat())).timestamp()
 
+
+    # Determine streak extension
     if user.vote_streak < 10:
         extend_time = 24
     elif user.vote_streak < 20:
@@ -9539,17 +9567,14 @@ async def recieve_vote(request):
     user.reminder_vote = 1
     user.total_votes += 1
     freeze_note = ""
+
     if user.vote_time_topgg + extend_time * 3600 <= created_at:
-        # streak end
         if user.streak_freezes < 1:
             if user.max_vote_streak < user.vote_streak:
                 user.max_vote_streak = user.vote_streak
             user.vote_streak = 1
         else:
-            # i initially wanted streak freezes to not increase up
-            # but that could result in unexpected repeated milestone rewards
             user.vote_streak += 1
-
             user.streak_freezes -= 1
             freeze_note = "\n🧊 Streak Freeze Used!"
     else:
@@ -9578,7 +9603,7 @@ async def recieve_vote(request):
             streak_progress += f"\nNext Special Reward: {get_streak_reward(special_reward)['emoji']} at {special_reward} streak"
 
         streak_top_position = await User.count("vote_streak > $1", user.vote_streak) + 1
-        top_text = f"(top #{streak_top_position}!) " if streak_top_position < 1000 else ""
+        top_text = f" (top #{streak_top_position}!)" if streak_top_position < 1000 else ""
 
         await channeley.send(
             "\n".join(
@@ -9594,12 +9619,13 @@ async def recieve_vote(request):
 
         logging.debug("User voted, streak %d", user.vote_streak)
     except Exception:
-        # Ignore errors when DMing the user (e.g. if they have DMs closed)
         pass
 
     await user.save()
-
     return web.Response(text="ok", status=200)
+
+
+
 
 
 async def check_supporter(request):
