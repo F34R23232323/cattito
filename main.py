@@ -2168,18 +2168,6 @@ async def on_message(message: discord.Message):
         logging.debug("Response sent: %s", "test success")
         await achemb(message, "test_ach", "reply")
 
-    if text.lower() == "please do not the cat":
-        user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.author.id)
-        user.cat_Fine -= 1
-        await user.save()
-        try:
-            personname = message.author.name.replace("_", "\\_")
-            await message.reply(f"ok then\n{personname} lost 1 fine cat!!!1!\nYou now have {user.cat_Fine:,} cats of dat type!")
-        except Exception:
-            pass
-        await achemb(message, "pleasedonotthecat", "reply")
-        logging.debug("Response sent: %s", "please do not the cat")
-
     if text.lower() == "please do the cat":
         thing = discord.File("images/socialcredit.jpg", filename="socialcredit.jpg")
         try:
@@ -2207,6 +2195,20 @@ async def on_message(message: discord.Message):
         except Exception:
             pass
         logging.debug("Response sent: %s", "cart")
+    if text.lower() == "cat!sex":
+        try:
+            await message.reply("really bro?")
+        except Exception:
+            pass
+    await achemb(message, "horny_bonk", "reply")
+    logging.debug("Response sent: %s", "really bro?")
+    if text.lower() == "67":
+        try:
+            await message.reply("touch grass")
+        except Exception:
+            pass
+    await achemb(message, "touch_grass", "reply")
+    logging.debug("Response sent: %s", "touch grass")
 
     try:
         if (
