@@ -87,3 +87,19 @@ class Server(catpg.Model):
 
 class Blacklist(Model):
     pass
+
+
+class Order(catpg.Model):
+    pass
+
+
+class PortfolioHistory(catpg.Model):
+    pass
+
+
+class PriceHistory(catpg.Model):
+    pass
+
+
+class Reward(catpg.Model):
+    pass

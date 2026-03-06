@@ -1,6 +1,6 @@
 {
   "seasons": {
-      "14": [
+        "14": [
       {"xp": 550, "reward": "Wooden", "amount": 1},
       {"xp": 550, "reward": "Wooden", "amount": 1},
       {"xp": 550, "reward": "Wooden", "amount": 1},
@@ -33,7 +33,7 @@
       {"xp": 1000, "reward": "Gold", "amount": 1},
       {"xp": 1000, "reward": "Stone", "amount": 1},
       {"xp": 1000, "reward": "Rain", "amount": 2}
-      ],
+    ],
     "15": [
       {"xp": 550, "reward": "Platinum", "amount": 1},
       {"xp": 550, "reward": "Rare", "amount": 6},
@@ -677,213 +677,427 @@
   },
   "quests": {
     "vote": {
-        "vote": {
-            "emoji": "topgg",
-            "title": "[Vote on Top.gg](https://top.gg/bot/1387860417706987590/vote)",
-            "xp_min": 250,
-            "xp_max": 350,
-            "progress": 1
-        }
+      "vote": {
+        "emoji": "topgg",
+        "title": "[Vote on Top.gg](https://top.gg/bot/1387860417706987590/vote)",
+        "xp_min": 250,
+        "xp_max": 350,
+        "progress": 1
+      }
     },
     "catch": {
-        "2fine": {
-            "emoji": "finecat",
-            "title": "Catch 2 Fine cats",
-            "xp_min": 330,
-            "xp_max": 370,
-            "progress": 2
-        },
-        "under10": {
-            "emoji": "\u23f1\ufe0f",
-            "title": "Catch in under 10 sec",
-            "xp_min": 250,
-            "xp_max": 290,
-            "progress": 1
-        },
-        "good": {
-            "emoji": "goodcat",
-            "title": "Catch a Good cat",
-            "xp_min": 300,
-            "xp_max": 340,
-            "progress": 1
-        },
-        "3cats": {
-            "emoji": "nicecat",
-            "title": "Catch 3 cats",
-            "xp_min": 260,
-            "xp_max": 320,
-            "progress": 3
-        },
-        "rare+": {
-            "emoji": "rarecat",
-            "title": "Catch a Rare or better cat",
-            "xp_min": 250,
-            "xp_max": 290,
-            "progress": 1
-        },
-        "odd": {
-            "emoji": "\ud83e\udd14",
-            "title": "Catch on an odd second",
-            "xp_min": 230,
-            "xp_max": 290,
-            "progress": 1
-        },
-        "even": {
-            "emoji": "\ud83e\udd14",
-            "title": "Catch on an even second",
-            "xp_min": 230,
-            "xp_max": 290,
-            "progress": 1
-        },
-        "prism": {
-            "emoji": "prism",
-            "title": "Trigger a prism boost",
-            "xp_min": 330,
-            "xp_max": 370,
-            "progress": 1
-        },
-        "finenice": {
-            "emoji": "finecat",
-            "title": "Catch a Fine and a Nice cat",
-            "xp_min": 340,
-            "xp_max": 400,
-            "progress": 3
-        }
+      "2fine": {
+        "emoji": "finecat",
+        "title": "Catch 2 Fine cats",
+        "xp_min": 330,
+        "xp_max": 370,
+        "progress": 2
+      },
+      "under10": {
+        "emoji": "⏱️",
+        "title": "Catch in under 10 sec",
+        "xp_min": 250,
+        "xp_max": 290,
+        "progress": 1
+      },
+      "good": {
+        "emoji": "goodcat",
+        "title": "Catch a Good cat",
+        "xp_min": 300,
+        "xp_max": 340,
+        "progress": 1
+      },
+      "3cats": {
+        "emoji": "nicecat",
+        "title": "Catch 3 cats",
+        "xp_min": 260,
+        "xp_max": 320,
+        "progress": 3
+      },
+      "rare+": {
+        "emoji": "rarecat",
+        "title": "Catch a Rare or better cat",
+        "xp_min": 250,
+        "xp_max": 290,
+        "progress": 1
+      },
+      "odd": {
+        "emoji": "🤔",
+        "title": "Catch on an odd second",
+        "xp_min": 230,
+        "xp_max": 290,
+        "progress": 1
+      },
+      "even": {
+        "emoji": "🤔",
+        "title": "Catch on an even second",
+        "xp_min": 230,
+        "xp_max": 290,
+        "progress": 1
+      },
+      "prism": {
+        "emoji": "prism",
+        "title": "Trigger a prism boost",
+        "xp_min": 330,
+        "xp_max": 370,
+        "progress": 1
+      },
+      "finenice": {
+        "emoji": "finecat",
+        "title": "Catch a Fine and a Nice cat",
+        "xp_min": 340,
+        "xp_max": 400,
+        "progress": 3
+      }
     },
     "misc": {
-        "slots": {
-            "emoji": "\ud83c\udfb0",
-            "title": "Spin the /slots machine 10 times",
-            "xp_min": 150,
-            "xp_max": 250,
-            "progress": 10
-        },
-        "slots2": {
-            "emoji": "\ud83c\udfb0",
-            "title": "Spin the /slots machine 5 times",
-            "xp_min": 250,
-            "xp_max": 350,
-            "progress": 5
-        },
-        "achievement": {
-            "emoji": "cat_throphy",
-            "title": "Get an achievement",
-            "xp_min": 180,
-            "xp_max": 260,
-            "progress": 1
-        },
-        "trade": {
-            "emoji": "\ud83d\udcb1",
-            "title": "Complete a /trade",
-            "xp_min": 280,
-            "xp_max": 320,
-            "progress": 1
-        },
-        "news": {
-            "emoji": "\ud83d\udcf0",
-            "title": "Read a /news article",
-            "xp_min": 150,
-            "xp_max": 210,
-            "progress": 1
-        },
-        "gift": {
-            "emoji": "\ud83c\udf81",
-            "title": "/Gift someone",
-            "xp_min": 180,
-            "xp_max": 220,
-            "progress": 1
-        },
-        "reminder": {
-            "emoji": "\ud83d\udcdd",
-            "title": "Set a /reminder",
-            "xp_min": 190,
-            "xp_max": 250,
-            "progress": 1
-        },
-        "ttc": {
-            "emoji": "\u2b55",
-            "title": "Play a game of /tictactoe",
-            "xp_min": 170,
-            "xp_max": 230,
-            "progress": 1
-        },
-        "rate": {
-            "emoji": "\ud83d\udc4d",
-            "title": "/Rate something",
-            "xp_min": 150,
-            "xp_max": 210,
-            "progress": 1
-        },
-        "catball": {
-            "emoji": "\ud83c\udfb1",
-            "title": "Ask the magic /8ball",
-            "xp_min": 120,
-            "xp_max": 220,
-            "progress": 1
-        },
-        "roll": {
-            "emoji": "\ud83c\udfb2",
-            "title": "/Roll a dice",
-            "xp_min": 120,
-            "xp_max": 220,
-            "progress": 1
-        },
-        "ping": {
-            "emoji": "\ud83c\udfd3",
-            "title": "Check cat's /ping",
-            "xp_min": 140,
-            "xp_max": 180,
-            "progress": 1
-        },
-        "tiktok": {
-            "emoji": "sillycat",
-            "title": "Use /tiktok TTS",
-            "xp_min": 130,
-            "xp_max": 210,
-            "progress": 1
-        },
-        "wiki": {
-            "emoji": "\ud83e\udd13",
-            "title": "Check out /wiki",
-            "xp_min": 120,
-            "xp_max": 200,
-            "progress": 1
-        },
-        "pig": {
-            "emoji": "\ud83c\udfb2",
-            "title": "Get 20+ score in /pig",
-            "xp_min": 200,
-            "xp_max": 250,
-            "progress": 1
-        },
-        "roulette": {
-            "emoji": "\ud83c\udfb0",
-            "title": "Win a /roulette bet",
-            "xp_min": 175,
-            "xp_max": 225,
-            "progress": 1
-        },
-        "big_win": {
-            "emoji": "\ud83c\udfb0",
-            "title": "Get a Big Win in /slots",
-            "xp_min": 400,
-            "xp_max": 500,
-            "progress": 1
-        },
-        "roulette_streak": {
-            "emoji": "\ud83d\udcb0",
-            "title": "Win /roulette 3 times",
-            "xp_min": 350,
-            "xp_max": 450,
-            "progress": 3
-        },
-        "casino_wins": {
-            "emoji": "\ud83c\udfb2",
-            "title": "Win /casino 5 times",
-            "xp_min": 300,
-            "xp_max": 400,
-            "progress": 5
-        }
+      "slots": {
+        "emoji": "🎰",
+        "title": "Spin the /slots machine 10 times",
+        "xp_min": 150,
+        "xp_max": 250,
+        "progress": 10
+      },
+      "slots2": {
+        "emoji": "🎰",
+        "title": "Spin the /slots machine 5 times",
+        "xp_min": 250,
+        "xp_max": 350,
+        "progress": 5
+      },
+      "achievement": {
+        "emoji": "cat_throphy",
+        "title": "Get an achievement",
+        "xp_min": 180,
+        "xp_max": 260,
+        "progress": 1
+      },
+      "trade": {
+        "emoji": "💱",
+        "title": "Complete a /trade",
+        "xp_min": 280,
+        "xp_max": 320,
+        "progress": 1
+      },
+      "news": {
+        "emoji": "📰",
+        "title": "Read a /news article",
+        "xp_min": 150,
+        "xp_max": 210,
+        "progress": 1
+      },
+      "gift": {
+        "emoji": "🎁",
+        "title": "/Gift someone",
+        "xp_min": 180,
+        "xp_max": 220,
+        "progress": 1
+      },
+      "reminder": {
+        "emoji": "📝",
+        "title": "Set a /reminder",
+        "xp_min": 190,
+        "xp_max": 250,
+        "progress": 1
+      },
+      "ttc": {
+        "emoji": "⭕",
+        "title": "Play a game of /tictactoe",
+        "xp_min": 170,
+        "xp_max": 230,
+        "progress": 1
+      },
+      "rate": {
+        "emoji": "👍",
+        "title": "/Rate something",
+        "xp_min": 150,
+        "xp_max": 210,
+        "progress": 1
+      },
+      "catball": {
+        "emoji": "🎱",
+        "title": "Ask the magic /8ball",
+        "xp_min": 120,
+        "xp_max": 220,
+        "progress": 1
+      },
+      "roll": {
+        "emoji": "🎲",
+        "title": "/Roll a dice",
+        "xp_min": 120,
+        "xp_max": 220,
+        "progress": 1
+      },
+      "ping": {
+        "emoji": "🏓",
+        "title": "Check cat's /ping",
+        "xp_min": 140,
+        "xp_max": 180,
+        "progress": 1
+      },
+      "tiktok": {
+        "emoji": "sillycat",
+        "title": "Use /tiktok TTS",
+        "xp_min": 130,
+        "xp_max": 210,
+        "progress": 1
+      },
+      "wiki": {
+        "emoji": "🤓",
+        "title": "Check out /wiki",
+        "xp_min": 120,
+        "xp_max": 200,
+        "progress": 1
+      },
+      "pig": {
+        "emoji": "🎲",
+        "title": "Get 20+ score in /pig",
+        "xp_min": 200,
+        "xp_max": 250,
+        "progress": 1
+      },
+      "roulette": {
+        "emoji": "🎰",
+        "title": "Win a /roulette bet",
+        "xp_min": 175,
+        "xp_max": 225,
+        "progress": 1
+      },
+      "big_win": {
+        "emoji": "🎰",
+        "title": "Get a Big Win in /slots",
+        "xp_min": 400,
+        "xp_max": 500,
+        "progress": 1
+      },
+      "roulette_streak": {
+        "emoji": "💰",
+        "title": "Win /roulette 3 times",
+        "xp_min": 350,
+        "xp_max": 450,
+        "progress": 3
+      },
+      "casino_wins": {
+        "emoji": "🎲",
+        "title": "Win /casino 5 times",
+        "xp_min": 300,
+        "xp_max": 400,
+        "progress": 5
+      }
+    },
+    "extra1": {
+      "casino_spins": {
+        "title": "Spin the Catsino",
+        "emoji": "casino",
+        "xp_min": 150,
+        "xp_max": 250,
+        "progress": 5
+      },
+      "slots_winner": {
+        "title": "Slot Machine Champion",
+        "emoji": "slot_machine",
+        "xp_min": 200,
+        "xp_max": 350,
+        "progress": 3
+      },
+      "roulette_gambler": {
+        "title": "Spin the Roulette",
+        "emoji": "roulette",
+        "xp_min": 180,
+        "xp_max": 300,
+        "progress": 7
+      },
+      "dice_roller": {
+        "title": "Roll the Dice",
+        "emoji": "dice",
+        "xp_min": 120,
+        "xp_max": 200,
+        "progress": 10
+      },
+      "lucky_pig": {
+        "title": "Play Pig",
+        "emoji": "pig",
+        "xp_min": 140,
+        "xp_max": 220,
+        "progress": 2
+      },
+      "fortune_teller": {
+        "title": "Consult the 8Ball",
+        "emoji": "8ball",
+        "xp_min": 100,
+        "xp_max": 180,
+        "progress": 8
+      },
+      "game_master": {
+        "title": "Play Rock Paper Scissors",
+        "emoji": "rock",
+        "xp_min": 130,
+        "xp_max": 210,
+        "progress": 4
+      },
+      "strategic_mind": {
+        "title": "Play Tic Tac Toe",
+        "emoji": "tic",
+        "xp_min": 160,
+        "xp_max": 280,
+        "progress": 3
+      },
+      "big_spender": {
+        "title": "Spend Roulette Dollars",
+        "emoji": "money",
+        "xp_min": 170,
+        "xp_max": 290,
+        "progress": 6
+      },
+      "blackjack_master": {
+        "title": "Win at Slots 5 Times",
+        "emoji": "gold",
+        "xp_min": 210,
+        "xp_max": 340,
+        "progress": 5
+      },
+      "dice_enthusiast": {
+        "title": "Roll High Numbers",
+        "emoji": "roulette",
+        "xp_min": 130,
+        "xp_max": 220,
+        "progress": 8
+      },
+      "roulette_champion": {
+        "title": "Win at Roulette",
+        "emoji": "roulette",
+        "xp_min": 190,
+        "xp_max": 320,
+        "progress": 2
+      },
+      "pig_pro": {
+        "title": "Score 50+ in Pig",
+        "emoji": "pig",
+        "xp_min": 180,
+        "xp_max": 300,
+        "progress": 1
+      },
+      "fortune_seeker": {
+        "title": "Use 8Ball 15 Times",
+        "emoji": "8ball",
+        "xp_min": 120,
+        "xp_max": 200,
+        "progress": 15
+      },
+      "gaming_legend": {
+        "title": "Play 3 Different Games",
+        "emoji": "trophy",
+        "xp_min": 200,
+        "xp_max": 350,
+        "progress": 3
+      }
+    },
+    "extra2": {
+      "gifter": {
+        "title": "Gift Cats to Others",
+        "emoji": "gift",
+        "xp_min": 170,
+        "xp_max": 290,
+        "progress": 3
+      },
+      "trader": {
+        "title": "Complete Trades",
+        "emoji": "trade",
+        "xp_min": 190,
+        "xp_max": 310,
+        "progress": 2
+      },
+      "prism_crafter": {
+        "title": "Craft Prisms",
+        "emoji": "prism",
+        "xp_min": 210,
+        "xp_max": 350,
+        "progress": 2
+      },
+      "pack_opener": {
+        "title": "Open Packs",
+        "emoji": "woodenpack",
+        "xp_min": 150,
+        "xp_max": 260,
+        "progress": 5
+      },
+      "rain_starter": {
+        "title": "Start Rain Sessions",
+        "emoji": "rain",
+        "xp_min": 220,
+        "xp_max": 380,
+        "progress": 1
+      },
+      "fact_collector": {
+        "title": "Read Cat Facts",
+        "emoji": "book",
+        "xp_min": 100,
+        "xp_max": 180,
+        "progress": 6
+      },
+      "cookie_clicker": {
+        "title": "Click Cookies",
+        "emoji": "cookie",
+        "xp_min": 110,
+        "xp_max": 190,
+        "progress": 25
+      },
+      "commander": {
+        "title": "Use Ping Command",
+        "emoji": "ping",
+        "xp_min": 90,
+        "xp_max": 160,
+        "progress": 5
+      },
+      "definition_seeker": {
+        "title": "Define Words",
+        "emoji": "book",
+        "xp_min": 120,
+        "xp_max": 200,
+        "progress": 4
+      },
+      "news_reader": {
+        "title": "Read the News",
+        "emoji": "newspaper",
+        "xp_min": 130,
+        "xp_max": 220,
+        "progress": 3
+      },
+      "random_lover": {
+        "title": "Get Random Cats",
+        "emoji": "random",
+        "xp_min": 140,
+        "xp_max": 240,
+        "progress": 4
+      },
+      "reminder_setter": {
+        "title": "Set Reminders",
+        "emoji": "alarm",
+        "xp_min": 110,
+        "xp_max": 190,
+        "progress": 2
+      },
+      "generous_gifter": {
+        "title": "Gift 10 Cats Total",
+        "emoji": "gift",
+        "xp_min": 200,
+        "xp_max": 340,
+        "progress": 10
+      },
+      "master_trader": {
+        "title": "Complete 5 Trades",
+        "emoji": "trade",
+        "xp_min": 210,
+        "xp_max": 360,
+        "progress": 5
+      },
+      "collector_supreme": {
+        "title": "Open 15 Packs",
+        "emoji": "goldpack",
+        "xp_min": 180,
+        "xp_max": 310,
+        "progress": 15
+      }
     }
-}
+  }
 }
