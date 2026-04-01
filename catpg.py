@@ -86,12 +86,11 @@ class Model:
                 f"'{self.__class__.__name__}' object has no attribute '{name}'"
             )
 
-        try:
-            return self.__values[name]
-        except KeyError:
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'"
-            )
+        # Return 0 for missing columns instead of raising AttributeError.
+        # This handles cases where new columns are added to the database schema
+        # but existing rows were fetched before the column existed (e.g. extra1_progress,
+        # extra2_progress and related fields added after initial deployment).
+        return self.__values.get(name, 0)
 
 
     def __getitem__(self, name: str) -> Any:

@@ -948,10 +948,7 @@ async def achemb(message, ach_id, send_type, author_string=None):
 async def generate_quest(user: Profile, quest_type: str):
     while True:
         quest = random.choice(list(battle["quests"][quest_type].keys()))
-        if quest in ["slots", "reminder"]:
-            # removed quests
-            continue
-        elif quest == "prism":
+        if quest == "prism":
             total_count = await Prism.count("guild_id = $1", user.guild_id)
             user_count = await Prism.count("guild_id = $1 AND user_id = $2", user.guild_id, user.user_id)
             global_boost = 0.06 * math.log(2 * total_count + 1)
@@ -1039,6 +1036,49 @@ async def refresh_quests(user):
     if 12 * 3600 < user.extra2_cooldown + 12 * 3600 < time.time():
         await generate_quest(user, "extra2")
 
+# Maps each extra quest JSON key to the short trigger string used in progress() calls.
+# extra1 = gambling/game quests, extra2 = social/misc quests
+EXTRA_QUEST_TRIGGERS = {
+    # extra1 – gambling / game quests
+    "casino_spins":       "casino_spin",     # /casino (any spin)
+    "slots_winner":       "slots_win",       # /slots – win
+    "roulette_gambler":   "roulette_spin",   # /roulette – any spin
+    "dice_roller":        "roll",            # /roll
+    "lucky_pig":          "pig",             # /pig score >= 20
+    "fortune_teller":     "catball",         # /8ball
+    "game_master":        "rate",            # /rate (proxy for misc game)
+    "strategic_mind":     "ttc",             # /tictactoe
+    "big_spender":        "roulette_spin",   # /roulette – any spin
+    "blackjack_master":   "slots_bigwin",    # /slots – big win (seven)
+    "dice_enthusiast":    "roll",            # /roll (high roll tracked same)
+    "roulette_champion":  "roulette",        # /roulette – win
+    "pig_pro":            "pig50",           # /pig score >= 50
+    "fortune_seeker":     "catball",         # /8ball
+    "gaming_legend":      "any_game",        # playing any game command
+    "coin_flipper":       "coinflip",        # /coinflip – any flip
+    "lucky_flip":         "coinflip_win",    # /coinflip – win
+    "quiz_starter":       "quiz_correct",    # /catquiz – correct answer
+    "quiz_master":        "quiz_correct",    # /catquiz – correct answer (higher count)
+    # extra2 – social / utility quests
+    "gifter":             "gift",            # /gift
+    "trader":             "trade",           # /trade
+    "prism_crafter":      "prism",           # prism catch
+    "pack_opener":        "pack_open",       # /packs
+    "rain_starter":       "rain_start",      # /rain
+    "fact_collector":     "fact",            # /fact
+    "cookie_clicker":     "cookie",          # /cookie
+    "commander":          "ping",            # /ping
+    "definition_seeker":  "define",          # /define
+    "news_reader":        "news",            # /news
+    "random_lover":       "random",          # /random
+    "reminder_setter":    "reminder",        # /remind
+    "generous_gifter":    "gift",            # /gift (same trigger, higher count)
+    "master_trader":      "trade",           # /trade (same trigger, higher count)
+    "collector_supreme":  "pack_open",       # /packs (same trigger, higher count)
+    "quiz_scholar":       "quiz_complete",   # /catquiz – finish a quiz (any result)
+    "flipper":            "coinflip",        # /coinflip – any flip (higher count)
+}
+
 async def progress(message: discord.Message | discord.Interaction, user: Profile, quest: str, is_belated: Optional[bool] = False):
     await refresh_quests(user)
     await user.refresh_from_db()
@@ -1088,10 +1128,10 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
             current_xp = user.progress + user.misc_reward
             user.misc_progress = 0
             user.reminder_misc = 1
-    elif user.extra1_quest == quest:
+    elif EXTRA_QUEST_TRIGGERS.get(user.extra1_quest) == quest:
         if user.extra1_cooldown != 0:
             return
-        quest_data = battle["quests"]["extra1"][quest]
+        quest_data = battle["quests"]["extra1"][user.extra1_quest]
         user.extra1_progress += 1
         if user.extra1_progress >= quest_data["progress"]:
             quest_complete = True
@@ -1102,10 +1142,10 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
             # Save progress even if quest not complete
             await user.save()
             return
-    elif user.extra2_quest == quest:
+    elif EXTRA_QUEST_TRIGGERS.get(user.extra2_quest) == quest:
         if user.extra2_cooldown != 0:
             return
-        quest_data = battle["quests"]["extra2"][quest]
+        quest_data = battle["quests"]["extra2"][user.extra2_quest]
         user.extra2_progress += 1
         if user.extra2_progress >= quest_data["progress"]:
             quest_complete = True
@@ -1234,13 +1274,6 @@ async def progress_embed(message, user, level_data, current_xp, old_xp, quest_da
         streak_reward = f"\n🔥 **Streak Bonus!** +1 {streak_data['emoji']} {streak_data['reward'].capitalize()} pack"
     else:
         streak_reward = ""
-
-    if "top.gg" in quest_data["title"]:
-        streak_reward += f"\n💝 **Valentine's Event!** +1 {get_emoji('valentinepack')} Valentine pack!"
-        if not user.valentine_user:
-            streak_reward += "\n💔 find a /valentine - both get a pack when either votes!"
-        else:
-            streak_reward += f"\n💞 and +1 {get_emoji('valentinepack')} for your valentine!"
 
     return discord.Embed(
         title=f"✅ {title}",
@@ -4551,6 +4584,7 @@ You currently have **{user.rain_minutes}** minutes of rains{server_rains}.""",
         config.rain_starter[channel.channel_id] = interaction.user.id
         await spawn_cat(str(interaction.channel.id))
         await rain_recovery_loop(channel)
+        await progress(interaction, profile, "rain_start")
 
     async def rain_modal(interaction):
         modal = RainModal(interaction.user)
@@ -5399,6 +5433,7 @@ async def packs(message: discord.Interaction):
             await interaction.edit_original_response(embed=embed)
         await asyncio.sleep(1)
         await interaction.edit_original_response(view=gen_view(user))
+        await progress(message, user, "pack_open")
 
     async def open_all_packs(interaction: discord.Interaction):
         embed = await process_pack_opening()
@@ -5408,6 +5443,7 @@ async def packs(message: discord.Interaction):
         await message.edit_original_response(embed=embed, view=None)
         await asyncio.sleep(1)
         await message.edit_original_response(view=gen_view(user))
+        await progress(message, user, "pack_open")
 
     description = "Each pack starts at one of eight tiers of increasing value - Wooden, Stone, Bronze, Silver, Gold, Platinum, Diamond, or Celestial - and can repeatedly move up tiers with a 30% chance per upgrade. This means that even a pack starting at Wooden, through successive upgrades, can reach the Celestial tier.\n[Chance Info](<https://cattito.fun/>)\n\nClick the buttons below to start opening packs!"
     embed = discord.Embed(title=f"{get_emoji('bronzepack')} Packs", description=description, color=Colors.brown)
@@ -5519,33 +5555,37 @@ async def battlepass(message: discord.Interaction):
             description += f"{streak_string}\n"
 
         # catch
-# catch
-        catch_quest = battle["quests"]["catch"][user.catch_quest]
-        if user.catch_cooldown != 0:
-            description += f"✅ ~~{catch_quest['title']}~~\n- Refreshes <t:{int(user.catch_cooldown + 12 * 3600 if user.catch_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n"
+        if user.catch_quest and user.catch_quest in battle["quests"]["catch"]:
+            catch_quest = battle["quests"]["catch"][user.catch_quest]
+            if user.catch_cooldown != 0:
+                description += f"\u2705 ~~{catch_quest['title']}~~\n- Refreshes <t:{int(user.catch_cooldown + 12 * 3600 if user.catch_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n"
+            else:
+                progress_string = ""
+                if catch_quest["progress"] != 1:
+                    if user.catch_quest == "finenice":
+                        try:
+                            real_progress = ["need both", "need Nice", "need Fine", "done"][user.catch_progress]
+                        except IndexError:
+                            real_progress = "error"
+                        progress_string = f" ({real_progress})"
+                    else:
+                        progress_string = f" ({user.catch_progress}/{catch_quest['progress']})"
+                description += f"{get_emoji(catch_quest['emoji'])} {catch_quest['title']}{progress_string}\n- Reward: {user.catch_reward} XP\n"
         else:
-            progress_string = ""
-            if catch_quest["progress"] != 1:
-                if user.catch_quest == "finenice":
-                    try:
-                        real_progress = ["need both", "need Nice", "need Fine", "done"][user.catch_progress]
-                    except IndexError:
-                        real_progress = "error"
-                    progress_string = f" ({real_progress})"
-                else:
-                    progress_string = f" ({user.catch_progress}/{catch_quest['progress']})"
-            description += f"{get_emoji(catch_quest['emoji'])} {catch_quest['title']}{progress_string}\n- Reward: {user.catch_reward} XP\n"
+            description += "\u23f3 Catch quest loading...\n"
 
         # misc
-        misc_quest = battle["quests"]["misc"][user.misc_quest]
-        if user.misc_cooldown != 0:
-            description += f"✅ ~~{misc_quest['title']}~~\n- Refreshes <t:{int(user.misc_cooldown + 12 * 3600 if user.misc_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n"
+        if user.misc_quest and user.misc_quest in battle["quests"]["misc"]:
+            misc_quest = battle["quests"]["misc"][user.misc_quest]
+            if user.misc_cooldown != 0:
+                description += f"\u2705 ~~{misc_quest['title']}~~\n- Refreshes <t:{int(user.misc_cooldown + 12 * 3600 if user.misc_cooldown + 12 * 3600 < timestamp else timestamp)}:R>\n"
+            else:
+                progress_string = ""
+                if misc_quest["progress"] != 1:
+                    progress_string = f" ({user.misc_progress}/{misc_quest['progress']})"
+                description += f"{get_emoji(misc_quest['emoji'])} {misc_quest['title']}{progress_string}\n- Reward: {user.misc_reward} XP\n"
         else:
-            progress_string = ""
-            if misc_quest["progress"] != 1:
-                progress_string = f" ({user.misc_progress}/{misc_quest['progress']})"
-            description += f"{get_emoji(misc_quest['emoji'])} {misc_quest['title']}{progress_string}\n- Reward: {user.misc_reward} XP\n"
-
+            description += "\u23f3 Misc quest loading...\n"
         # extra1
         if user.extra1_quest:
             extra1_quest = battle["quests"]["extra1"][user.extra1_quest]
@@ -5990,6 +6030,7 @@ async def tictactoe(message: discord.Interaction, person: discord.Member):
             # self-play
             user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
             await progress(message, user, "ttc")
+            await progress(message, user, "any_game")
             return
         users = [
             await Profile.get_or_create(guild_id=message.guild.id, user_id=players[0].id),
@@ -6006,7 +6047,9 @@ async def tictactoe(message: discord.Interaction, person: discord.Member):
         await users[0].save()
         await users[1].save()
         await progress(message, users[0], "ttc")
+        await progress(message, users[0], "any_game")
         await progress(message, users[1], "ttc")
+        await progress(message, users[1], "any_game")
 
     await finish_turn()
 
@@ -6118,6 +6161,7 @@ async def cookie(message: discord.Interaction):
             await achemb(interaction, "cookieclicker", "followup")
         if 5100 > curr >= 5000:
             await achemb(interaction, "cookiesclicked", "followup")
+        await progress(interaction, user, "cookie")
 
     view = View(timeout=VIEW_TIMEOUT)
     button = Button(emoji="🍪", label=f"{temp_cookie_storage[cookie_id]:,}", style=ButtonStyle.blurple)
@@ -6917,6 +6961,12 @@ async def casino(message: discord.Interaction):
 
         casino_lock.remove(message.user.id + message.guild.id)
 
+        # Track battlepass progress for casino spins and wins
+        await progress(interaction, profile, "casino_spin")
+        await progress(interaction, profile, "any_game")
+        await progress(interaction, profile, "casino_win")
+        await progress(interaction, profile, "casino_wins")  # misc quest "Win /casino 5 times"
+
         try:
             await interaction.edit_original_response(embed=embed, view=myview)
         except Exception:
@@ -7041,10 +7091,13 @@ async def slots(message: discord.Interaction):
                 big_win = True
                 await profile.save()
                 await achemb(interaction, "big_win_slots", "followup")
+                await progress(message, profile, "slots_bigwin")
+                await progress(message, profile, "big_win")  # misc quest "Get a Big Win in /slots"
             else:
                 desc = "**You win!**\n\n" + desc
                 await profile.save()
             await achemb(interaction, "win_slots", "followup")
+            await progress(message, profile, "slots_win")
         else:
             desc = "**You lose!**\n\n" + desc
 
@@ -7231,11 +7284,14 @@ async def roulette(message: discord.Interaction):
 
             if win:
                 await progress(message, user, "roulette")
+                await progress(message, user, "roulette_streak")
+                await progress(message, user, "any_game")  # misc quest "Win /roulette 3 times"
                 await achemb(interaction, "roulette_winner", "followup")
             if funny_win:
                 await achemb(interaction, "roulette_prodigy", "followup")
             if user.roulette_balance < 0:
                 await achemb(interaction, "failed_gambler", "followup")
+            await progress(message, user, "roulette_spin")
 
     async def modal_select(interaction: discord.Interaction):
         if interaction.user != message.user:
@@ -7376,8 +7432,7 @@ async def roll(message: discord.Interaction, sides: Optional[int]):
     else:
         await message.response.send_message(f"🎲 your {dice} lands on **{random.randint(1, sides)}**")
     await progress(message, user, "roll")
-
-
+    await progress(message, user, "any_game")
 
 
 @bot.tree.command(description="get a super accurate rating of something")
@@ -7392,6 +7447,7 @@ async def rate(message: discord.Interaction, thing: str, stat: str):
         await message.response.send_message(f"{thing} is {random.randint(0, 100)}% {stat}")
     user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
     await progress(message, user, "rate")
+    await progress(message, user, "any_game")
 
 
 @bot.tree.command(name="8ball", description="ask the magic catball")
@@ -7435,6 +7491,7 @@ async def eightball(message: discord.Interaction, question: str):
     await message.response.send_message(f"{question}\n:8ball: **{random.choice(catball_responses)}**")
     user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
     await progress(message, user, "catball")
+    await progress(message, user, "any_game")
     await achemb(message, "balling", "followup")
 
 
@@ -7496,8 +7553,10 @@ async def pig(message: discord.Interaction):
 
         if score >= 20:
             await progress(message, profile, "pig")
+        await progress(message, profile, "any_game")
         if score >= 50:
             await achemb(interaction, "pig50", "followup")
+            await progress(message, profile, "pig50")
         if score >= 100:
             await achemb(interaction, "pig100", "followup")
 
@@ -7575,40 +7634,66 @@ async def random_cat(message: discord.Interaction):
                 data = await response.json()
                 await message.followup.send(data[0]["url"])
                 await achemb(message, "randomizer", "followup")
+                user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
+                await progress(message, user, "random")
         except Exception:
             await message.followup.send("no cats :(")
 
 
-if config.WORDNIK_API_KEY:
+@bot.tree.command(description="define a word")
+async def define(message: discord.Interaction, word: str):
+    word = word.lower()
 
-    @bot.tree.command(description="define a word")
-    async def define(message: discord.Interaction, word: str):
-        word = word.lower()
-        async with aiohttp.ClientSession() as session:
-            try:
-                async with session.get(
-                    f"https://api.wordnik.com/v4/word.json/{word}/definitions?api_key={config.WORDNIK_API_KEY}&useCanonical=true&includeTags=false&includeRelated=false&limit=69",
-                    headers={"User-Agent": "CatBot/1.0 https://github.com/milenakos/cat-bot"},
-                ) as response:
-                    data = await response.json()
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(
+                f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}",
+                headers={"User-Agent": "CatBot/1.0 https://github.com/milenakos/cat-bot"},
+            ) as response:
 
-                    # lazily filter some things
-                    text = (await response.text()).lower()
-
-                    # sometimes the api returns results without definitions, so we search for the first one which has a definition
-                    for i in data:
-                        if "text" in i.keys():
-                            clean_data = re.sub(re.compile("<.*?>"), "", i["text"])
-                            await message.response.send_message(
-                                f"__{word}__\n{clean_data}\n-# [{i['attributionText']}](<{i['attributionUrl']}>) Powered by [Wordnik](<{i['wordnikUrl']}>)",
-                                ephemeral=any([test in text for test in ["vulgar", "slur", "offensive", "profane", "insult", "abusive", "derogatory"]]),
-                            )
-                            await achemb(message, "define", "followup")
-                            return
-
+                if response.status != 200:
                     raise Exception
-            except Exception:
-                await message.response.send_message("no definition found", ephemeral=True)
+
+                data = await response.json()
+
+                definition = None
+                source = "https://dictionaryapi.dev/"
+
+                for entry in data:
+                    for meaning in entry.get("meanings", []):
+                        for d in meaning.get("definitions", []):
+                            if "definition" in d:
+                                definition = d["definition"]
+                                break
+                        if definition:
+                            break
+                    if definition:
+                        break
+
+                if not definition:
+                    raise Exception
+
+                text = definition.lower()
+
+                await message.response.send_message(
+                    f"__{word}__\n{definition}\n-# Powered by [Free Dictionary API](<{source}>)",
+                    ephemeral=any(test in text for test in [
+                        "vulgar", "slur", "offensive", "profane", "insult", "abusive", "derogatory"
+                    ]),
+                )
+
+                await achemb(message, "define", "followup")
+                user = await Profile.get_or_create(
+                    guild_id=message.guild.id,
+                    user_id=message.user.id
+                )
+                await progress(message, user, "define")
+
+        except Exception:
+            await message.response.send_message(
+                "no definition found",
+                ephemeral=True
+            )
 
 
 @bot.tree.command(name="fact", description="get a random cat fact")
@@ -7631,6 +7716,7 @@ async def cat_fact(message: discord.Interaction):
     await user.save()
     if user.facts >= 10:
         await achemb(message, "fact_enjoyer", "followup")
+    await progress(message, user, "fact")
 
     try:
         channel = await Channel.get_or_none(channel_id=message.channel.id)
@@ -7638,6 +7724,173 @@ async def cat_fact(message: discord.Interaction):
             await achemb(message, "nerd_battle", "followup")
     except Exception:
         pass
+
+
+
+# ── /coinflip ──────────────────────────────────────────────────────────────
+@bot.tree.command(name="coinflip", description="Flip a coin and bet cats on it!")
+@discord.app_commands.describe(
+    choice="heads or tails",
+    bet="how many Fine cats to bet (1-50, optional)"
+)
+async def coinflip(message: discord.Interaction, choice: str, bet: Optional[int]):
+    if message.guild is None:
+        await message.response.send_message("This command can only be used in a server.", ephemeral=True)
+        return
+
+    choice = choice.lower().strip()
+    if choice not in ("heads", "tails", "h", "t"):
+        await message.response.send_message(
+            "Pick **heads** or **tails**!", ephemeral=True
+        )
+        return
+    if choice in ("h",):
+        choice = "heads"
+    elif choice in ("t",):
+        choice = "tails"
+
+    user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
+
+    # Handle bet
+    winnings = 0
+    bet_text = ""
+    if bet is not None:
+        if bet < 1 or bet > 50:
+            await message.response.send_message("Bet must be between 1 and 50 Fine cats.", ephemeral=True)
+            return
+        if user.cat_Fine < bet:
+            await message.response.send_message(
+                f"You only have {user.cat_Fine} Fine cats!", ephemeral=True
+            )
+            return
+        winnings = bet
+
+    result = random.choice(["heads", "tails"])
+    won = result == choice
+    coin_emoji = "🪙"
+
+    if won:
+        result_text = f"**{result.upper()}!** You win!"
+        color = Colors.green
+        if winnings:
+            user.cat_Fine += winnings
+            bet_text = f"\n+{winnings} {get_emoji('finecat')} Fine cats!"
+    else:
+        result_text = f"**{result.upper()}!** You lose!"
+        color = Colors.red
+        if winnings:
+            user.cat_Fine -= winnings
+            bet_text = f"\n-{winnings} {get_emoji('finecat')} Fine cats!"
+
+    await user.save()
+
+    embed = discord.Embed(
+        title=f"{coin_emoji} Coin Flip",
+        description=f"You chose **{choice}** — {result_text}{bet_text}",
+        color=color,
+    )
+    await message.response.send_message(embed=embed)
+
+    await progress(message, user, "coinflip")
+    await progress(message, user, "any_game")
+    if won:
+        await progress(message, user, "coinflip_win")
+
+
+# ── /catquiz ──────────────────────────────────────────────────────────────
+CAT_TRIVIA = [
+    {"q": "How many hours a day do cats sleep on average?", "a": "13", "choices": ["8", "13", "20", "5"], "fun": "Cats are professional nappers — up to 16h on a lazy day!"},
+    {"q": "What is a group of cats called?", "a": "clowder", "choices": ["pride", "clowder", "pack", "herd"], "fun": "A group of kittens is called a kindle!"},
+    {"q": "How many toes does a typical cat have?", "a": "18", "choices": ["16", "18", "20", "14"], "fun": "Polydactyl cats can have even more!"},
+    {"q": "What is the fastest domestic cat breed?", "a": "Egyptian Mau", "choices": ["Siamese", "Bengal", "Egyptian Mau", "Abyssinian"], "fun": "Egyptian Maus can run at 30mph!"},
+    {"q": "Cats have how many whiskers on average?", "a": "24", "choices": ["12", "18", "24", "32"], "fun": "Whiskers help cats judge tight spaces!"},
+    {"q": "What is a female cat called?", "a": "queen", "choices": ["doe", "queen", "hen", "cow"], "fun": "Male cats are called toms!"},
+    {"q": "Which sense is weakest in cats?", "a": "taste", "choices": ["smell", "hearing", "sight", "taste"], "fun": "Cats can't taste sweetness at all!"},
+    {"q": "How many distinct sounds can cats make?", "a": "100", "choices": ["16", "50", "100", "200"], "fun": "Dogs make about 10 sounds by comparison!"},
+    {"q": "What percentage of their lives do cats spend grooming?", "a": "30%", "choices": ["10%", "20%", "30%", "50%"], "fun": "Grooming also keeps them cool!"},
+    {"q": "Cats walk like which other animal?", "a": "camel", "choices": ["horse", "dog", "camel", "giraffe"], "fun": "Both move both legs on one side at a time — 'pacing gait'!"},
+    {"q": "What is the oldest known pet cat? (years)", "a": "9500", "choices": ["4000", "9500", "2000", "15000"], "fun": "Found in a Cyprus grave dating to ~7500 BC!"},
+    {"q": "A cat's heart beats how many times per minute?", "a": "140", "choices": ["70", "100", "140", "200"], "fun": "That's about twice as fast as a human heart!"},
+    {"q": "Cats can jump how many times their height?", "a": "6", "choices": ["3", "6", "10", "15"], "fun": "That's equivalent to a human jumping over a bus!"},
+    {"q": "What is the name of the reflex that makes cats land on their feet?", "a": "righting reflex", "choices": ["balance reflex", "righting reflex", "gravity reflex", "paw reflex"], "fun": "Kittens develop this by 3 weeks old!"},
+    {"q": "How many muscles does each cat ear have?", "a": "32", "choices": ["6", "16", "32", "48"], "fun": "This lets cats rotate their ears 180 degrees!"},
+    {"q": "What colour are all kittens' eyes at birth?", "a": "blue", "choices": ["brown", "green", "blue", "grey"], "fun": "Permanent eye colour develops at 6-7 weeks!"},
+    {"q": "Which country has the most pet cats per capita?", "a": "Russia", "choices": ["USA", "Japan", "Russia", "France"], "fun": "About 57% of Russian households have a cat!"},
+    {"q": "A cat's nose print is unique like what human feature?", "a": "fingerprint", "choices": ["ear shape", "fingerprint", "iris", "tongue"], "fun": "No two cats share the same nose print pattern!"},
+    {"q": "How many teeth does an adult cat have?", "a": "30", "choices": ["26", "28", "30", "32"], "fun": "Humans have 32 — cats have fewer but sharper!"},
+    {"q": "What is the loudest cat breed?", "a": "Siamese", "choices": ["Maine Coon", "Bengal", "Siamese", "Burmese"], "fun": "Siamese cats are famously chatty and vocal!"},
+]
+
+@bot.tree.command(name="catquiz", description="Test your cat knowledge for bonus XP!")
+async def catquiz(message: discord.Interaction):
+    if message.guild is None:
+        await message.response.send_message("This command can only be used in a server.", ephemeral=True)
+        return
+
+    await message.response.defer()
+    user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
+
+    q = random.choice(CAT_TRIVIA)
+    choices = q["choices"][:]
+    random.shuffle(choices)
+
+    # Build answer buttons
+    answered = False
+
+    async def make_view(disabled=False, selected=None):
+        view = View(timeout=30)
+        for opt in choices:
+            is_correct = (opt == q["a"])
+            if disabled:
+                if opt == q["a"]:
+                    style = ButtonStyle.green
+                elif opt == selected and not is_correct:
+                    style = ButtonStyle.red
+                else:
+                    style = ButtonStyle.grey
+            else:
+                style = ButtonStyle.blurple
+            btn = Button(label=opt, style=style, disabled=disabled)
+            if not disabled:
+                async def make_cb(answer=opt):
+                    async def cb(interaction: discord.Interaction):
+                        nonlocal answered
+                        if interaction.user.id != message.user.id:
+                            await interaction.response.send_message("This isn't your quiz!", ephemeral=True)
+                            return
+                        if answered:
+                            return
+                        answered = True
+                        correct = (answer == q["a"])
+                        result_view = await make_view(disabled=True, selected=answer)
+                        if correct:
+                            result_embed = discord.Embed(
+                                title="✅ Correct!",
+                                description=f"**{q['q']}**\n\nAnswer: **{q['a']}**\n\n-# {q['fun']}",
+                                color=Colors.green,
+                            )
+                        else:
+                            result_embed = discord.Embed(
+                                title="❌ Wrong!",
+                                description=f"**{q['q']}**\n\nCorrect answer: **{q['a']}**\n\n-# {q['fun']}",
+                                color=Colors.red,
+                            )
+                        await interaction.response.edit_message(embed=result_embed, view=result_view)
+                        await progress(message, user, "quiz_complete")
+                        if correct:
+                            await progress(message, user, "quiz_correct")
+                    return cb
+                btn.callback = await make_cb(opt)
+            view.add_item(btn)
+        return view
+
+    embed = discord.Embed(
+        title="🐱 Cat Trivia!",
+        description=f"**{q['q']}**\n\nPick your answer below:",
+        color=Colors.brown,
+    )
+    view = await make_view()
+    await message.followup.send(embed=embed, view=view)
 
 
 async def bounty(message, user, cattype):

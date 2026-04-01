@@ -1,678 +1,3196 @@
 {
   "seasons": {
-        "14": [
-      {"xp": 550, "reward": "Wooden", "amount": 1},
-      {"xp": 550, "reward": "Wooden", "amount": 1},
-      {"xp": 550, "reward": "Wooden", "amount": 1},
-      {"xp": 600, "reward": "Wooden", "amount": 1},
-      {"xp": 600, "reward": "Bronze", "amount": 1},
-      {"xp": 600, "reward": "Stone", "amount": 1},
-      {"xp": 650, "reward": "Wooden", "amount": 1},
-      {"xp": 650, "reward": "Gold", "amount": 1},
-      {"xp": 650, "reward": "Stone", "amount": 1},
-      {"xp": 700, "reward": "Platinum", "amount": 1},
-
-      {"xp": 700, "reward": "Stone", "amount": 1},
-      {"xp": 700, "reward": "Stone", "amount": 1},
-      {"xp": 750, "reward": "Stone", "amount": 1},
-      {"xp": 750, "reward": "Stone", "amount": 1},
-      {"xp": 750, "reward": "Bronze", "amount": 1},
-      {"xp": 800, "reward": "Silver", "amount": 1},
-      {"xp": 800, "reward": "Wooden", "amount": 1},
-      {"xp": 800, "reward": "Wooden", "amount": 1},
-      {"xp": 850, "reward": "Bronze", "amount": 1},
-      {"xp": 850, "reward": "Platinum", "amount": 1},
-
-      {"xp": 850, "reward": "Bronze", "amount": 1},
-      {"xp": 900, "reward": "Bronze", "amount": 1},
-      {"xp": 900, "reward": "Bronze", "amount": 1},
-      {"xp": 900, "reward": "Silver", "amount": 1},
-      {"xp": 950, "reward": "Bronze", "amount": 1},
-      {"xp": 950, "reward": "Wooden", "amount": 1},
-      {"xp": 950, "reward": "Wooden", "amount": 1},
-      {"xp": 1000, "reward": "Gold", "amount": 1},
-      {"xp": 1000, "reward": "Stone", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+    "14": [
+      {
+        "xp": 550,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Gold",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Silver",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Silver",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Gold",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "15": [
-      {"xp": 550, "reward": "Platinum", "amount": 1},
-      {"xp": 550, "reward": "Rare", "amount": 6},
-      {"xp": 550, "reward": "Nice", "amount": 10},
-      {"xp": 600, "reward": "Epic", "amount": 6},
-      {"xp": 600, "reward": "Wild", "amount": 5},
-      {"xp": 600, "reward": "Baby", "amount": 4},
-      {"xp": 650, "reward": "Legendary", "amount": 3},
-      {"xp": 650, "reward": "Superior", "amount": 3},
-      {"xp": 650, "reward": "Reverse", "amount": 3},
-      {"xp": 700, "reward": "Mythic", "amount": 1},
-      {"xp": 700, "reward": "Rickroll", "amount": 3},
-      {"xp": 700, "reward": "eGirl", "amount": 1},
-      {"xp": 750, "reward": "Professor", "amount": 1},
-      {"xp": 750, "reward": "Sus", "amount": 3},
-      {"xp": 750, "reward": "Ultimate", "amount": 1},
-      {"xp": 800, "reward": "Wooden", "amount": 1},
-      {"xp": 800, "reward": "Stone", "amount": 1},
-      {"xp": 800, "reward": "Bronze", "amount": 1},
-      {"xp": 850, "reward": "Silver", "amount": 4},
-      {"xp": 850, "reward": "Gold", "amount": 4},
-      {"xp": 850, "reward": "Platinum", "amount": 1},
-      {"xp": 900, "reward": "Rare", "amount": 4},
-      {"xp": 900, "reward": "Nice", "amount": 10},
-      {"xp": 900, "reward": "Epic", "amount": 4},
-      {"xp": 950, "reward": "Wild", "amount": 5},
-      {"xp": 950, "reward": "Baby", "amount": 4},
-      {"xp": 950, "reward": "Legendary", "amount": 1},
-      {"xp": 1000, "reward": "Superior", "amount": 1},
-      {"xp": 1000, "reward": "Reverse", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 600,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 600,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 650,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 750,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 900,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 950,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Legendary",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Superior",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Reverse",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "16": [
-      {"xp": 550, "reward": "Superior", "amount": 3},
-      {"xp": 550, "reward": "Reverse", "amount": 3},
-      {"xp": 550, "reward": "Mythic", "amount": 1},
-      {"xp": 600, "reward": "Rickroll", "amount": 3},
-      {"xp": 600, "reward": "eGirl", "amount": 1},
-      {"xp": 600, "reward": "Professor", "amount": 1},
-      {"xp": 650, "reward": "Sus", "amount": 3},
-      {"xp": 650, "reward": "Ultimate", "amount": 1},
-      {"xp": 650, "reward": "Wooden", "amount": 1},
-      {"xp": 700, "reward": "Stone", "amount": 1},
-      {"xp": 700, "reward": "Bronze", "amount": 1},
-      {"xp": 700, "reward": "Silver", "amount": 5},
-      {"xp": 750, "reward": "Gold", "amount": 5},
-      {"xp": 750, "reward": "Platinum", "amount": 1},
-      {"xp": 750, "reward": "Rare", "amount": 5},
-      {"xp": 800, "reward": "Nice", "amount": 10},
-      {"xp": 800, "reward": "Epic", "amount": 5},
-      {"xp": 800, "reward": "Wild", "amount": 5},
-      {"xp": 850, "reward": "Baby", "amount": 4},
-      {"xp": 850, "reward": "Legendary", "amount": 2},
-      {"xp": 850, "reward": "Superior", "amount": 2},
-      {"xp": 900, "reward": "Reverse", "amount": 2},
-      {"xp": 900, "reward": "Mythic", "amount": 1},
-      {"xp": 900, "reward": "Rickroll", "amount": 2},
-      {"xp": 950, "reward": "eGirl", "amount": 1},
-      {"xp": 950, "reward": "Professor", "amount": 1},
-      {"xp": 950, "reward": "Sus", "amount": 3},
-      {"xp": 1000, "reward": "Ultimate", "amount": 1},
-      {"xp": 1000, "reward": "Wooden", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 800,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 850,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 950,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "17": [
-      {"xp": 550, "reward": "Ultimate", "amount": 1},
-      {"xp": 550, "reward": "Wooden", "amount": 1},
-      {"xp": 550, "reward": "Stone", "amount": 1},
-      {"xp": 600, "reward": "Bronze", "amount": 1},
-      {"xp": 600, "reward": "Silver", "amount": 6},
-      {"xp": 600, "reward": "Gold", "amount": 6},
-      {"xp": 650, "reward": "Platinum", "amount": 1},
-      {"xp": 650, "reward": "Rare", "amount": 6},
-      {"xp": 650, "reward": "Nice", "amount": 10},
-      {"xp": 700, "reward": "Epic", "amount": 5},
-      {"xp": 700, "reward": "Wild", "amount": 5},
-      {"xp": 700, "reward": "Baby", "amount": 4},
-      {"xp": 750, "reward": "Legendary", "amount": 2},
-      {"xp": 750, "reward": "Superior", "amount": 2},
-      {"xp": 750, "reward": "Reverse", "amount": 2},
-      {"xp": 800, "reward": "Mythic", "amount": 1},
-      {"xp": 800, "reward": "Rickroll", "amount": 2},
-      {"xp": 800, "reward": "eGirl", "amount": 1},
-      {"xp": 850, "reward": "Professor", "amount": 1},
-      {"xp": 850, "reward": "Sus", "amount": 3},
-      {"xp": 850, "reward": "Ultimate", "amount": 1},
-      {"xp": 900, "reward": "Wooden", "amount": 1},
-      {"xp": 900, "reward": "Stone", "amount": 1},
-      {"xp": 900, "reward": "Bronze", "amount": 1},
-      {"xp": 950, "reward": "Silver", "amount": 4},
-      {"xp": 950, "reward": "Gold", "amount": 4},
-      {"xp": 950, "reward": "Platinum", "amount": 1},
-      {"xp": 1000, "reward": "Rare", "amount": 3},
-      {"xp": 1000, "reward": "Nice", "amount": 10},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 700,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 750,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 850,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rare",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "18": [
-      {"xp": 550, "reward": "Rare", "amount": 6},
-      {"xp": 550, "reward": "Nice", "amount": 10},
-      {"xp": 550, "reward": "Epic", "amount": 6},
-      {"xp": 600, "reward": "Wild", "amount": 5},
-      {"xp": 600, "reward": "Baby", "amount": 4},
-      {"xp": 600, "reward": "Legendary", "amount": 3},
-      {"xp": 650, "reward": "Superior", "amount": 3},
-      {"xp": 650, "reward": "Reverse", "amount": 3},
-      {"xp": 650, "reward": "Mythic", "amount": 1},
-      {"xp": 700, "reward": "Rickroll", "amount": 3},
-      {"xp": 700, "reward": "eGirl", "amount": 1},
-      {"xp": 700, "reward": "Professor", "amount": 1},
-      {"xp": 750, "reward": "Sus", "amount": 3},
-      {"xp": 750, "reward": "Ultimate", "amount": 1},
-      {"xp": 750, "reward": "Wooden", "amount": 1},
-      {"xp": 800, "reward": "Stone", "amount": 1},
-      {"xp": 800, "reward": "Bronze", "amount": 1},
-      {"xp": 800, "reward": "Silver", "amount": 5},
-      {"xp": 850, "reward": "Gold", "amount": 4},
-      {"xp": 850, "reward": "Platinum", "amount": 1},
-      {"xp": 850, "reward": "Rare", "amount": 4},
-      {"xp": 900, "reward": "Nice", "amount": 10},
-      {"xp": 900, "reward": "Epic", "amount": 4},
-      {"xp": 900, "reward": "Wild", "amount": 5},
-      {"xp": 950, "reward": "Baby", "amount": 4},
-      {"xp": 950, "reward": "Legendary", "amount": 1},
-      {"xp": 950, "reward": "Superior", "amount": 1},
-      {"xp": 1000, "reward": "Reverse", "amount": 1},
-      {"xp": 1000, "reward": "Mythic", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 550,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 600,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 600,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 750,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 850,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 900,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 950,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Legendary",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Superior",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Reverse",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "19": [
-      {"xp": 550, "reward": "Reverse", "amount": 3},
-      {"xp": 550, "reward": "Mythic", "amount": 1},
-      {"xp": 550, "reward": "Rickroll", "amount": 3},
-      {"xp": 600, "reward": "eGirl", "amount": 1},
-      {"xp": 600, "reward": "Professor", "amount": 1},
-      {"xp": 600, "reward": "Sus", "amount": 3},
-      {"xp": 650, "reward": "Ultimate", "amount": 1},
-      {"xp": 650, "reward": "Wooden", "amount": 1},
-      {"xp": 650, "reward": "Stone", "amount": 1},
-      {"xp": 700, "reward": "Bronze", "amount": 1},
-      {"xp": 700, "reward": "Silver", "amount": 5},
-      {"xp": 700, "reward": "Gold", "amount": 5},
-      {"xp": 750, "reward": "Platinum", "amount": 1},
-      {"xp": 750, "reward": "Rare", "amount": 5},
-      {"xp": 750, "reward": "Nice", "amount": 10},
-      {"xp": 800, "reward": "Epic", "amount": 5},
-      {"xp": 800, "reward": "Wild", "amount": 5},
-      {"xp": 800, "reward": "Baby", "amount": 4},
-      {"xp": 850, "reward": "Legendary", "amount": 2},
-      {"xp": 850, "reward": "Superior", "amount": 2},
-      {"xp": 850, "reward": "Reverse", "amount": 2},
-      {"xp": 900, "reward": "Mythic", "amount": 1},
-      {"xp": 900, "reward": "Rickroll", "amount": 2},
-      {"xp": 900, "reward": "eGirl", "amount": 1},
-      {"xp": 950, "reward": "Professor", "amount": 1},
-      {"xp": 950, "reward": "Sus", "amount": 3},
-      {"xp": 950, "reward": "Ultimate", "amount": 1},
-      {"xp": 1000, "reward": "Wooden", "amount": 1},
-      {"xp": 1000, "reward": "Stone", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 800,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 950,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "20": [
-      {"xp": 550, "reward": "Wooden", "amount": 1},
-      {"xp": 550, "reward": "Stone", "amount": 1},
-      {"xp": 550, "reward": "Bronze", "amount": 1},
-      {"xp": 600, "reward": "Silver", "amount": 6},
-      {"xp": 600, "reward": "Gold", "amount": 6},
-      {"xp": 600, "reward": "Platinum", "amount": 1},
-      {"xp": 650, "reward": "Rare", "amount": 6},
-      {"xp": 650, "reward": "Nice", "amount": 10},
-      {"xp": 650, "reward": "Epic", "amount": 6},
-      {"xp": 700, "reward": "Wild", "amount": 5},
-      {"xp": 700, "reward": "Baby", "amount": 4},
-      {"xp": 700, "reward": "Legendary", "amount": 3},
-      {"xp": 750, "reward": "Superior", "amount": 2},
-      {"xp": 750, "reward": "Reverse", "amount": 2},
-      {"xp": 750, "reward": "Mythic", "amount": 1},
-      {"xp": 800, "reward": "Rickroll", "amount": 2},
-      {"xp": 800, "reward": "eGirl", "amount": 1},
-      {"xp": 800, "reward": "Professor", "amount": 1},
-      {"xp": 850, "reward": "Sus", "amount": 3},
-      {"xp": 850, "reward": "Ultimate", "amount": 1},
-      {"xp": 850, "reward": "Wooden", "amount": 1},
-      {"xp": 900, "reward": "Stone", "amount": 1},
-      {"xp": 900, "reward": "Bronze", "amount": 1},
-      {"xp": 900, "reward": "Silver", "amount": 4},
-      {"xp": 950, "reward": "Gold", "amount": 4},
-      {"xp": 950, "reward": "Platinum", "amount": 1},
-      {"xp": 950, "reward": "Rare", "amount": 4},
-      {"xp": 1000, "reward": "Nice", "amount": 10},
-      {"xp": 1000, "reward": "Epic", "amount": 3},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 650,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 700,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 700,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 750,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 850,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 1000,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 1000,
+        "reward": "Epic",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "21": [
-      {"xp": 550, "reward": "Nice", "amount": 10},
-      {"xp": 550, "reward": "Epic", "amount": 6},
-      {"xp": 550, "reward": "Wild", "amount": 5},
-      {"xp": 600, "reward": "Baby", "amount": 4},
-      {"xp": 600, "reward": "Legendary", "amount": 3},
-      {"xp": 600, "reward": "Superior", "amount": 3},
-      {"xp": 650, "reward": "Reverse", "amount": 3},
-      {"xp": 650, "reward": "Mythic", "amount": 1},
-      {"xp": 650, "reward": "Rickroll", "amount": 3},
-      {"xp": 700, "reward": "eGirl", "amount": 1},
-      {"xp": 700, "reward": "Professor", "amount": 1},
-      {"xp": 700, "reward": "Sus", "amount": 3},
-      {"xp": 750, "reward": "Ultimate", "amount": 1},
-      {"xp": 750, "reward": "Wooden", "amount": 1},
-      {"xp": 750, "reward": "Stone", "amount": 1},
-      {"xp": 800, "reward": "Bronze", "amount": 1},
-      {"xp": 800, "reward": "Silver", "amount": 5},
-      {"xp": 800, "reward": "Gold", "amount": 5},
-      {"xp": 850, "reward": "Platinum", "amount": 1},
-      {"xp": 850, "reward": "Rare", "amount": 4},
-      {"xp": 850, "reward": "Nice", "amount": 10},
-      {"xp": 900, "reward": "Epic", "amount": 4},
-      {"xp": 900, "reward": "Wild", "amount": 5},
-      {"xp": 900, "reward": "Baby", "amount": 4},
-      {"xp": 950, "reward": "Legendary", "amount": 1},
-      {"xp": 950, "reward": "Superior", "amount": 1},
-      {"xp": 950, "reward": "Reverse", "amount": 1},
-      {"xp": 1000, "reward": "Mythic", "amount": 1},
-      {"xp": 1000, "reward": "Rickroll", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 550,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 600,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 600,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 750,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 850,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 900,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 900,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Legendary",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Superior",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Reverse",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rickroll",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "22": [
-      {"xp": 550, "reward": "Mythic", "amount": 1},
-      {"xp": 550, "reward": "Rickroll", "amount": 3},
-      {"xp": 550, "reward": "eGirl", "amount": 1},
-      {"xp": 600, "reward": "Professor", "amount": 1},
-      {"xp": 600, "reward": "Sus", "amount": 3},
-      {"xp": 600, "reward": "Ultimate", "amount": 1},
-      {"xp": 650, "reward": "Wooden", "amount": 1},
-      {"xp": 650, "reward": "Stone", "amount": 1},
-      {"xp": 650, "reward": "Bronze", "amount": 1},
-      {"xp": 700, "reward": "Silver", "amount": 5},
-      {"xp": 700, "reward": "Gold", "amount": 5},
-      {"xp": 700, "reward": "Platinum", "amount": 1},
-      {"xp": 750, "reward": "Rare", "amount": 5},
-      {"xp": 750, "reward": "Nice", "amount": 10},
-      {"xp": 750, "reward": "Epic", "amount": 5},
-      {"xp": 800, "reward": "Wild", "amount": 5},
-      {"xp": 800, "reward": "Baby", "amount": 4},
-      {"xp": 800, "reward": "Legendary", "amount": 2},
-      {"xp": 850, "reward": "Superior", "amount": 2},
-      {"xp": 850, "reward": "Reverse", "amount": 2},
-      {"xp": 850, "reward": "Mythic", "amount": 1},
-      {"xp": 900, "reward": "Rickroll", "amount": 2},
-      {"xp": 900, "reward": "eGirl", "amount": 1},
-      {"xp": 900, "reward": "Professor", "amount": 1},
-      {"xp": 950, "reward": "Sus", "amount": 3},
-      {"xp": 950, "reward": "Ultimate", "amount": 1},
-      {"xp": 950, "reward": "Wooden", "amount": 1},
-      {"xp": 1000, "reward": "Stone", "amount": 1},
-      {"xp": 1000, "reward": "Bronze", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 750,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 800,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 950,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "23": [
-      {"xp": 550, "reward": "Stone", "amount": 1},
-      {"xp": 550, "reward": "Bronze", "amount": 1},
-      {"xp": 550, "reward": "Silver", "amount": 6},
-      {"xp": 600, "reward": "Gold", "amount": 6},
-      {"xp": 600, "reward": "Platinum", "amount": 1},
-      {"xp": 600, "reward": "Rare", "amount": 6},
-      {"xp": 650, "reward": "Nice", "amount": 10},
-      {"xp": 650, "reward": "Epic", "amount": 6},
-      {"xp": 650, "reward": "Wild", "amount": 5},
-      {"xp": 700, "reward": "Baby", "amount": 4},
-      {"xp": 700, "reward": "Legendary", "amount": 3},
-      {"xp": 700, "reward": "Superior", "amount": 3},
-      {"xp": 750, "reward": "Reverse", "amount": 2},
-      {"xp": 750, "reward": "Mythic", "amount": 1},
-      {"xp": 750, "reward": "Rickroll", "amount": 2},
-      {"xp": 800, "reward": "eGirl", "amount": 1},
-      {"xp": 800, "reward": "Professor", "amount": 1},
-      {"xp": 800, "reward": "Sus", "amount": 3},
-      {"xp": 850, "reward": "Ultimate", "amount": 1},
-      {"xp": 850, "reward": "Wooden", "amount": 1},
-      {"xp": 850, "reward": "Stone", "amount": 1},
-      {"xp": 900, "reward": "Bronze", "amount": 1},
-      {"xp": 900, "reward": "Silver", "amount": 4},
-      {"xp": 900, "reward": "Gold", "amount": 4},
-      {"xp": 950, "reward": "Platinum", "amount": 1},
-      {"xp": 950, "reward": "Rare", "amount": 4},
-      {"xp": 950, "reward": "Nice", "amount": 10},
-      {"xp": 1000, "reward": "Epic", "amount": 3},
-      {"xp": 1000, "reward": "Wild", "amount": 5},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 650,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 700,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 750,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 850,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 1000,
+        "reward": "Epic",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "24": [
-      {"xp": 550, "reward": "Epic", "amount": 6},
-      {"xp": 550, "reward": "Wild", "amount": 5},
-      {"xp": 550, "reward": "Baby", "amount": 4},
-      {"xp": 600, "reward": "Legendary", "amount": 3},
-      {"xp": 600, "reward": "Superior", "amount": 3},
-      {"xp": 600, "reward": "Reverse", "amount": 3},
-      {"xp": 650, "reward": "Mythic", "amount": 1},
-      {"xp": 650, "reward": "Rickroll", "amount": 3},
-      {"xp": 650, "reward": "eGirl", "amount": 1},
-      {"xp": 700, "reward": "Professor", "amount": 1},
-      {"xp": 700, "reward": "Sus", "amount": 3},
-      {"xp": 700, "reward": "Ultimate", "amount": 1},
-      {"xp": 750, "reward": "Wooden", "amount": 1},
-      {"xp": 750, "reward": "Stone", "amount": 1},
-      {"xp": 750, "reward": "Bronze", "amount": 1},
-      {"xp": 800, "reward": "Silver", "amount": 5},
-      {"xp": 800, "reward": "Gold", "amount": 5},
-      {"xp": 800, "reward": "Platinum", "amount": 1},
-      {"xp": 850, "reward": "Rare", "amount": 4},
-      {"xp": 850, "reward": "Nice", "amount": 10},
-      {"xp": 850, "reward": "Epic", "amount": 4},
-      {"xp": 900, "reward": "Wild", "amount": 5},
-      {"xp": 900, "reward": "Baby", "amount": 4},
-      {"xp": 900, "reward": "Legendary", "amount": 2},
-      {"xp": 950, "reward": "Superior", "amount": 1},
-      {"xp": 950, "reward": "Reverse", "amount": 1},
-      {"xp": 950, "reward": "Mythic", "amount": 1},
-      {"xp": 1000, "reward": "Rickroll", "amount": 1},
-      {"xp": 1000, "reward": "eGirl", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 550,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 600,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 850,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 900,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 950,
+        "reward": "Superior",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Reverse",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rickroll",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "25": [
-      {"xp": 550, "reward": "Rickroll", "amount": 3},
-      {"xp": 550, "reward": "eGirl", "amount": 1},
-      {"xp": 550, "reward": "Professor", "amount": 1},
-      {"xp": 600, "reward": "Sus", "amount": 3},
-      {"xp": 600, "reward": "Ultimate", "amount": 1},
-      {"xp": 600, "reward": "Wooden", "amount": 1},
-      {"xp": 650, "reward": "Stone", "amount": 1},
-      {"xp": 650, "reward": "Bronze", "amount": 1},
-      {"xp": 650, "reward": "Silver", "amount": 6},
-      {"xp": 700, "reward": "Gold", "amount": 5},
-      {"xp": 700, "reward": "Platinum", "amount": 1},
-      {"xp": 700, "reward": "Rare", "amount": 5},
-      {"xp": 750, "reward": "Nice", "amount": 10},
-      {"xp": 750, "reward": "Epic", "amount": 5},
-      {"xp": 750, "reward": "Wild", "amount": 5},
-      {"xp": 800, "reward": "Baby", "amount": 4},
-      {"xp": 800, "reward": "Legendary", "amount": 2},
-      {"xp": 800, "reward": "Superior", "amount": 2},
-      {"xp": 850, "reward": "Reverse", "amount": 2},
-      {"xp": 850, "reward": "Mythic", "amount": 1},
-      {"xp": 850, "reward": "Rickroll", "amount": 2},
-      {"xp": 900, "reward": "eGirl", "amount": 1},
-      {"xp": 900, "reward": "Professor", "amount": 1},
-      {"xp": 900, "reward": "Sus", "amount": 3},
-      {"xp": 950, "reward": "Ultimate", "amount": 1},
-      {"xp": 950, "reward": "Wooden", "amount": 1},
-      {"xp": 950, "reward": "Stone", "amount": 1},
-      {"xp": 1000, "reward": "Bronze", "amount": 1},
-      {"xp": 1000, "reward": "Silver", "amount": 3},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 700,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 750,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 800,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 950,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Silver",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "26": [
-      {"xp": 550, "reward": "Bronze", "amount": 1},
-      {"xp": 550, "reward": "Silver", "amount": 6},
-      {"xp": 550, "reward": "Gold", "amount": 6},
-      {"xp": 600, "reward": "Platinum", "amount": 1},
-      {"xp": 600, "reward": "Rare", "amount": 6},
-      {"xp": 600, "reward": "Nice", "amount": 10},
-      {"xp": 650, "reward": "Epic", "amount": 6},
-      {"xp": 650, "reward": "Wild", "amount": 5},
-      {"xp": 650, "reward": "Baby", "amount": 4},
-      {"xp": 700, "reward": "Legendary", "amount": 3},
-      {"xp": 700, "reward": "Superior", "amount": 3},
-      {"xp": 700, "reward": "Reverse", "amount": 3},
-      {"xp": 750, "reward": "Mythic", "amount": 1},
-      {"xp": 750, "reward": "Rickroll", "amount": 2},
-      {"xp": 750, "reward": "eGirl", "amount": 1},
-      {"xp": 800, "reward": "Professor", "amount": 1},
-      {"xp": 800, "reward": "Sus", "amount": 3},
-      {"xp": 800, "reward": "Ultimate", "amount": 1},
-      {"xp": 850, "reward": "Wooden", "amount": 1},
-      {"xp": 850, "reward": "Stone", "amount": 1},
-      {"xp": 850, "reward": "Bronze", "amount": 1},
-      {"xp": 900, "reward": "Silver", "amount": 4},
-      {"xp": 900, "reward": "Gold", "amount": 4},
-      {"xp": 900, "reward": "Platinum", "amount": 1},
-      {"xp": 950, "reward": "Rare", "amount": 4},
-      {"xp": 950, "reward": "Nice", "amount": 10},
-      {"xp": 950, "reward": "Epic", "amount": 4},
-      {"xp": 1000, "reward": "Wild", "amount": 5},
-      {"xp": 1000, "reward": "Baby", "amount": 4},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 650,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 650,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 700,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 750,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 800,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 950,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 1000,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 1000,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "27": [
-      {"xp": 550, "reward": "Wild", "amount": 5},
-      {"xp": 550, "reward": "Baby", "amount": 4},
-      {"xp": 550, "reward": "Legendary", "amount": 3},
-      {"xp": 600, "reward": "Superior", "amount": 3},
-      {"xp": 600, "reward": "Reverse", "amount": 3},
-      {"xp": 600, "reward": "Mythic", "amount": 1},
-      {"xp": 650, "reward": "Rickroll", "amount": 3},
-      {"xp": 650, "reward": "eGirl", "amount": 1},
-      {"xp": 650, "reward": "Professor", "amount": 1},
-      {"xp": 700, "reward": "Sus", "amount": 3},
-      {"xp": 700, "reward": "Ultimate", "amount": 1},
-      {"xp": 700, "reward": "Wooden", "amount": 1},
-      {"xp": 750, "reward": "Stone", "amount": 1},
-      {"xp": 750, "reward": "Bronze", "amount": 1},
-      {"xp": 750, "reward": "Silver", "amount": 5},
-      {"xp": 800, "reward": "Gold", "amount": 5},
-      {"xp": 800, "reward": "Platinum", "amount": 1},
-      {"xp": 800, "reward": "Rare", "amount": 5},
-      {"xp": 850, "reward": "Nice", "amount": 10},
-      {"xp": 850, "reward": "Epic", "amount": 4},
-      {"xp": 850, "reward": "Wild", "amount": 5},
-      {"xp": 900, "reward": "Baby", "amount": 4},
-      {"xp": 900, "reward": "Legendary", "amount": 2},
-      {"xp": 900, "reward": "Superior", "amount": 2},
-      {"xp": 950, "reward": "Reverse", "amount": 1},
-      {"xp": 950, "reward": "Mythic", "amount": 1},
-      {"xp": 950, "reward": "Rickroll", "amount": 1},
-      {"xp": 1000, "reward": "eGirl", "amount": 1},
-      {"xp": 1000, "reward": "Professor", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 550,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 550,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 850,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 850,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 900,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 950,
+        "reward": "Reverse",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Rickroll",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "28": [
-      {"xp": 550, "reward": "eGirl", "amount": 1},
-      {"xp": 550, "reward": "Professor", "amount": 1},
-      {"xp": 550, "reward": "Sus", "amount": 3},
-      {"xp": 600, "reward": "Ultimate", "amount": 1},
-      {"xp": 600, "reward": "Wooden", "amount": 1},
-      {"xp": 600, "reward": "Stone", "amount": 1},
-      {"xp": 650, "reward": "Bronze", "amount": 1},
-      {"xp": 650, "reward": "Silver", "amount": 6},
-      {"xp": 650, "reward": "Gold", "amount": 6},
-      {"xp": 700, "reward": "Platinum", "amount": 1},
-      {"xp": 700, "reward": "Rare", "amount": 5},
-      {"xp": 700, "reward": "Nice", "amount": 10},
-      {"xp": 750, "reward": "Epic", "amount": 5},
-      {"xp": 750, "reward": "Wild", "amount": 5},
-      {"xp": 750, "reward": "Baby", "amount": 4},
-      {"xp": 800, "reward": "Legendary", "amount": 2},
-      {"xp": 800, "reward": "Superior", "amount": 2},
-      {"xp": 800, "reward": "Reverse", "amount": 2},
-      {"xp": 850, "reward": "Mythic", "amount": 1},
-      {"xp": 850, "reward": "Rickroll", "amount": 2},
-      {"xp": 850, "reward": "eGirl", "amount": 1},
-      {"xp": 900, "reward": "Professor", "amount": 1},
-      {"xp": 900, "reward": "Sus", "amount": 3},
-      {"xp": 900, "reward": "Ultimate", "amount": 1},
-      {"xp": 950, "reward": "Wooden", "amount": 1},
-      {"xp": 950, "reward": "Stone", "amount": 1},
-      {"xp": 950, "reward": "Bronze", "amount": 1},
-      {"xp": 1000, "reward": "Silver", "amount": 3},
-      {"xp": 1000, "reward": "Gold", "amount": 3},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 700,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 750,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 800,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 900,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Silver",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Gold",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "29": [
-      {"xp": 550, "reward": "Silver", "amount": 6},
-      {"xp": 550, "reward": "Gold", "amount": 6},
-      {"xp": 550, "reward": "Platinum", "amount": 1},
-      {"xp": 600, "reward": "Rare", "amount": 6},
-      {"xp": 600, "reward": "Nice", "amount": 10},
-      {"xp": 600, "reward": "Epic", "amount": 6},
-      {"xp": 650, "reward": "Wild", "amount": 5},
-      {"xp": 650, "reward": "Baby", "amount": 4},
-      {"xp": 650, "reward": "Legendary", "amount": 3},
-      {"xp": 700, "reward": "Superior", "amount": 3},
-      {"xp": 700, "reward": "Reverse", "amount": 3},
-      {"xp": 700, "reward": "Mythic", "amount": 1},
-      {"xp": 750, "reward": "Rickroll", "amount": 2},
-      {"xp": 750, "reward": "eGirl", "amount": 1},
-      {"xp": 750, "reward": "Professor", "amount": 1},
-      {"xp": 800, "reward": "Sus", "amount": 3},
-      {"xp": 800, "reward": "Ultimate", "amount": 1},
-      {"xp": 800, "reward": "Wooden", "amount": 1},
-      {"xp": 850, "reward": "Stone", "amount": 1},
-      {"xp": 850, "reward": "Bronze", "amount": 1},
-      {"xp": 850, "reward": "Silver", "amount": 4},
-      {"xp": 900, "reward": "Gold", "amount": 4},
-      {"xp": 900, "reward": "Platinum", "amount": 1},
-      {"xp": 900, "reward": "Rare", "amount": 4},
-      {"xp": 950, "reward": "Nice", "amount": 10},
-      {"xp": 950, "reward": "Epic", "amount": 4},
-      {"xp": 950, "reward": "Wild", "amount": 5},
-      {"xp": 1000, "reward": "Baby", "amount": 4},
-      {"xp": 1000, "reward": "Legendary", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 600,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 650,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 650,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 800,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 950,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 1000,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 1000,
+        "reward": "Legendary",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "30": [
-      {"xp": 550, "reward": "Baby", "amount": 4},
-      {"xp": 550, "reward": "Legendary", "amount": 3},
-      {"xp": 550, "reward": "Superior", "amount": 3},
-      {"xp": 600, "reward": "Reverse", "amount": 3},
-      {"xp": 600, "reward": "Mythic", "amount": 1},
-      {"xp": 600, "reward": "Rickroll", "amount": 3},
-      {"xp": 650, "reward": "eGirl", "amount": 1},
-      {"xp": 650, "reward": "Professor", "amount": 1},
-      {"xp": 650, "reward": "Sus", "amount": 3},
-      {"xp": 700, "reward": "Ultimate", "amount": 1},
-      {"xp": 700, "reward": "Wooden", "amount": 1},
-      {"xp": 700, "reward": "Stone", "amount": 1},
-      {"xp": 750, "reward": "Bronze", "amount": 1},
-      {"xp": 750, "reward": "Silver", "amount": 5},
-      {"xp": 750, "reward": "Gold", "amount": 5},
-      {"xp": 800, "reward": "Platinum", "amount": 1},
-      {"xp": 800, "reward": "Rare", "amount": 5},
-      {"xp": 800, "reward": "Nice", "amount": 10},
-      {"xp": 850, "reward": "Epic", "amount": 4},
-      {"xp": 850, "reward": "Wild", "amount": 5},
-      {"xp": 850, "reward": "Baby", "amount": 4},
-      {"xp": 900, "reward": "Legendary", "amount": 2},
-      {"xp": 900, "reward": "Superior", "amount": 2},
-      {"xp": 900, "reward": "Reverse", "amount": 2},
-      {"xp": 950, "reward": "Mythic", "amount": 1},
-      {"xp": 950, "reward": "Rickroll", "amount": 1},
-      {"xp": 950, "reward": "eGirl", "amount": 1},
-      {"xp": 1000, "reward": "Professor", "amount": 1},
-      {"xp": 1000, "reward": "Sus", "amount": 3},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 550,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 850,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 850,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 950,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Rickroll",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "31": [
-      {"xp": 550, "reward": "Professor", "amount": 1},
-      {"xp": 550, "reward": "Sus", "amount": 3},
-      {"xp": 550, "reward": "Ultimate", "amount": 1},
-      {"xp": 600, "reward": "Wooden", "amount": 1},
-      {"xp": 600, "reward": "Stone", "amount": 1},
-      {"xp": 600, "reward": "Bronze", "amount": 1},
-      {"xp": 650, "reward": "Silver", "amount": 6},
-      {"xp": 650, "reward": "Gold", "amount": 6},
-      {"xp": 650, "reward": "Platinum", "amount": 1},
-      {"xp": 700, "reward": "Rare", "amount": 5},
-      {"xp": 700, "reward": "Nice", "amount": 10},
-      {"xp": 700, "reward": "Epic", "amount": 5},
-      {"xp": 750, "reward": "Wild", "amount": 5},
-      {"xp": 750, "reward": "Baby", "amount": 4},
-      {"xp": 750, "reward": "Legendary", "amount": 2},
-      {"xp": 800, "reward": "Superior", "amount": 2},
-      {"xp": 800, "reward": "Reverse", "amount": 2},
-      {"xp": 800, "reward": "Mythic", "amount": 1},
-      {"xp": 850, "reward": "Rickroll", "amount": 2},
-      {"xp": 850, "reward": "eGirl", "amount": 1},
-      {"xp": 850, "reward": "Professor", "amount": 1},
-      {"xp": 900, "reward": "Sus", "amount": 3},
-      {"xp": 900, "reward": "Ultimate", "amount": 1},
-      {"xp": 900, "reward": "Wooden", "amount": 1},
-      {"xp": 950, "reward": "Stone", "amount": 1},
-      {"xp": 950, "reward": "Bronze", "amount": 1},
-      {"xp": 950, "reward": "Silver", "amount": 4},
-      {"xp": 1000, "reward": "Gold", "amount": 3},
-      {"xp": 1000, "reward": "Platinum", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 700,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 750,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 900,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 1000,
+        "reward": "Gold",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "32": [
-      {"xp": 550, "reward": "Gold", "amount": 6},
-      {"xp": 550, "reward": "Platinum", "amount": 1},
-      {"xp": 550, "reward": "Rare", "amount": 6},
-      {"xp": 600, "reward": "Nice", "amount": 10},
-      {"xp": 600, "reward": "Epic", "amount": 6},
-      {"xp": 600, "reward": "Wild", "amount": 5},
-      {"xp": 650, "reward": "Baby", "amount": 4},
-      {"xp": 650, "reward": "Legendary", "amount": 3},
-      {"xp": 650, "reward": "Superior", "amount": 3},
-      {"xp": 700, "reward": "Reverse", "amount": 3},
-      {"xp": 700, "reward": "Mythic", "amount": 1},
-      {"xp": 700, "reward": "Rickroll", "amount": 3},
-      {"xp": 750, "reward": "eGirl", "amount": 1},
-      {"xp": 750, "reward": "Professor", "amount": 1},
-      {"xp": 750, "reward": "Sus", "amount": 3},
-      {"xp": 800, "reward": "Ultimate", "amount": 1},
-      {"xp": 800, "reward": "Wooden", "amount": 1},
-      {"xp": 800, "reward": "Stone", "amount": 1},
-      {"xp": 850, "reward": "Bronze", "amount": 1},
-      {"xp": 850, "reward": "Silver", "amount": 4},
-      {"xp": 850, "reward": "Gold", "amount": 4},
-      {"xp": 900, "reward": "Platinum", "amount": 1},
-      {"xp": 900, "reward": "Rare", "amount": 4},
-      {"xp": 900, "reward": "Nice", "amount": 10},
-      {"xp": 950, "reward": "Epic", "amount": 4},
-      {"xp": 950, "reward": "Wild", "amount": 5},
-      {"xp": 950, "reward": "Baby", "amount": 4},
-      {"xp": 1000, "reward": "Legendary", "amount": 1},
-      {"xp": 1000, "reward": "Superior", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 550,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 600,
+        "reward": "Epic",
+        "amount": 6
+      },
+      {
+        "xp": 600,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 650,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 650,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 700,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 750,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 800,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Rare",
+        "amount": 4
+      },
+      {
+        "xp": 900,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 950,
+        "reward": "Epic",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 950,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 1000,
+        "reward": "Legendary",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Superior",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "33": [
-      {"xp": 550, "reward": "Legendary", "amount": 3},
-      {"xp": 550, "reward": "Superior", "amount": 3},
-      {"xp": 550, "reward": "Reverse", "amount": 3},
-      {"xp": 600, "reward": "Mythic", "amount": 1},
-      {"xp": 600, "reward": "Rickroll", "amount": 3},
-      {"xp": 600, "reward": "eGirl", "amount": 1},
-      {"xp": 650, "reward": "Professor", "amount": 1},
-      {"xp": 650, "reward": "Sus", "amount": 3},
-      {"xp": 650, "reward": "Ultimate", "amount": 1},
-      {"xp": 700, "reward": "Wooden", "amount": 1},
-      {"xp": 700, "reward": "Stone", "amount": 1},
-      {"xp": 700, "reward": "Bronze", "amount": 1},
-      {"xp": 750, "reward": "Silver", "amount": 5},
-      {"xp": 750, "reward": "Gold", "amount": 5},
-      {"xp": 750, "reward": "Platinum", "amount": 1},
-      {"xp": 800, "reward": "Rare", "amount": 5},
-      {"xp": 800, "reward": "Nice", "amount": 10},
-      {"xp": 800, "reward": "Epic", "amount": 5},
-      {"xp": 850, "reward": "Wild", "amount": 5},
-      {"xp": 850, "reward": "Baby", "amount": 4},
-      {"xp": 850, "reward": "Legendary", "amount": 2},
-      {"xp": 900, "reward": "Superior", "amount": 2},
-      {"xp": 900, "reward": "Reverse", "amount": 2},
-      {"xp": 900, "reward": "Mythic", "amount": 1},
-      {"xp": 950, "reward": "Rickroll", "amount": 1},
-      {"xp": 950, "reward": "eGirl", "amount": 1},
-      {"xp": 950, "reward": "Professor", "amount": 1},
-      {"xp": 1000, "reward": "Sus", "amount": 3},
-      {"xp": 1000, "reward": "Ultimate", "amount": 1},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Legendary",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Superior",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Reverse",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Rickroll",
+        "amount": 3
+      },
+      {
+        "xp": 600,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 650,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 700,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 750,
+        "reward": "Silver",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Gold",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Rare",
+        "amount": 5
+      },
+      {
+        "xp": 800,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 800,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 850,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 850,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 850,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 900,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Rickroll",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ],
     "34": [
-      {"xp": 550, "reward": "Sus", "amount": 3},
-      {"xp": 550, "reward": "Ultimate", "amount": 1},
-      {"xp": 550, "reward": "Wooden", "amount": 1},
-      {"xp": 600, "reward": "Stone", "amount": 1},
-      {"xp": 600, "reward": "Bronze", "amount": 1},
-      {"xp": 600, "reward": "Silver", "amount": 6},
-      {"xp": 650, "reward": "Gold", "amount": 6},
-      {"xp": 650, "reward": "Platinum", "amount": 1},
-      {"xp": 650, "reward": "Rare", "amount": 6},
-      {"xp": 700, "reward": "Nice", "amount": 10},
-      {"xp": 700, "reward": "Epic", "amount": 5},
-      {"xp": 700, "reward": "Wild", "amount": 5},
-      {"xp": 750, "reward": "Baby", "amount": 4},
-      {"xp": 750, "reward": "Legendary", "amount": 2},
-      {"xp": 750, "reward": "Superior", "amount": 2},
-      {"xp": 800, "reward": "Reverse", "amount": 2},
-      {"xp": 800, "reward": "Mythic", "amount": 1},
-      {"xp": 800, "reward": "Rickroll", "amount": 2},
-      {"xp": 850, "reward": "eGirl", "amount": 1},
-      {"xp": 850, "reward": "Professor", "amount": 1},
-      {"xp": 850, "reward": "Sus", "amount": 3},
-      {"xp": 900, "reward": "Ultimate", "amount": 1},
-      {"xp": 900, "reward": "Wooden", "amount": 1},
-      {"xp": 900, "reward": "Stone", "amount": 1},
-      {"xp": 950, "reward": "Bronze", "amount": 1},
-      {"xp": 950, "reward": "Silver", "amount": 4},
-      {"xp": 950, "reward": "Gold", "amount": 4},
-      {"xp": 1000, "reward": "Platinum", "amount": 1},
-      {"xp": 1000, "reward": "Rare", "amount": 3},
-      {"xp": 1000, "reward": "Rain", "amount": 2}
+      {
+        "xp": 550,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 550,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 550,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 600,
+        "reward": "Silver",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Gold",
+        "amount": 6
+      },
+      {
+        "xp": 650,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 650,
+        "reward": "Rare",
+        "amount": 6
+      },
+      {
+        "xp": 700,
+        "reward": "Nice",
+        "amount": 10
+      },
+      {
+        "xp": 700,
+        "reward": "Epic",
+        "amount": 5
+      },
+      {
+        "xp": 700,
+        "reward": "Wild",
+        "amount": 5
+      },
+      {
+        "xp": 750,
+        "reward": "Baby",
+        "amount": 4
+      },
+      {
+        "xp": 750,
+        "reward": "Legendary",
+        "amount": 2
+      },
+      {
+        "xp": 750,
+        "reward": "Superior",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Reverse",
+        "amount": 2
+      },
+      {
+        "xp": 800,
+        "reward": "Mythic",
+        "amount": 1
+      },
+      {
+        "xp": 800,
+        "reward": "Rickroll",
+        "amount": 2
+      },
+      {
+        "xp": 850,
+        "reward": "eGirl",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Professor",
+        "amount": 1
+      },
+      {
+        "xp": 850,
+        "reward": "Sus",
+        "amount": 3
+      },
+      {
+        "xp": 900,
+        "reward": "Ultimate",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Wooden",
+        "amount": 1
+      },
+      {
+        "xp": 900,
+        "reward": "Stone",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Bronze",
+        "amount": 1
+      },
+      {
+        "xp": 950,
+        "reward": "Silver",
+        "amount": 4
+      },
+      {
+        "xp": 950,
+        "reward": "Gold",
+        "amount": 4
+      },
+      {
+        "xp": 1000,
+        "reward": "Platinum",
+        "amount": 1
+      },
+      {
+        "xp": 1000,
+        "reward": "Rare",
+        "amount": 3
+      },
+      {
+        "xp": 1000,
+        "reward": "Rain",
+        "amount": 2
+      }
     ]
   },
   "quests": {
@@ -888,105 +3406,105 @@
     "extra1": {
       "casino_spins": {
         "title": "Spin the Catsino",
-        "emoji": "casino",
+        "emoji": "🎰",
         "xp_min": 150,
         "xp_max": 250,
         "progress": 5
       },
       "slots_winner": {
         "title": "Slot Machine Champion",
-        "emoji": "slot_machine",
+        "emoji": "🎰",
         "xp_min": 200,
         "xp_max": 350,
         "progress": 3
       },
       "roulette_gambler": {
         "title": "Spin the Roulette",
-        "emoji": "roulette",
+        "emoji": "🎡",
         "xp_min": 180,
         "xp_max": 300,
         "progress": 7
       },
       "dice_roller": {
         "title": "Roll the Dice",
-        "emoji": "dice",
+        "emoji": "🎲",
         "xp_min": 120,
         "xp_max": 200,
         "progress": 10
       },
       "lucky_pig": {
         "title": "Play Pig",
-        "emoji": "pig",
+        "emoji": "🐷",
         "xp_min": 140,
         "xp_max": 220,
         "progress": 2
       },
       "fortune_teller": {
         "title": "Consult the 8Ball",
-        "emoji": "8ball",
+        "emoji": "🎱",
         "xp_min": 100,
         "xp_max": 180,
         "progress": 8
       },
       "game_master": {
         "title": "Play Rock Paper Scissors",
-        "emoji": "rock",
+        "emoji": "✂️",
         "xp_min": 130,
         "xp_max": 210,
         "progress": 4
       },
       "strategic_mind": {
         "title": "Play Tic Tac Toe",
-        "emoji": "tic",
+        "emoji": "⭕",
         "xp_min": 160,
         "xp_max": 280,
         "progress": 3
       },
       "big_spender": {
         "title": "Spend Roulette Dollars",
-        "emoji": "money",
+        "emoji": "💸",
         "xp_min": 170,
         "xp_max": 290,
         "progress": 6
       },
       "blackjack_master": {
         "title": "Win at Slots 5 Times",
-        "emoji": "gold",
+        "emoji": "🏆",
         "xp_min": 210,
         "xp_max": 340,
         "progress": 5
       },
       "dice_enthusiast": {
         "title": "Roll High Numbers",
-        "emoji": "roulette",
+        "emoji": "🎲",
         "xp_min": 130,
         "xp_max": 220,
         "progress": 8
       },
       "roulette_champion": {
         "title": "Win at Roulette",
-        "emoji": "roulette",
+        "emoji": "🏅",
         "xp_min": 190,
         "xp_max": 320,
         "progress": 2
       },
       "pig_pro": {
         "title": "Score 50+ in Pig",
-        "emoji": "pig",
+        "emoji": "🐷",
         "xp_min": 180,
         "xp_max": 300,
         "progress": 1
       },
       "fortune_seeker": {
         "title": "Use 8Ball 15 Times",
-        "emoji": "8ball",
+        "emoji": "🎱",
         "xp_min": 120,
         "xp_max": 200,
         "progress": 15
       },
       "gaming_legend": {
         "title": "Play 3 Different Games",
-        "emoji": "trophy",
+        "emoji": "🏆",
         "xp_min": 200,
         "xp_max": 350,
         "progress": 3
@@ -995,14 +3513,14 @@
     "extra2": {
       "gifter": {
         "title": "Gift Cats to Others",
-        "emoji": "gift",
+        "emoji": "🎁",
         "xp_min": 170,
         "xp_max": 290,
         "progress": 3
       },
       "trader": {
         "title": "Complete Trades",
-        "emoji": "trade",
+        "emoji": "💱",
         "xp_min": 190,
         "xp_max": 310,
         "progress": 2
@@ -1023,70 +3541,70 @@
       },
       "rain_starter": {
         "title": "Start Rain Sessions",
-        "emoji": "rain",
+        "emoji": "🌧️",
         "xp_min": 220,
         "xp_max": 380,
         "progress": 1
       },
       "fact_collector": {
         "title": "Read Cat Facts",
-        "emoji": "book",
+        "emoji": "📖",
         "xp_min": 100,
         "xp_max": 180,
         "progress": 6
       },
       "cookie_clicker": {
         "title": "Click Cookies",
-        "emoji": "cookie",
+        "emoji": "🍪",
         "xp_min": 110,
         "xp_max": 190,
         "progress": 25
       },
       "commander": {
         "title": "Use Ping Command",
-        "emoji": "ping",
+        "emoji": "🏓",
         "xp_min": 90,
         "xp_max": 160,
         "progress": 5
       },
       "definition_seeker": {
         "title": "Define Words",
-        "emoji": "book",
+        "emoji": "📚",
         "xp_min": 120,
         "xp_max": 200,
         "progress": 4
       },
       "news_reader": {
         "title": "Read the News",
-        "emoji": "newspaper",
+        "emoji": "📰",
         "xp_min": 130,
         "xp_max": 220,
         "progress": 3
       },
       "random_lover": {
         "title": "Get Random Cats",
-        "emoji": "random",
+        "emoji": "🎲",
         "xp_min": 140,
         "xp_max": 240,
         "progress": 4
       },
       "reminder_setter": {
         "title": "Set Reminders",
-        "emoji": "alarm",
+        "emoji": "📝",
         "xp_min": 110,
         "xp_max": 190,
         "progress": 2
       },
       "generous_gifter": {
         "title": "Gift 10 Cats Total",
-        "emoji": "gift",
+        "emoji": "🎁",
         "xp_min": 200,
         "xp_max": 340,
         "progress": 10
       },
       "master_trader": {
         "title": "Complete 5 Trades",
-        "emoji": "trade",
+        "emoji": "💱",
         "xp_min": 210,
         "xp_max": 360,
         "progress": 5

@@ -1,4 +1,11 @@
+--
+-- PostgreSQL database dump
+--
 
+\restrict uUzyNpu3rW825lSpMpKNxBCEKYx9auRnScFHNmR9Kped5TwiwjqNne7ustT4skN
+
+-- Dumped from database version 16.11 (Ubuntu 16.11-1.pgdg24.04+1)
+-- Dumped by pg_dump version 17.7 (Ubuntu 17.7-3.pgdg24.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -673,4 +680,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
+\unrestrict uUzyNpu3rW825lSpMpKNxBCEKYx9auRnScFHNmR9Kped5TwiwjqNne7ustT4skN
 
