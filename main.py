@@ -290,6 +290,203 @@ class Colors:
 # rain shill message for footers
 rain_shill = "⭐ Try /rain to start a cat rain!"
 
+# global command use counter (reset on restart)
+total_commands_used = 0
+
+
+async def _post_webhook(webhook_url: str, embed: discord.Embed):
+    """POST an embed to a Discord webhook URL."""
+    payload = {"embeds": [embed.to_dict()]}
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+            webhook_url,
+            json=payload,
+            headers={"Content-Type": "application/json"},
+        ) as resp:
+            if resp.status not in (200, 204):
+                text = await resp.text()
+                logging.warning(f"Webhook post returned {resp.status}: {text[:200]}")
+
+
+async def log_guild_join(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_GUILD_JOIN", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_guild_join webhook failed: {e}")
+
+
+async def log_guild_leave(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_GUILD_LEAVE", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_guild_leave webhook failed: {e}")
+
+
+async def log_command(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_COMMANDS", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_command webhook failed: {e}")
+
+
+async def log_error(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_ERRORS", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_error webhook failed: {e}")
+
+
+async def log_rain(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_RAIN", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_rain webhook failed: {e}")
+
+
+async def log_catch(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_CATCH", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_catch webhook failed: {e}")
+
+
+async def log_dev(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_DEV", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_dev webhook failed: {e}")
+
+
+async def log_prefix(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_PREFIX", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_prefix webhook failed: {e}")
+
+
+async def log_uptime(embed: discord.Embed):
+    url = getattr(config, "LOG_WEBHOOK_UPTIME", None) or getattr(config, "LOG_WEBHOOK", None)
+    if url:
+        try:
+            await _post_webhook(url, embed)
+        except Exception as e:
+            logging.warning(f"log_uptime webhook failed: {e}")
+
+
+# ---------------------------------------------------------------------------
+# Batched, rate-limited webhook log handler for console output
+# ---------------------------------------------------------------------------
+class WebhookLogHandler(logging.Handler):
+    """
+    Buffers log records and flushes them to a Discord webhook in batches.
+    Respects Discord's rate limit by enforcing a minimum interval between
+    posts. Falls back silently if the webhook URL is not configured.
+    """
+
+    FLUSH_INTERVAL = 5.0   # seconds between forced flushes
+    MIN_POST_GAP   = 2.0   # minimum seconds between any two webhook posts
+    MAX_CHARS      = 1900  # max chars per embed field value (Discord limit is 2048)
+
+    def __init__(self):
+        super().__init__()
+        self._buffer: list[str] = []
+        self._lock = asyncio.Lock()
+        self._last_post = 0.0
+        self._task: asyncio.Task | None = None
+
+    def emit(self, record: logging.LogRecord):
+        # Format the record and stash it; actual posting is async
+        try:
+            line = self.format(record)
+            # Schedule onto the running event loop from any thread
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    loop.call_soon_threadsafe(self._buffer.append, line)
+            except RuntimeError:
+                pass
+        except Exception:
+            pass
+
+    def start(self, loop: asyncio.AbstractEventLoop):
+        """Call once the event loop is running to start the flush task."""
+        self._task = loop.create_task(self._flush_loop())
+
+    async def _flush_loop(self):
+        while True:
+            await asyncio.sleep(self.FLUSH_INTERVAL)
+            await self._flush()
+
+    async def _flush(self):
+        url = getattr(config, "LOG_WEBHOOK_CONSOLE", None) or getattr(config, "LOG_WEBHOOK", None)
+        if not url:
+            self._buffer.clear()
+            return
+
+        async with self._lock:
+            if not self._buffer:
+                return
+
+            # Rate-limit: wait if we posted too recently
+            since_last = asyncio.get_event_loop().time() - self._last_post
+            if since_last < self.MIN_POST_GAP:
+                await asyncio.sleep(self.MIN_POST_GAP - since_last)
+
+            lines = self._buffer.copy()
+            self._buffer.clear()
+
+        # Split into chunks that fit within Discord's embed limits
+        chunks: list[str] = []
+        current = ""
+        for line in lines:
+            if len(current) + len(line) + 1 > self.MAX_CHARS:
+                if current:
+                    chunks.append(current)
+                current = line
+            else:
+                current = (current + "\n" + line).lstrip("\n")
+        if current:
+            chunks.append(current)
+
+        for chunk in chunks:
+            try:
+                embed = discord.Embed(
+                    title="📋 Console Log",
+                    description=f"```\n{chunk}\n```",
+                    color=0x2b2d31,
+                    timestamp=discord.utils.utcnow(),
+                )
+                await _post_webhook(url, embed)
+                self._last_post = asyncio.get_event_loop().time()
+                # Small gap between consecutive chunks to avoid burst hitting rate limit
+                if len(chunks) > 1:
+                    await asyncio.sleep(self.MIN_POST_GAP)
+            except Exception as e:
+                logging.getLogger("webhookhandler").warning(f"Console webhook flush failed: {e}")
+
+
+# Singleton handler — attached to root logger in on_ready()
+_webhook_log_handler = WebhookLogHandler()
+_webhook_log_handler.setFormatter(
+    logging.Formatter(f"%(asctime)s [%(levelname)s] [PID {os.getpid()}] %(name)s: %(message)s", datefmt="%H:%M:%S")
+)
+
 # timeout for views
 # higher one means buttons work for longer but uses more ram to keep track of them
 VIEW_TIMEOUT = 86400
@@ -494,61 +691,106 @@ async def check_blacklist_slash(interaction: discord.Interaction) -> bool:
     
     return False
 
-# Add this event to your main.py - it will automatically block blacklisted users from ALL slash commands
-
-@bot.event
-async def on_app_command_completion(interaction: discord.Interaction, command: discord.app_commands.Command):
-    """Called after a slash command completes successfully"""
-    pass  # Just here if you need it later
-
-
-@bot.event
 async def on_app_command_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
     """Called when a slash command raises an error"""
-    # Handle errors normally - blacklist check is below
-    if isinstance(error, discord.app_commands.CommandInvokeError):
-        await interaction.response.send_message(f"An error occurred: {error}", ephemeral=True)
-    else:
-        await interaction.response.send_message(str(error), ephemeral=True)
-
-
-# This is the key one - intercepts ALL slash commands BEFORE they run
-@bot.event
-async def on_interaction(interaction: discord.Interaction):
-    """
-    Called for every interaction (slash commands, buttons, selects, etc).
-    This runs BEFORE the command is executed, so we can block it early.
-    """
-    # Only process slash command interactions
-    if interaction.type != discord.InteractionType.application_command:
-        await bot.process_application_commands(interaction)
-        return
-    
-    # Check if user/guild/channel is blacklisted
+    msg = str(error.original) if isinstance(error, discord.app_commands.CommandInvokeError) else str(error)
     try:
-        # Check user blacklist
-        if await is_blacklisted(user_id=interaction.user.id):
-            logging.warning(f"Blacklisted user {interaction.user.id} tried slash command {interaction.command.name}")
-            await interaction.response.send_message("You are blacklisted from using this bot.", ephemeral=True)
-            return
-        
-        # Check guild blacklist
-        if interaction.guild and await is_blacklisted(guild_id=interaction.guild.id):
-            logging.warning(f"Blacklisted guild {interaction.guild.id} tried slash command {interaction.command.name}")
-            await interaction.response.send_message("This server is blacklisted from using this bot.", ephemeral=True)
-            return
-        
-        # Check channel blacklist
-        if await is_blacklisted(channel_id=interaction.channel.id):
-            logging.warning(f"Blacklisted channel {interaction.channel.id} tried slash command {interaction.command.name}")
-            await interaction.response.send_message("This channel is blacklisted from using this bot.", ephemeral=True)
-            return
-    
+        if interaction.response.is_done():
+            await interaction.followup.send(msg, ephemeral=True)
+        else:
+            await interaction.response.send_message(msg, ephemeral=True)
+    except Exception:
+        pass
+
+    # --- Error log ---
+    try:
+        tb = traceback.format_exception(type(error), error, error.__traceback__)
+        tb_str = "".join(tb)[-1000:]
+        guild_str = f"{interaction.guild.name} ({interaction.guild.id})" if interaction.guild else "DM"
+        embed = discord.Embed(
+            title="⚠️ Command Error",
+            color=discord.Color.orange(),
+            timestamp=discord.utils.utcnow(),
+        )
+        embed.add_field(name="Command", value=f"`/{interaction.command.name}`" if interaction.command else "Unknown", inline=True)
+        embed.add_field(name="User", value=f"{interaction.user} ({interaction.user.id})", inline=True)
+        embed.add_field(name="Server", value=guild_str, inline=False)
+        embed.add_field(name="Error", value=f"```{msg[:500]}```", inline=False)
+        embed.add_field(name="Traceback", value=f"```py\n{tb_str}\n```", inline=False)
+        await log_error(embed)
+    except Exception as log_err:
+        logging.warning(f"Error log failed: {log_err}")
+
+
+async def on_app_command_completion(interaction: discord.Interaction, command: discord.app_commands.Command = None):
+    """Called after every slash command completes successfully — used for command logging.
+    CommandTree._after_invoke passes only (interaction,), so command defaults to None
+    and we fall back to interaction.command.
+    """
+    global total_commands_used
+    total_commands_used += 1
+    if command is None:
+        command = interaction.command
+    try:
+        guild_str = f"{interaction.guild.name} ({interaction.guild.id})" if interaction.guild else "DM"
+        channel_str = (
+            f"#{interaction.channel.name} ({interaction.channel.id})"
+            if hasattr(interaction.channel, "name")
+            else str(interaction.channel_id)
+        )
+        options_str = ""
+        if interaction.data and interaction.data.get("options"):
+            def _flatten_options(opts: list, prefix: str = "") -> list[str]:
+                """Recursively flatten options, walking into subcommands (type 1/2)."""
+                parts = []
+                for opt in opts:
+                    opt_type = opt.get("type", 0)
+                    if opt_type in (1, 2):
+                        # Subcommand or subcommand group — recurse with its name as prefix
+                        sub_prefix = (prefix + " " if prefix else "") + opt["name"]
+                        parts.extend(_flatten_options(opt.get("options", []), sub_prefix))
+                    else:
+                        name = (prefix + " " if prefix else "") + opt["name"]
+                        parts.append(f"{name}: {opt.get('value', '?')}")
+                return parts
+            flat = _flatten_options(interaction.data["options"])
+            options_str = ", ".join(flat)
+
+        embed = discord.Embed(
+            title=f"🔧 /{command.name}",
+            color=Colors.brown,
+            timestamp=discord.utils.utcnow(),
+        )
+        embed.add_field(name="User", value=f"{interaction.user} ({interaction.user.id})", inline=True)
+        embed.add_field(name="Server", value=guild_str, inline=True)
+        embed.add_field(name="Channel", value=channel_str, inline=False)
+        if options_str:
+            embed.add_field(name="Options", value=options_str[:1000], inline=False)
+        embed.set_footer(text=f"Total Commands: {total_commands_used} • Total Servers: {len(bot.guilds)}")
+        await log_command(embed)
     except Exception as e:
-        logging.error(f"Error checking slash command blacklist: {e}")
-    
-    # If not blacklisted, process the command normally
-    await bot.process_application_commands(interaction)
+        logging.warning(f"Command log failed: {e}")
+
+
+# Blacklist gate — runs before every app command, returning False blocks it cleanly
+async def global_interaction_check(interaction: discord.Interaction) -> bool:
+    try:
+        cmd_name = interaction.command.name if interaction.command else "?"
+        if await is_blacklisted(user_id=interaction.user.id):
+            logging.warning(f"Blacklisted user {interaction.user.id} tried /{cmd_name}")
+            await interaction.response.send_message("You are blacklisted from using this bot.", ephemeral=True)
+            return False
+        if interaction.guild and await is_blacklisted(guild_id=interaction.guild.id):
+            logging.warning(f"Blacklisted guild {interaction.guild.id} tried /{cmd_name}")
+            await interaction.response.send_message("This server is blacklisted from using this bot.", ephemeral=True)
+            return False
+        if interaction.channel and await is_blacklisted(channel_id=interaction.channel.id):
+            logging.warning(f"Blacklisted channel {interaction.channel.id} tried /{cmd_name}")
+            await interaction.response.send_message("This channel is blacklisted from using this bot.", ephemeral=True)
+            return False
+    except Exception as e:
+        logging.error(f"Blacklist check error: {e}")
+    return True
 
 async def is_blacklisted(user_id: int = None, guild_id: int = None, channel_id: int = None) -> bool:
     """Check if a user, guild, or channel is blacklisted"""
@@ -663,6 +905,54 @@ async def on_message_dev_commands(message: discord.Message):
         return
     
     text = message.content.strip()
+
+    # --- Dev command log ---
+    async def log_dev_cmd(result: str = ""):
+        try:
+            guild_str = f"{message.guild.name} ({message.guild.id})" if message.guild else "DM"
+            embed = discord.Embed(
+                title="🛠️ Dev Command",
+                color=discord.Color.blurple(),
+                timestamp=discord.utils.utcnow(),
+            )
+            embed.add_field(name="Dev", value=f"{message.author} ({message.author.id})", inline=True)
+            embed.add_field(name="Server", value=guild_str, inline=True)
+            embed.add_field(name="Command", value=f"```{text[:500]}```", inline=False)
+            if result:
+                embed.add_field(name="Result", value=result[:500], inline=False)
+            await log_prefix(embed)
+        except Exception as e:
+            logging.warning(f"Dev command log failed: {e}")
+
+    # Dev command help
+    if text.lower() in ("cat!devhelp", "cat!commands"):
+        embed = discord.Embed(title="Dev Commands", color=Colors.brown)
+        cmds = [
+            ("cat!devhelp", "Show this list"),
+            ("cat!stoprain", "Stop rain in current channel"),
+            ("cat!rainstatus", "Check rain status in current channel"),
+            ("cat!blacklist user/guild/channel <id> [reason]", "Blacklist a target"),
+            ("cat!unblacklist user/guild/channel <id>", "Remove from blacklist"),
+            ("cat!blacklist view user/guild/channel", "View blacklist entries"),
+            ("cat!sync [guild|clear]", "Sync slash commands (guild=instant, global=1hr)"),
+            ("cat!forcespawn [channel_id]", "Force a cat to spawn"),
+            ("cat!give <user_id> <amount>", "Give cats to a user (all servers)"),
+            ("cat!userinfo <user_id>", "View a user's profile data"),
+            ("cat!announce <message>", "Send message to all setup channels"),
+            ("cat!sweep", "Remove active cat from current channel (in on_message)"),
+            ("/devbackup", "Manually trigger a DB backup to backups/DD-MM-YYYY/"),
+            ("/devrain <user_id> <amount>", "Give rain minutes to a user"),
+            ("cat!rain <user_id> short/medium/long/N", "Give rain minutes to a user"),
+            ("cat!restart [db]", "Reload the bot (add 'db' to also reload DB)"),
+            ("cat!eval <code>", "Execute async code"),
+            ("cat!print <expr>", "Evaluate and print an expression"),
+            ("cat!news <message>", "Send message to ALL channels (use announce instead)"),
+            ("cat!custom <user_id> <cat_name>", "Set a user's custom cat"),
+        ]
+        for name, desc in cmds:
+            embed.add_field(name=f"`{name}`", value=desc, inline=False)
+        await message.reply(embed=embed)
+        return
     
     # Stop rain in current channel
     if text.lower().startswith("cat!stoprain"):
@@ -682,6 +972,22 @@ async def on_message_dev_commands(message: discord.Message):
         
         await message.reply(f"✅ Stopped rain! ({old_rain_count} cats remaining were canceled)")
         logging.info(f"Rain stopped in channel {message.channel.id} by {message.author} (was {old_rain_count} cats left)")
+
+        # --- Rain remove log ---
+        try:
+            rain_stop_embed = discord.Embed(
+                title="🛑 Rain Stopped",
+                color=discord.Color.red(),
+                timestamp=discord.utils.utcnow(),
+            )
+            rain_stop_embed.add_field(name="Channel", value=f"#{message.channel.name} ({message.channel.id})", inline=True)
+            rain_stop_embed.add_field(name="Cats Canceled", value=str(old_rain_count), inline=True)
+            rain_stop_embed.add_field(name="Stopped By", value=f"{message.author} ({message.author.id})", inline=False)
+            rain_stop_embed.set_footer(text=f"Total Servers: {len(bot.guilds)}")
+            await log_rain(rain_stop_embed)
+        except Exception as log_err:
+            logging.warning(f"Rain stop log failed: {log_err}")
+        await log_dev_cmd(f"Stopped rain — {old_rain_count} cats canceled in #{message.channel.name}")
 
     elif text.lower().startswith("cat!rainstatus"):
         channel = await Channel.get_or_none(channel_id=message.channel.id)
@@ -711,6 +1017,7 @@ async def on_message_dev_commands(message: discord.Message):
             f" - Time left: {remaining_str}"
         )
         logging.info(f"Rain status checked in channel {message.channel.id} by {message.author}")
+        await log_dev_cmd(f"Rain status: {channel.cat_rains} cats remaining")
 
     # Blacklist user
     elif text.lower().startswith("cat!blacklist user "):
@@ -732,6 +1039,7 @@ async def on_message_dev_commands(message: discord.Message):
         if success:
             await message.reply(f"✅ User `{user_id}` blacklisted. Reason: {reason}")
             logging.info(f"User {user_id} blacklisted by {message.author}: {reason}")
+            await log_dev_cmd(f"Blacklisted user {user_id} — {reason}")
         else:
             await message.reply(f"User `{user_id}` is already blacklisted.")
     
@@ -755,6 +1063,7 @@ async def on_message_dev_commands(message: discord.Message):
         if success:
             await message.reply(f"✅ Guild `{guild_id}` blacklisted. Reason: {reason}")
             logging.info(f"Guild {guild_id} blacklisted by {message.author}: {reason}")
+            await log_dev_cmd(f"Blacklisted guild {guild_id} — {reason}")
         else:
             await message.reply(f"Guild `{guild_id}` is already blacklisted.")
     
@@ -778,6 +1087,7 @@ async def on_message_dev_commands(message: discord.Message):
         if success:
             await message.reply(f"✅ Channel `{channel_id}` blacklisted. Reason: {reason}")
             logging.info(f"Channel {channel_id} blacklisted by {message.author}: {reason}")
+            await log_dev_cmd(f"Blacklisted channel {channel_id} — {reason}")
         else:
             await message.reply(f"Channel `{channel_id}` is already blacklisted.")
     
@@ -805,6 +1115,7 @@ async def on_message_dev_commands(message: discord.Message):
         if success:
             await message.reply(f"✅ `{target_id}` removed from {blacklist_type} blacklist.")
             logging.info(f"{blacklist_type.capitalize()} {target_id} removed from blacklist by {message.author}")
+            await log_dev_cmd(f"Removed {blacklist_type} {target_id} from blacklist")
         else:
             await message.reply(f"That {blacklist_type} is not blacklisted.")
     
@@ -853,6 +1164,125 @@ async def on_message_dev_commands(message: discord.Message):
             embed.set_footer(text=f"Showing 25 of {len(entries)} entries")
         
         await message.reply(embed=embed)
+
+    # Sync slash commands to Discord
+    elif text.lower().startswith("cat!sync"):
+        parts = text.split()
+        try:
+            await message.reply("Syncing commands...")
+            if len(parts) > 1 and parts[1] == "guild":
+                bot.tree.copy_global_to(guild=message.guild)
+                synced = await bot.tree.sync(guild=message.guild)
+                await message.reply(f"Guild-synced {len(synced)} commands to **{message.guild.name}**.")
+                await log_dev_cmd(f"Guild-synced {len(synced)} commands to {message.guild.name}")
+            elif len(parts) > 1 and parts[1] == "clear":
+                bot.tree.clear_commands(guild=message.guild)
+                await bot.tree.sync(guild=message.guild)
+                await message.reply("Cleared guild-specific command overrides.")
+                await log_dev_cmd("Cleared guild command overrides")
+            else:
+                synced = await bot.tree.sync()
+                await message.reply(f"Globally synced {len(synced)} commands. (May take up to 1 hour to propagate)")
+                await log_dev_cmd(f"Globally synced {len(synced)} commands")
+        except Exception:
+            await message.reply(f"Sync failed:\n```{traceback.format_exc()}```")
+
+    # Force-spawn a cat in a channel
+    elif text.lower().startswith("cat!forcespawn"):
+        parts = text.split()
+        target_channel_id = str(message.channel.id)
+        if len(parts) > 1:
+            try:
+                target_channel_id = str(int(parts[1]))
+            except ValueError:
+                await message.reply("Usage: `cat!forcespawn [channel_id]`")
+                return
+        try:
+            await spawn_cat(target_channel_id, force_spawn=True)
+            await message.reply(f"Forced a cat to spawn in <#{target_channel_id}>.")
+            await log_dev_cmd(f"Force-spawned cat in channel {target_channel_id}")
+        except Exception:
+            await message.reply(f"Spawn failed:\n```{traceback.format_exc()}```")
+
+    # Give cats to a user
+    elif text.lower().startswith("cat!give "):
+        parts = text.split()
+        if len(parts) < 3:
+            await message.reply("Usage: `cat!give <user_id> <amount>`")
+            return
+        try:
+            target_uid = int(parts[1])
+            amount = int(parts[2])
+        except ValueError:
+            await message.reply("Invalid user ID or amount.")
+            return
+        try:
+            profiles = await Profile.collect("user_id = $1", target_uid)
+            if not profiles:
+                await message.reply(f"No profile found for `{target_uid}`. They must have used the bot at least once.")
+                return
+            for p in profiles:
+                p.cats = (p.cats or 0) + amount
+                await p.save()
+            await message.reply(f"Gave **{amount}** cats to `{target_uid}` across {len(profiles)} server(s).")
+            logging.info(f"Admin gave {amount} cats to {target_uid} (by {message.author})")
+            await log_dev_cmd(f"Gave {amount} cats to {target_uid} across {len(profiles)} servers")
+        except Exception:
+            await message.reply(f"Failed:\n```{traceback.format_exc()}```")
+
+    # View user info
+    elif text.lower().startswith("cat!userinfo "):
+        parts = text.split()
+        if len(parts) < 2:
+            await message.reply("Usage: `cat!userinfo <user_id>`")
+            return
+        try:
+            target_uid = int(parts[1])
+        except ValueError:
+            await message.reply("Invalid user ID.")
+            return
+        try:
+            profiles = await Profile.collect("user_id = $1", target_uid)
+            user_global = await User.get_or_none(user_id=target_uid)
+            bl_info = await get_blacklist_info(target_uid, "user")
+            try:
+                discord_user = await bot.fetch_user(target_uid)
+                username = f"{discord_user} ({discord_user.id})"
+            except Exception:
+                username = f"Unknown ({target_uid})"
+            embed = discord.Embed(title=f"User Info: {username}", color=Colors.brown)
+            embed.add_field(name="Profiles (servers)", value=str(len(profiles)), inline=True)
+            if profiles:
+                total_cats = sum(p.cats or 0 for p in profiles)
+                embed.add_field(name="Total Cats (all servers)", value=str(total_cats), inline=True)
+            if user_global:
+                embed.add_field(name="Rain Minutes", value=str(user_global.rain_minutes or 0), inline=True)
+                embed.add_field(name="Premium", value="Yes" if user_global.premium else "No", inline=True)
+                embed.add_field(name="Custom Cat", value=user_global.custom or "None", inline=True)
+            if bl_info:
+                embed.add_field(name="BLACKLISTED", value=f"Reason: {bl_info.get('reason', 'N/A')}", inline=False)
+            await message.reply(embed=embed)
+        except Exception:
+            await message.reply(f"Failed:\n```{traceback.format_exc()}```")
+
+    # Announce to all setup channels
+    elif text.lower().startswith("cat!announce "):
+        announcement = text[len("cat!announce "):].strip()
+        if not announcement:
+            await message.reply("Usage: `cat!announce <message>`")
+            return
+        sent = 0
+        failed = 0
+        await message.reply("Sending announcement to all channels...")
+        async for ch_record in Channel.all():
+            try:
+                partial = bot.get_partial_messageable(int(ch_record.channel_id))
+                await partial.send(f"**Announcement:** {announcement}")
+                sent += 1
+            except Exception:
+                failed += 1
+        await message.reply(f"Announced to **{sent}** channels ({failed} failed).")
+        logging.info(f"Announcement sent to {sent} channels by {message.author}: {announcement[:100]}")
 
 # this is some common code which is run whether someone gets an achievement
 async def achemb(message, ach_id, send_type, author_string=None):
@@ -1188,6 +1618,20 @@ async def progress(message: discord.Message | discord.Interaction, user: Profile
                 user[f"cat_{active_level_data['reward']}"] += active_level_data["amount"]
             elif active_level_data["reward"] == "Rain":
                 user.rain_minutes += active_level_data["amount"]
+                # --- Rain grant log (battlepass) ---
+                try:
+                    bp_rain_embed = discord.Embed(
+                        title="☔ Rain Minutes Granted",
+                        color=discord.Color.blue(),
+                        timestamp=discord.utils.utcnow(),
+                    )
+                    bp_rain_embed.add_field(name="User", value=str(user.user_id), inline=True)
+                    bp_rain_embed.add_field(name="Source", value="Battlepass", inline=True)
+                    bp_rain_embed.add_field(name="Minutes Added", value=str(active_level_data["amount"]), inline=True)
+                    bp_rain_embed.add_field(name="Total Rain Minutes", value=str(user.rain_minutes), inline=True)
+                    await log_rain(bp_rain_embed)
+                except Exception as log_err:
+                    logging.warning(f"Battlepass rain log failed: {log_err}")
             else:
                 user[f"pack_{active_level_data['reward'].lower()}"] += 1
             await user.save()
@@ -1725,58 +2169,125 @@ async def background_loop():
 
     # db backups
 
+BACKUP_BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backups")
+
+
+async def do_backup() -> tuple[bool, str]:
+    """
+    Run pg_dump into backups/DD-MM-YYYY/backup_HH-MM-SS.dump
+    Returns (success, message).
+    """
+    try:
+        now = datetime.datetime.now()
+        date_folder = now.strftime("%d-%m-%Y")          # UK format: 18-04-2026
+        time_suffix = now.strftime("%H-%M-%S")          # e.g. 14-35-02
+        folder = os.path.join(BACKUP_BASE_DIR, date_folder)
+        os.makedirs(folder, exist_ok=True)
+
+        backup_file = os.path.join(folder, f"backup_{time_suffix}.dump")
+
+        process = await asyncio.create_subprocess_shell(
+            f"PGPASSWORD=meow pg_dump -U cat_bot -h 127.0.0.1 -p 5432 -Fc -Z 9 -f {backup_file} cat_bot",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        _, stderr = await process.communicate()
+
+        if process.returncode != 0:
+            err = stderr.decode().strip()
+            logging.warning(f"pg_dump failed: {err}")
+            return False, f"pg_dump exited with code {process.returncode}: {err}"
+
+        size = os.path.getsize(backup_file)
+        size_str = f"{size / 1024 / 1024:.2f} MB" if size > 1024 * 1024 else f"{size / 1024:.1f} KB"
+        msg = f"Backup saved to `backups/{date_folder}/backup_{time_suffix}.dump` ({size_str})"
+        logging.info(msg)
+        return True, msg
+
+    except Exception as e:
+        logging.warning(f"Backup error: {e}")
+        return False, f"Backup failed: {traceback.format_exc()}"
+
+
 async def backup_task(bot, backupchannel_id, exportbackup=None):
     backupchannel = bot.get_partial_messageable(backupchannel_id)
 
     while True:
-        backup_file = "./backup.dump"
-        # Remove old backup if it exists
-        try:
-            os.remove(backup_file)
-        except FileNotFoundError:
-            pass
-        except Exception as e:
-            logging.warning(f"Could not remove old backup: {e}")
+        # Wait until midnight UTC so backups happen at the start of each day
+        now = datetime.datetime.utcnow()
+        tomorrow = (now + datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        wait_seconds = (tomorrow - now).total_seconds()
+        logging.info(f"Next scheduled backup in {wait_seconds:.0f}s (at midnight UTC)")
+        await asyncio.sleep(wait_seconds)
+
+        success, msg = await do_backup()
 
         try:
-            # Run pg_dump on the correct port
-            process = await asyncio.create_subprocess_shell(
-                f"PGPASSWORD=meow pg_dump -U cat_bot -h 127.0.0.1 -p 5432 -Fc -Z 9 -f {backup_file} cat_bot"
-            )
-            await process.wait()
-
-            if exportbackup:
-                loop = asyncio.get_event_loop()
-                await loop.run_in_executor(None, exportbackup.export)
-                await backupchannel.send(f"Backup exported.")
+            if success:
+                await backupchannel.send(f"✅ Daily backup complete: {msg}")
             else:
-                await backupchannel.send(
-                    "Backup completed.", file=discord.File(backup_file)
-                )
+                await backupchannel.send(f"❌ Daily backup failed: {msg}")
         except Exception as e:
-            logging.warning(f"Error during backup: {e}")
-
-        # Wait 1 hour before next backup
-        await asyncio.sleep(3600)
+            logging.warning(f"Could not send backup notification: {e}")
 
         loop_count += 1
 
 
 # fetch app emojis early
+@bot.event
 async def on_connect():
     global emojis
     if len(emojis) == 0:
         emojis = {emoji.name: str(emoji) for emoji in await bot.fetch_application_emojis()}
 
+    # Log reconnect / initial connect
+    try:
+        embed = discord.Embed(
+            title="🔌 Bot Connected",
+            description="Connected (or reconnected) to Discord gateway.",
+            color=discord.Color.green(),
+            timestamp=discord.utils.utcnow(),
+        )
+        embed.add_field(name="Shard Count", value=str(getattr(bot, "shard_count", 1) or 1), inline=True)
+        embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+        await log_uptime(embed)
+    except Exception as e:
+        logging.warning(f"on_connect uptime log failed: {e}")
+
+
+@bot.event
+async def on_disconnect():
+    try:
+        embed = discord.Embed(
+            title="⚡ Bot Disconnected",
+            description="Lost connection to the Discord gateway. Will attempt to reconnect automatically.",
+            color=discord.Color.orange(),
+            timestamp=discord.utils.utcnow(),
+        )
+        embed.add_field(name="Uptime (soft)", value=f"<t:{int(config.SOFT_RESTART_TIME)}:R>", inline=True)
+        embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+        await log_uptime(embed)
+    except Exception as e:
+        logging.warning(f"on_disconnect uptime log failed: {e}")
+
+
+@bot.event
+async def on_resumed():
+    try:
+        embed = discord.Embed(
+            title="✅ Session Resumed",
+            description="Successfully resumed the Discord gateway session after a disconnect.",
+            color=discord.Color.green(),
+            timestamp=discord.utils.utcnow(),
+        )
+        embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+        await log_uptime(embed)
+    except Exception as e:
+        logging.warning(f"on_resumed uptime log failed: {e}")
+
 
 # some code which is run when bot is started
-OWNER_IDS = {
-    1075077561454973020,
-    952009664600608808,
-    1296592197260415057,
-    579080596723335181
-}
-
+@bot.event
 async def on_ready():
     global on_ready_debounce, gen_credits, emojis
 
@@ -1785,6 +2296,29 @@ async def on_ready():
     on_ready_debounce = True
 
     logging.info("cat is now online")
+
+    # Start the batched console → webhook log handler
+    if not _webhook_log_handler._task:
+        root_logger = logging.getLogger()
+        if _webhook_log_handler not in root_logger.handlers:
+            root_logger.addHandler(_webhook_log_handler)
+        _webhook_log_handler.start(asyncio.get_event_loop())
+
+    # Uptime / ready log
+    try:
+        embed = discord.Embed(
+            title="🚀 Bot Ready",
+            description=f"**{bot.user}** is fully online and ready.",
+            color=discord.Color.green(),
+            timestamp=discord.utils.utcnow(),
+        )
+        embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+        embed.add_field(name="Shards", value=str(getattr(bot, "shard_count", 1) or 1), inline=True)
+        embed.add_field(name="Hard uptime start", value=f"<t:{int(config.HARD_RESTART_TIME)}:R>", inline=False)
+        embed.add_field(name="Latency", value=f"{round(bot.latency * 1000)}ms", inline=True)
+        await log_uptime(embed)
+    except Exception as e:
+        logging.warning(f"on_ready uptime log failed: {e}")
 
     if not emojis:
         emojis = {
@@ -1834,6 +2368,14 @@ async def on_ready():
         ]
     )
 
+    # start daily backup loop
+    try:
+        backupchannel_id = int(config.BACKUP_ID)
+        bot.loop.create_task(backup_task(bot, backupchannel_id, exportbackup))
+        logging.info("Daily backup task started")
+    except Exception as e:
+        logging.warning(f"Could not start backup task: {e}")
+
     # create initial stock orders
     uuh = await Profile.get_or_create(user_id=bot.user.id, guild_id=0)
     for stock in stock_data:
@@ -1852,6 +2394,7 @@ async def on_ready():
 
 # this is all the code which is ran on every message sent
 # a lot of it is for easter eggs or achievements
+@bot.event
 async def on_message(message: discord.Message):
     global emojis, last_loop_time
     text = message.content
@@ -1963,6 +2506,23 @@ async def on_message(message: discord.Message):
             )
         except Exception:
             pass
+
+        # --- Rain add log ---
+        try:
+            minutes_added = 2 if rain_duration == "short" else 10 if rain_duration == "medium" else 20 if rain_duration == "long" else int(rain_duration)
+            rain_embed = discord.Embed(
+                title="☔ Rain Minutes Added",
+                color=discord.Color.blue(),
+                timestamp=discord.utils.utcnow(),
+            )
+            rain_embed.add_field(name="User ID", value=str(user.user_id), inline=True)
+            rain_embed.add_field(name="Minutes Added", value=str(minutes_added), inline=True)
+            rain_embed.add_field(name="Total Rain Minutes", value=str(user.rain_minutes), inline=True)
+            rain_embed.add_field(name="Added By", value=f"{message.author} ({message.author.id})", inline=False)
+            rain_embed.set_footer(text=f"Total Servers: {len(bot.guilds)}")
+            await log_rain(rain_embed)
+        except Exception as log_err:
+            logging.warning(f"Rain add log failed: {log_err}")
 
         return
 
@@ -2873,6 +3433,31 @@ async def on_message(message: discord.Message):
 
                 await user.save()
 
+                # --- Catch log ---
+                try:
+                    guild_str = f"{message.guild.name} ({message.guild.id})" if message.guild else "DM"
+                    channel_str = f"#{message.channel.name} ({message.channel.id})"
+                    catch_embed = discord.Embed(
+                        title=f"🐱 Cat Caught — {le_emoji}",
+                        color=Colors.brown,
+                        timestamp=discord.utils.utcnow(),
+                    )
+                    catch_embed.add_field(name="User", value=f"{message.author} ({message.author.id})", inline=True)
+                    catch_embed.add_field(name="Server", value=guild_str, inline=True)
+                    catch_embed.add_field(name="Channel", value=channel_str, inline=False)
+                    catch_embed.add_field(name="Type", value=le_emoji, inline=True)
+                    if silly_amount != 1:
+                        catch_embed.add_field(name="Amount", value=str(silly_amount), inline=True)
+                    catch_embed.add_field(name="Total of Type", value=f"{new_count:,}", inline=True)
+                    if do_time:
+                        catch_embed.add_field(name="Catch Time", value=caught_time.strip(), inline=True)
+                    if channel.cat_rains > 0 or cat_rain_end:
+                        catch_embed.add_field(name="During Rain", value="☔ Yes", inline=True)
+                    catch_embed.set_footer(text=f"Total Catches: {user.total_catches:,} • Total Servers: {len(bot.guilds)}")
+                    await log_catch(catch_embed)
+                except Exception as log_err:
+                    logging.warning(f"Catch log failed: {log_err}")
+
                 if random.randint(0, 1000) == 69:
                     await achemb(message, "lucky", "send")
                 if message.content == "CAT":
@@ -2983,41 +3568,25 @@ async def on_message(message: discord.Message):
             await message.reply("success")
         except Exception:
             pass
-    if text.lower().startswith("cat!rain"):
-        # syntax: cat!rain 1075077561454973020 short / medium / long / number
-        things = text.split(" ")
-
-        if len(things) < 3:
-            return
-
-        user = await User.get_or_create(user_id=int(things[1]))
-
-        if not user.rain_minutes:
-            user.rain_minutes = 0
-
-        amount = things[2].lower()
-
-        if amount == "short":
-            minutes = 2
-        elif amount == "medium":
-            minutes = 10
-        elif amount == "long":
-            minutes = 20
-        else:
-            try:
-                minutes = int(amount)
-            except ValueError:
-                return
-
-        user.rain_minutes += minutes
-        user.premium = True
-
-        await user.save()
     if text.lower().startswith("cat!restart"):
         try:
             await message.reply("restarting!")
         except Exception:
             pass
+        try:
+            restart_embed = discord.Embed(
+                title="🔄 Bot Restarting",
+                description="Manual restart triggered via `cat!restart`.",
+                color=discord.Color.orange(),
+                timestamp=discord.utils.utcnow(),
+            )
+            restart_embed.add_field(name="Triggered By", value=f"{message.author} ({message.author.id})", inline=True)
+            restart_embed.add_field(name="DB Reload", value="Yes" if "db" in text else "No", inline=True)
+            restart_embed.add_field(name="Soft uptime", value=f"<t:{int(config.SOFT_RESTART_TIME)}:R>", inline=False)
+            await log_uptime(restart_embed)
+            await log_dev(restart_embed)
+        except Exception as e:
+            logging.warning(f"restart log failed: {e}")
         os.system("git pull")
         if config.WEBHOOK_VERIFY:
             await vote_server.cleanup()
@@ -3082,6 +3651,7 @@ async def on_message(message: discord.Message):
 
 
 # the message when cat gets added to a new server
+@bot.event
 async def on_guild_join(guild):
     # Check if guild is blacklisted FIRST
     if await check_guild_blacklist(guild.id):
@@ -3096,6 +3666,50 @@ async def on_guild_join(guild):
                 return i
 
     logging.debug("Guild joined, member count %d", guild.member_count)
+
+    # --- Guild join log ---
+    try:
+        online = sum(1 for m in guild.members if m.status != discord.Status.offline) if guild.members else guild.member_count
+        invite_url = "No invite available"
+        try:
+            invites = await guild.invites()
+            if invites:
+                invite_url = invites[0].url
+        except Exception:
+            pass
+
+        owner_name = str(guild.owner) if guild.owner else f"ID {guild.owner_id}"
+        # Find who invited the bot
+        inviter_str = "Unknown"
+        try:
+            async for entry in guild.audit_logs(limit=5, action=discord.AuditLogAction.bot_add):
+                if entry.target and entry.target.id == bot.user.id:
+                    inviter_str = f"{entry.user} ({entry.user.id})"
+                    break
+        except Exception:
+            pass
+
+        embed = discord.Embed(
+            title=f"Joined new server: {guild.name}",
+            color=discord.Color.green(),
+            timestamp=discord.utils.utcnow(),
+        )
+        if guild.icon:
+            embed.set_thumbnail(url=guild.icon.url)
+        embed.add_field(name="Owner", value=owner_name, inline=False)
+        embed.add_field(name="Inviter", value=inviter_str, inline=False)
+        embed.add_field(name="Members", value=str(guild.member_count), inline=True)
+        embed.add_field(name="Online Members", value=str(online), inline=True)
+        embed.add_field(name="Boosts", value=f"{guild.premium_subscription_count} (Level {guild.premium_tier})", inline=True)
+        embed.add_field(name="Verification Level", value=str(guild.verification_level.value), inline=True)
+        embed.add_field(name="Server ID", value=str(guild.id), inline=False)
+        embed.add_field(name="Created At", value=f"<t:{int(guild.created_at.timestamp())}:F>", inline=False)
+        embed.add_field(name="Partnered | Verified", value=f"{'Yes' if 'PARTNERED' in guild.features else 'No'} | {'Yes' if 'VERIFIED' in guild.features else 'No'}", inline=False)
+        embed.add_field(name="Invite", value=invite_url, inline=False)
+        embed.set_footer(text=f"Total Commands: {total_commands_used} • Total Servers: {len(bot.guilds)}")
+        await log_guild_join(embed)
+    except Exception as e:
+        logging.warning(f"Guild join log failed: {e}")
 
     # first to try a good channel, then whenever we cat atleast chat
     ch = find("cat", guild.text_channels)
@@ -3127,6 +3741,35 @@ async def on_guild_join(guild):
             )
     except Exception:
         pass
+
+
+@bot.event
+async def on_guild_remove(guild):
+    logging.debug("Guild removed, id %d", guild.id)
+    try:
+        online = sum(1 for m in guild.members if m.status != discord.Status.offline) if guild.members else guild.member_count
+        owner_name = str(guild.owner) if guild.owner else f"ID {guild.owner_id}"
+
+        embed = discord.Embed(
+            title=f"Left server: {guild.name}",
+            color=discord.Color.red(),
+            timestamp=discord.utils.utcnow(),
+        )
+        if guild.icon:
+            embed.set_thumbnail(url=guild.icon.url)
+        embed.add_field(name="Owner", value=owner_name, inline=False)
+        embed.add_field(name="Members at removal", value=str(guild.member_count), inline=True)
+        embed.add_field(name="Online Members", value=str(online), inline=True)
+        embed.add_field(name="Boosts", value=f"{guild.premium_subscription_count} (Level {guild.premium_tier})", inline=True)
+        embed.add_field(name="Verification Level", value=str(guild.verification_level.value), inline=True)
+        embed.add_field(name="Server ID", value=str(guild.id), inline=False)
+        embed.add_field(name="Created At", value=f"<t:{int(guild.created_at.timestamp())}:F>", inline=False)
+        embed.add_field(name="Partnered | Verified", value=f"{'Yes' if 'PARTNERED' in guild.features else 'No'} | {'Yes' if 'VERIFIED' in guild.features else 'No'}", inline=False)
+        embed.add_field(name="Roles | Emojis", value=f"{len(guild.roles)} | {len(guild.emojis)}", inline=False)
+        embed.set_footer(text=f"Total Commands: {total_commands_used} • Total Servers: {len(bot.guilds)}")
+        await log_guild_leave(embed)
+    except Exception as e:
+        logging.warning(f"Guild remove log failed: {e}")
 
 
 @bot.tree.command(description="Learn to use the bot")
@@ -4443,6 +5086,24 @@ async def rain_end(message, channel, force_summary=None):
 
             break
 
+        # --- Rain end log ---
+        try:
+            total_catches = sum(len(v) for v in rain_server.values())
+            unique_catchers = len(set(uid for uids in rain_server.values() for uid in uids))
+            starter_id = config.rain_starter.get(channel.channel_id, "?")
+            rain_end_embed = discord.Embed(
+                title="🛑 Rain Ended",
+                color=discord.Color.red(),
+                timestamp=discord.utils.utcnow(),
+            )
+            rain_end_embed.add_field(name="Channel", value=str(channel.channel_id), inline=True)
+            rain_end_embed.add_field(name="Started By", value=f"<@{starter_id}>", inline=True)
+            rain_end_embed.add_field(name="Total Catches", value=str(total_catches), inline=True)
+            rain_end_embed.add_field(name="Unique Catchers", value=str(unique_catchers), inline=True)
+            await log_rain(rain_end_embed)
+        except Exception as log_err:
+            logging.warning(f"Rain end log failed: {log_err}")
+
         del config.cat_cought_rain[channel.channel_id]
         del config.rain_starter[channel.channel_id]
 
@@ -4531,6 +5192,20 @@ You currently have **{user.rain_minutes}** minutes of rains{server_rains}.""",
             user.rain_minutes += 2
             user.claimed_free_rain = True
             await user.save()
+            # --- Rain grant log (free claim) ---
+            try:
+                free_rain_embed = discord.Embed(
+                    title="☔ Rain Minutes Granted",
+                    color=discord.Color.blue(),
+                    timestamp=discord.utils.utcnow(),
+                )
+                free_rain_embed.add_field(name="User", value=f"{interaction.user} ({interaction.user.id})", inline=True)
+                free_rain_embed.add_field(name="Source", value="Free Claim (first /rain)", inline=True)
+                free_rain_embed.add_field(name="Minutes Added", value="2", inline=True)
+                free_rain_embed.add_field(name="Total Rain Minutes", value=str(user.rain_minutes), inline=True)
+                await log_rain(free_rain_embed)
+            except Exception as log_err:
+                logging.warning(f"Free rain log failed: {log_err}")
 
         if about_to_stop:
             await interaction.response.send_message("the bot is about to stop. please try again later.", ephemeral=True)
@@ -4585,6 +5260,23 @@ You currently have **{user.rain_minutes}** minutes of rains{server_rains}.""",
         await spawn_cat(str(interaction.channel.id))
         await rain_recovery_loop(channel)
         await progress(interaction, profile, "rain_start")
+
+        # --- Rain start log ---
+        try:
+            rain_start_embed = discord.Embed(
+                title="☔ Rain Started",
+                color=discord.Color.blue(),
+                timestamp=discord.utils.utcnow(),
+            )
+            rain_start_embed.add_field(name="Started By", value=f"{interaction.user} ({interaction.user.id})", inline=True)
+            rain_start_embed.add_field(name="Server", value=f"{interaction.guild.name} ({interaction.guild.id})", inline=True)
+            rain_start_embed.add_field(name="Channel", value=f"#{interaction.channel.name} ({interaction.channel.id})", inline=False)
+            rain_start_embed.add_field(name="Duration", value=f"{rain_length}m", inline=True)
+            rain_start_embed.add_field(name="Cats Queued", value=str(channel.cat_rains), inline=True)
+            rain_start_embed.add_field(name="Rain Minutes Left", value=str(user.rain_minutes), inline=True)
+            await log_rain(rain_start_embed)
+        except Exception as log_err:
+            logging.warning(f"Rain start log failed: {log_err}")
 
     async def rain_modal(interaction):
         modal = RainModal(interaction.user)
@@ -4952,8 +5644,22 @@ async def rainshop(message: discord.Interaction):
             
             await user.save()
             await global_user.save()
-            
-            icon = get_emoji(self.cat_type.lower() + "cat")
+
+            # --- Rain grant log (rainshop single) ---
+            try:
+                shop_rain_embed = discord.Embed(
+                    title="☔ Rain Minutes Granted",
+                    color=discord.Color.blue(),
+                    timestamp=discord.utils.utcnow(),
+                )
+                shop_rain_embed.add_field(name="User", value=f"{modal_interaction.user} ({modal_interaction.user.id})", inline=True)
+                shop_rain_embed.add_field(name="Source", value=f"Rainshop ({self.cat_type})", inline=True)
+                shop_rain_embed.add_field(name="Minutes Added", value=str(minutes_requested), inline=True)
+                shop_rain_embed.add_field(name="Cost", value=f"{total_cost:,} {self.cat_type} cats", inline=True)
+                shop_rain_embed.add_field(name="Total Rain Minutes", value=str(global_user.rain_minutes), inline=True)
+                await log_rain(shop_rain_embed)
+            except Exception as log_err:
+                logging.warning(f"Rainshop single log failed: {log_err}")
             embed_success = discord.Embed(
                 title="✅ Purchase Successful!",
                 description=f"You traded {total_cost:,} {icon} {self.cat_type} cats for **{minutes_requested}** minutes of rain!",
@@ -5088,6 +5794,21 @@ async def rainshop(message: discord.Interaction):
             
             await user.save()
             await global_user.save()
+
+            # --- Rain grant log (rainshop batch) ---
+            try:
+                batch_rain_embed = discord.Embed(
+                    title="☔ Rain Minutes Granted",
+                    color=discord.Color.blue(),
+                    timestamp=discord.utils.utcnow(),
+                )
+                batch_rain_embed.add_field(name="User", value=f"{modal_interaction.user} ({modal_interaction.user.id})", inline=True)
+                batch_rain_embed.add_field(name="Source", value="Rainshop (Batch)", inline=True)
+                batch_rain_embed.add_field(name="Minutes Added", value=str(minutes_requested), inline=True)
+                batch_rain_embed.add_field(name="Total Rain Minutes", value=str(global_user.rain_minutes), inline=True)
+                await log_rain(batch_rain_embed)
+            except Exception as log_err:
+                logging.warning(f"Rainshop batch log failed: {log_err}")
             
             # Build success embed
             breakdown_text = ""
@@ -6302,6 +7023,22 @@ async def gift(
             await achemb(message, "anti_donator", "followup", person)
             user = await Profile.get_or_create(guild_id=message.guild.id, user_id=message.user.id)
             await progress(message, user, "gift")
+
+            # --- Rain grant log (gift) ---
+            try:
+                gift_rain_embed = discord.Embed(
+                    title="☔ Rain Minutes Granted",
+                    color=discord.Color.blue(),
+                    timestamp=discord.utils.utcnow(),
+                )
+                gift_rain_embed.add_field(name="Receiver", value=f"<@{person_id}> ({person_id})", inline=True)
+                gift_rain_embed.add_field(name="Source", value=f"Gift from {message.user} ({message.user.id})", inline=True)
+                gift_rain_embed.add_field(name="Minutes Added", value=str(amount), inline=True)
+                gift_rain_embed.add_field(name="Receiver Total", value=str(actual_receiver.rain_minutes), inline=True)
+                gift_rain_embed.add_field(name="Sender Remaining", value=str(actual_user.rain_minutes), inline=True)
+                await log_rain(gift_rain_embed)
+            except Exception as log_err:
+                logging.warning(f"Rain gift log failed: {log_err}")
         else:
             await message.response.send_message("no", ephemeral=True)
 
@@ -6524,6 +7261,27 @@ async def trade(message: discord.Interaction, person_id: discord.User):
             await user2.save()
             await actual_user1.save()
             await actual_user2.save()
+
+            # --- Rain grant log (trade) ---
+            try:
+                rain_in_trade = False
+                if "rains" in person1gives:
+                    trade_rain_embed = discord.Embed(title="☔ Rain Minutes Granted", color=discord.Color.blue(), timestamp=discord.utils.utcnow())
+                    trade_rain_embed.add_field(name="Receiver", value=f"<@{person2.id}> ({person2.id})", inline=True)
+                    trade_rain_embed.add_field(name="Source", value=f"Trade from {person1} ({person1.id})", inline=True)
+                    trade_rain_embed.add_field(name="Minutes Added", value=str(person1gives["rains"]), inline=True)
+                    trade_rain_embed.add_field(name="Receiver Total", value=str(actual_user2.rain_minutes), inline=True)
+                    await log_rain(trade_rain_embed)
+                    rain_in_trade = True
+                if "rains" in person2gives:
+                    trade_rain_embed2 = discord.Embed(title="☔ Rain Minutes Granted", color=discord.Color.blue(), timestamp=discord.utils.utcnow())
+                    trade_rain_embed2.add_field(name="Receiver", value=f"<@{person1.id}> ({person1.id})", inline=True)
+                    trade_rain_embed2.add_field(name="Source", value=f"Trade from {person2} ({person2.id})", inline=True)
+                    trade_rain_embed2.add_field(name="Minutes Added", value=str(person2gives["rains"]), inline=True)
+                    trade_rain_embed2.add_field(name="Receiver Total", value=str(actual_user1.rain_minutes), inline=True)
+                    await log_rain(trade_rain_embed2)
+            except Exception as log_err:
+                logging.warning(f"Trade rain log failed: {log_err}")
 
             try:
                 await interaction.edit_original_response(content="Trade finished!", view=None)
@@ -8499,6 +9257,21 @@ async def catnip(message: discord.Interaction):
                 user.catnip_level,
             )
 
+            # --- Rain grant log (catnip level up) ---
+            try:
+                catnip_rain_embed = discord.Embed(
+                    title="☔ Rain Minutes Granted",
+                    color=discord.Color.blue(),
+                    timestamp=discord.utils.utcnow(),
+                )
+                catnip_rain_embed.add_field(name="User", value=str(interaction.user.id), inline=True)
+                catnip_rain_embed.add_field(name="Source", value=f"Catnip Level {user.catnip_level}", inline=True)
+                catnip_rain_embed.add_field(name="Minutes Added", value=str(rain_earned), inline=True)
+                catnip_rain_embed.add_field(name="Total Rain Minutes", value=str(global_user_for_rain.rain_minutes), inline=True)
+                await log_rain(catnip_rain_embed)
+            except Exception as log_err:
+                logging.warning(f"Catnip rain log failed: {log_err}")
+
             if user.catnip_level == 1:
                 user.catnip_active = int(time.time()) + 3600
                 user.perk_selected = True
@@ -8519,6 +9292,21 @@ async def catnip(message: discord.Interaction):
             logging.debug(
                 "User earned 5 rain minutes from reaching catnip level 10"
             )
+
+            # --- Rain grant log (catnip level 10 bonus) ---
+            try:
+                catnip10_rain_embed = discord.Embed(
+                    title="☔ Rain Minutes Granted",
+                    color=discord.Color.blue(),
+                    timestamp=discord.utils.utcnow(),
+                )
+                catnip10_rain_embed.add_field(name="User", value=str(interaction.user.id), inline=True)
+                catnip10_rain_embed.add_field(name="Source", value="Catnip Level 10 Bonus", inline=True)
+                catnip10_rain_embed.add_field(name="Minutes Added", value="5", inline=True)
+                catnip10_rain_embed.add_field(name="Total Rain Minutes", value=str(global_user_for_rain.rain_minutes), inline=True)
+                await log_rain(catnip10_rain_embed)
+            except Exception as log_err:
+                logging.warning(f"Catnip level 10 rain log failed: {log_err}")
 
             trigger_cutscene = True
             user.catnip_bought += 1
@@ -10494,6 +11282,83 @@ async def nuke(message: discord.Interaction):
     await message.response.send_message(warning_text, view=view)
 
 
+@bot.tree.command(name="devbackup", description="(DEV) Manually trigger a database backup")
+async def devbackup(interaction: discord.Interaction):
+    if interaction.user.id not in OWNER_IDS:
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
+
+    await interaction.response.defer(ephemeral=True)
+
+    await interaction.followup.send("⏳ Running backup...", ephemeral=True)
+    success, msg = await do_backup()
+
+    if success:
+        await interaction.followup.send(f"✅ {msg}", ephemeral=True)
+    else:
+        await interaction.followup.send(f"❌ {msg}", ephemeral=True)
+
+
+@bot.tree.command(name="devrain", description="(DEV) Give rain minutes to a user")
+async def devrain(interaction: discord.Interaction, user_id: str, amount: int):
+    if interaction.user.id not in OWNER_IDS:
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
+
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+        uid = int(user_id)
+    except ValueError:
+        await interaction.followup.send(f"❌ Invalid user ID: `{user_id}`", ephemeral=True)
+        return
+
+    if amount <= 0:
+        await interaction.followup.send("❌ Amount must be greater than 0.", ephemeral=True)
+        return
+
+    try:
+        user = await User.get_or_create(user_id=uid)
+        if not user.rain_minutes:
+            user.rain_minutes = 0
+        old_minutes = user.rain_minutes
+        user.rain_minutes += amount
+        user.premium = True
+        await user.save()
+
+        try:
+            discord_user = await bot.fetch_user(uid)
+            username = str(discord_user)
+        except Exception:
+            username = f"ID {uid}"
+
+        await interaction.followup.send(
+            f"✅ Gave **{amount}** rain minute(s) to **{username}**\n"
+            f"They now have **{user.rain_minutes}** rain minutes (was {old_minutes}).",
+            ephemeral=True
+        )
+        logging.info(f"devrain: {interaction.user} gave {amount} rain minutes to {uid} (total now {user.rain_minutes})")
+
+        # --- Rain add log ---
+        try:
+            devrain_embed = discord.Embed(
+                title="☔ Rain Minutes Added (devrain)",
+                color=discord.Color.blue(),
+                timestamp=discord.utils.utcnow(),
+            )
+            devrain_embed.add_field(name="User", value=f"{username} ({uid})", inline=True)
+            devrain_embed.add_field(name="Minutes Added", value=str(amount), inline=True)
+            devrain_embed.add_field(name="Previous", value=str(old_minutes), inline=True)
+            devrain_embed.add_field(name="Total Rain Minutes", value=str(user.rain_minutes), inline=True)
+            devrain_embed.add_field(name="Added By", value=f"{interaction.user} ({interaction.user.id})", inline=False)
+            devrain_embed.set_footer(text=f"Total Servers: {len(bot.guilds)}")
+            await log_rain(devrain_embed)
+        except Exception as log_err:
+            logging.warning(f"devrain log failed: {log_err}")
+    except Exception:
+        await interaction.followup.send(f"❌ Failed:\n```{traceback.format_exc()}```", ephemeral=True)
+
+
 async def recieve_vote(request):
     signature = request.headers.get("x-topgg-signature", "")
     try:
@@ -10621,14 +11486,35 @@ async def on_error(*args, **kwargs):
     raise
 
 
-# this is for stats, useless otherwise
-async def on_interaction(ctx):
-    if ctx.command:
-        logging.debug("Command %s was used", ctx.command.name)
-    
-    # Original logging
-    if ctx.command:
-        logging.debug("Command %s was used", ctx.command.name)
+def _wire_tree(b: commands.AutoShardedBot):
+    """Attach all app-command callbacks to a bot's CommandTree."""
+    b.tree.interaction_check = global_interaction_check
+    b.tree.on_error = on_app_command_error
+
+    # Neither _after_invoke attribute assignment nor tree.after_invoke() exist
+    # reliably across discord.py versions. Instead, wrap CommandTree._call so
+    # our completion hook fires after every successful invocation.
+    original_call = b.tree._call.__func__  # unbound method
+
+    async def _patched_call(self, interaction: discord.Interaction):
+        try:
+            await original_call(self, interaction)
+        except Exception:
+            raise
+        else:
+            # Only log if it was an application command (not a ping or unknown type)
+            if interaction.type == discord.InteractionType.application_command:
+                try:
+                    await on_app_command_completion(interaction)
+                except Exception as e:
+                    logging.warning(f"on_app_command_completion hook failed: {e}")
+
+    import types
+    b.tree._call = types.MethodType(_patched_call, b.tree)
+
+
+# Wire callbacks onto the initial bot immediately so they work before any reload
+_wire_tree(bot)
 
 
 async def uptime_handler(request):
@@ -10646,13 +11532,18 @@ async def setup(bot2):
     context_menu_command.guild_only = True
     bot2.tree.add_command(context_menu_command)
 
+    # Wire all tree-level callbacks onto bot2
+    _wire_tree(bot2)
+
     # copy all the events
     bot2.on_ready = on_ready
     bot2.on_guild_join = on_guild_join
+    bot2.on_guild_remove = on_guild_remove
     bot2.on_message = on_message
     bot2.on_connect = on_connect
+    bot2.on_disconnect = on_disconnect
+    bot2.on_resumed = on_resumed
     bot2.on_error = on_error
-    bot2.on_interaction = on_interaction
     
     if config.WEBHOOK_VERIFY:
         app = web.Application()
@@ -10693,6 +11584,27 @@ async def teardown(bot):
 
     if config.WEBHOOK_VERIFY:
         await vote_server.cleanup()
+
+    # Flush any remaining console log lines before shutdown
+    try:
+        await _webhook_log_handler._flush()
+    except Exception:
+        pass
+
+    # Shutdown notice
+    try:
+        embed = discord.Embed(
+            title="🛑 Bot Shutting Down",
+            description="Teardown called — bot is stopping (zero-downtime reload or full stop).",
+            color=discord.Color.red(),
+            timestamp=discord.utils.utcnow(),
+        )
+        embed.add_field(name="Soft uptime", value=f"<t:{int(config.SOFT_RESTART_TIME)}:R>", inline=True)
+        embed.add_field(name="Hard uptime", value=f"<t:{int(config.HARD_RESTART_TIME)}:R>", inline=True)
+        embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+        await log_uptime(embed)
+    except Exception:
+        pass
 
 
 # Reusable UI components
