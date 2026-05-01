@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Sign in — Cattito{% endblock %}
+
+{% block extra %}
+<style>
+    body { background: var(--bg); }
+    .layout { align-items: center; justify-content: center; }
+    .sidebar, .topbar { display: none; }
+    .main { width: 100%; display: flex; align-items: center; justify-content: center; }
+    .content { width: 100%; max-width: 420px; padding: 2rem; animation: fadeUp 0.3s ease both; }
+
+    .login-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem 2rem;
+        text-align: center;
+    }
+    .login-logo { font-size: 3rem; margin-bottom: 1rem; }
+    .login-wordmark {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 1.75rem;
+        color: var(--amber);
+        letter-spacing: -0.03em;
+        margin-bottom: 0.4rem;
+    }
+    .login-wordmark span { color: var(--text); }
+    .login-tagline { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; }
+    .login-divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+    .login-terms { font-size: 0.78rem; color: var(--muted); margin-top: 1.25rem; line-height: 1.5; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-card">
+    <div class="login-logo">🐾</div>
+    <div class="login-wordmark">Catti<span>to</span></div>
+    <div class="login-tagline">Dashboard — manage your cat servers</div>
+
+    <a href="/login" class="btn btn-discord" style="width:100%;justify-content:center;font-size:0.95rem;padding:0.8rem 1.5rem;">
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+            <path d="M15.245 1.175A14.87 14.87 0 0 0 11.613 0c-.174.316-.369.741-.505 1.079a13.752 13.752 0 0 0-4.215 0A11.434 11.434 0 0 0 6.384 0a14.876 14.876 0 0 0-3.635 1.178C.39 4.459-.239 7.654.075 10.803c1.572 1.172 3.097 1.887 4.597 2.352.371-.51.701-1.053.987-1.624a9.738 9.738 0 0 1-1.554-.755c.13-.096.258-.196.381-.3 3.001 1.405 6.261 1.405 9.226 0 .124.104.251.204.381.3-.494.296-1.017.549-1.557.756.287.572.616 1.116.987 1.625 1.502-.466 3.028-1.181 4.6-2.355.378-3.677-.617-6.843-2.878-9.627ZM6.014 8.854c-.908 0-1.651-.847-1.651-1.888 0-1.04.728-1.889 1.651-1.889.924 0 1.666.849 1.651 1.89 0 1.04-.727 1.887-1.651 1.887Zm6.115 0c-.907 0-1.65-.847-1.65-1.888 0-1.04.727-1.889 1.65-1.889.924 0 1.666.849 1.652 1.89 0 1.04-.72 1.887-1.652 1.887Z" fill="currentColor"/>
+        </svg>
+        Continue with Discord
+    </a>
+
+    <div class="login-terms">You need <strong style="color:var(--text)">Manage Server</strong> permission<br>to access a server's dashboard.</div>
+</div>
+{% endblock %}

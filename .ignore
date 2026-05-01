@@ -1,0 +1,19 @@
+# Sensitive files
+.env*
+config.py
+*.key
+*.pem
+*.crt
+secrets.json
+credentials.json
+
+# Specific directories
+/secrets/**
+/private/**
+
+# Common build/dependency dirs
+**/node_modules/**
+**/dist/**
+
+# Allow an exception with negation
+!*.local.json

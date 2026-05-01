@@ -70,6 +70,7 @@ type_dict = {
     "Wild": 400,
     "Kittuh": 300,
     "Baby": 250,
+    "Princess": 225,
     "Epic": 200,
     "Sus": 150,
     "Water": 120,
@@ -85,12 +86,14 @@ type_dict = {
     "8bit": 12,
     "Corrupt": 10,
     "Professor": 8,
+    "Rainbow": 6,
     "Divine": 5,
     "Space": 4,
     "Real": 3,
     "Ultimate": 2,
     "eGirl": 1,
-    "eBoy": 0.5
+    "eBoy": 0.5,
+    "Angel": 0.1
 }
 
 # this list stores unique non-duplicate cattypes
@@ -988,6 +991,97 @@ async def on_message_dev_commands(message: discord.Message):
         except Exception as log_err:
             logging.warning(f"Rain stop log failed: {log_err}")
         await log_dev_cmd(f"Stopped rain — {old_rain_count} cats canceled in #{message.channel.name}")
+
+    elif text.lower().startswith("cat!servers"):
+        parts = text.split(None, 2)
+        search = parts[1] if len(parts) > 1 else None
+
+        guilds = list(bot.guilds)
+        if search:
+            guilds = [g for g in guilds if str(g.id) == search or str(g.owner_id) == search]
+
+        if not guilds:
+            await message.reply("No servers found with that ID or owner ID.")
+            return
+
+        total = len(guilds)
+        page_size = 10
+        BAR_LENGTH = 20
+
+        loading_embed = discord.Embed(
+            title="⏳ Loading servers...",
+            description=f"`{'░' * BAR_LENGTH}` 0%",
+            color=discord.Color.orange()
+        )
+        loading_msg = await message.reply(embed=loading_embed)
+
+        pages = []
+        for i in range(0, total, page_size):
+            chunk = guilds[i:i + page_size]
+            embed = discord.Embed(
+                title=f"📜 Bot Servers ({i+1}–{i+len(chunk)} of {total})",
+                color=discord.Color.green()
+            )
+            for g in chunk:
+                try:
+                    invite = await g.text_channels[0].create_invite(max_age=0, max_uses=0)
+                    invite_str = f"[Invite]({invite.url})"
+                except Exception:
+                    invite_str = "No permissions ❌"
+                embed.add_field(
+                    name=g.name,
+                    value=f"🆔 `{g.id}`\n👑 `{g.owner_id}`\n🔗 {invite_str}",
+                    inline=False
+                )
+            pages.append(embed)
+
+            progress = min(i + page_size, total)
+            percent = int((progress / total) * 100)
+            filled = int((progress / total) * BAR_LENGTH)
+            bar = "█" * filled + "░" * (BAR_LENGTH - filled)
+            loading_embed.description = f"`{bar}` {percent}%"
+            try:
+                await loading_msg.edit(embed=loading_embed)
+            except Exception:
+                pass
+
+        current = [0]
+
+        def make_view():
+            view = View(timeout=600)
+            prev_btn = Button(label="⬅️", style=discord.ButtonStyle.secondary, disabled=len(pages) <= 1)
+            next_btn = Button(label="➡️", style=discord.ButtonStyle.secondary, disabled=len(pages) <= 1)
+
+            async def prev_page(interaction: discord.Interaction):
+                if interaction.user.id not in OWNER_IDS:
+                    await interaction.response.send_message("nope", ephemeral=True)
+                    return
+                current[0] = (current[0] - 1) % len(pages)
+                await interaction.response.edit_message(embed=pages[current[0]], view=make_view())
+
+            async def next_page(interaction: discord.Interaction):
+                if interaction.user.id not in OWNER_IDS:
+                    await interaction.response.send_message("nope", ephemeral=True)
+                    return
+                current[0] = (current[0] + 1) % len(pages)
+                await interaction.response.edit_message(embed=pages[current[0]], view=make_view())
+
+            prev_btn.callback = prev_page
+            next_btn.callback = next_page
+            view.add_item(prev_btn)
+            view.add_item(next_btn)
+            return view
+
+        loading_embed.title = f"✅ Loaded {total} server(s)"
+        loading_embed.description = f"`{'█' * BAR_LENGTH}` 100%"
+        loading_embed.color = discord.Color.green()
+        try:
+            await loading_msg.edit(embed=loading_embed)
+        except Exception:
+            pass
+
+        await loading_msg.edit(embed=pages[0], view=make_view())
+        await log_dev_cmd(f"Listed {total} servers" + (f" (filter: {search})" if search else ""))
 
     elif text.lower().startswith("cat!rainstatus"):
         channel = await Channel.get_or_none(channel_id=message.channel.id)
@@ -2333,16 +2427,20 @@ async def on_ready():
     url = "https://api.github.com/repos/milenakos/cat-bot/contributors"
     contributors = []
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers={"User-Agent": "CatBot/1.0 https://github.com/milenakos/cat-bot"}) as response:
-            if response.status == 200:
-                data = await response.json()
-                for contributor in data:
-                    login = contributor["login"].replace("_", r"\_")
-                    if login not in ["milenakos", "ImgBotApp"]:
-                        contributors.append(login)
-            else:
-                logging.warning(f"Error: {response.status} - {await response.text()}")
+    try:
+        import aiohttp as _aiohttp
+        async with _aiohttp.ClientSession() as session:
+            async with session.get(url, headers={"User-Agent": "CatBot/1.0 https://github.com/milenakos/cat-bot"}) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    for contributor in data:
+                        login = contributor["login"].replace("_", r"\_")
+                        if login not in ["milenakos", "ImgBotApp"]:
+                            contributors.append(login)
+                else:
+                    logging.warning(f"Error: {response.status} - {await response.text()}")
+    except Exception as e:
+        logging.warning(f"Could not fetch GitHub contributors: {e}")
 
     # fetch testers
     tester_users = []

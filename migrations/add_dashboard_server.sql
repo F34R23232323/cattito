@@ -1,0 +1,4 @@
+-- Add server settings columns for dashboard
+ALTER TABLE server ADD COLUMN IF NOT EXISTS welcome_message VARCHAR(500) DEFAULT '';
+ALTER TABLE server ADD COLUMN IF NOT EXISTS spawn_min INTEGER DEFAULT 60;
+ALTER TABLE server ADD COLUMN IF NOT EXISTS spawn_max INTEGER DEFAULT 600;

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Your Servers — Cattito{% endblock %}
+
+{% block nav_servers %}active{% endblock %}
+
+{% block topbar_title %}
+    <span>Cattito</span><span class="sep">/</span><span class="page">Servers</span>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">Your Servers</div>
+    <div class="page-desc">Select a server to manage its Cattito settings.</div>
+</div>
+
+{% if servers %}
+    {% set accessible = servers | selectattr("has_access") | list %}
+    {% set locked = servers | rejectattr("has_access") | list %}
+
+    {% if accessible %}
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Manageable Servers</div>
+                <div class="card-subtitle">You have Manage Server permission in these.</div>
+            </div>
+        </div>
+        <div class="server-grid">
+            {% for server in accessible %}
+            <a href="/guild/{{ server.id }}" class="server-card">
+                {% if server.icon %}
+                <img class="server-icon"
+                     src="https://cdn.discordapp.com/icons/{{ server.id }}/{{ server.icon }}.png"
+                     alt="{{ server.name }}">
+                {% else %}
+                <div class="server-icon-fallback">🐾</div>
+                {% endif %}
+                <div class="server-name">{{ server.name }}</div>
+                <span class="badge badge-green" style="align-self:flex-start">✓ Manage</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if locked %}
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Other Servers</div>
+                <div class="card-subtitle">You need Manage Server permission to configure these.</div>
+            </div>
+        </div>
+        <div class="server-grid">
+            {% for server in locked %}
+            <div class="server-card locked">
+                {% if server.icon %}
+                <img class="server-icon"
+                     src="https://cdn.discordapp.com/icons/{{ server.id }}/{{ server.icon }}.png"
+                     alt="{{ server.name }}">
+                {% else %}
+                <div class="server-icon-fallback">🐾</div>
+                {% endif %}
+                <div class="server-name">{{ server.name }}</div>
+                <span class="badge badge-muted" style="align-self:flex-start">🔒 No access</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+{% else %}
+<div class="empty-state">
+    <div class="icon">🐾</div>
+    <p>No servers found. Make sure Cattito is in at least one of your servers.</p>
+</div>
+{% endif %}
+{% endblock %}

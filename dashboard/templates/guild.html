@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+{% block title %}{{ server_name or 'Server' }} — Cattito{% endblock %}
+
+{% block topbar_title %}
+    <a href="/servers" style="color:var(--muted);text-decoration:none;font-weight:500;font-size:0.9rem">Servers</a>
+    <span style="color:var(--faint);margin:0 0.5em">/</span>
+    {{ server_name or 'Server' }}
+{% endblock %}
+
+{% block sidebar_guild %}
+{% if guild_id %}
+<div style="margin-top:0.75rem">
+    <div class="sidebar-section-label">{{ server_name or 'Server' }}</div>
+    <a href="/guild/{{ guild_id }}" class="sidebar-link {% if active_tab == 'settings' %}active{% endif %}">
+        <span class="icon">⚙️</span> Settings
+    </a>
+    <a href="/guild/{{ guild_id }}/users" class="sidebar-link {% if active_tab == 'users' %}active{% endif %}">
+        <span class="icon">👤</span> Users
+    </a>
+    <a href="/guild/{{ guild_id }}/cats" class="sidebar-link {% if active_tab == 'cats' %}active{% endif %}">
+        <span class="icon">🐱</span> Cats
+    </a>
+    <a href="/guild/{{ guild_id }}/channels" class="sidebar-link {% if active_tab == 'channels' %}active{% endif %}">
+        <span class="icon">#</span> Channels
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra %}
+<style>
+    /* ─── Settings tab ─── */
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .settings-grid { grid-template-columns: 1fr; } }
+    .setting-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border);
+        gap: 1rem;
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-weight: 500; font-size: 0.9rem; }
+    .setting-desc { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+    .toggle-wrap { position: relative; flex-shrink: 0; }
+    select.inline-select {
+        padding: 0.4rem 2rem 0.4rem 0.65rem;
+        font-size: 0.85rem;
+        border-radius: 8px;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b6b80' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.6rem center;
+        width: auto;
+        cursor: pointer;
+    }
+    .spawn-inputs { display: flex; align-items: center; gap: 0.5rem; }
+    .spawn-inputs input { width: 80px; padding: 0.4rem 0.65rem; font-size: 0.85rem; }
+    .spawn-inputs .sep { color: var(--muted); font-size: 0.8rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if active_tab == 'settings' %}
+<!-- ─── SETTINGS ─── -->
+<div class="page-header">
+    <div class="page-title">Settings</div>
+    <div class="page-desc">Configure Cattito for this server.</div>
+</div>
+
+<form method="post">
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Bot Behaviour</div>
+        </div>
+    </div>
+
+    <div class="setting-row">
+        <div>
+            <div class="setting-label">React to catches</div>
+            <div class="setting-desc">Add a 🐱 reaction when someone catches a cat</div>
+        </div>
+        <select name="do_reactions" class="inline-select">
+            <option value="true" {% if server and server.do_reactions %}selected{% endif %}>Enabled</option>
+            <option value="false" {% if server and not server.do_reactions %}selected{% endif %}>Disabled</option>
+        </select>
+    </div>
+
+    <div class="setting-row">
+        <div>
+            <div class="setting-label">Welcome message</div>
+            <div class="setting-desc">Sent when a new user catches their first cat</div>
+        </div>
+        <input type="text" name="welcome_message" value="{{ server.welcome_message if server else '' }}" placeholder="Welcome to Cattito!" style="width:260px;padding:0.4rem 0.65rem;font-size:0.85rem;">
+    </div>
+
+    <div class="setting-row">
+        <div>
+            <div class="setting-label">Spawn interval</div>
+            <div class="setting-desc">Random range (in seconds) between cat spawns</div>
+        </div>
+        <div class="spawn-inputs">
+            <input type="number" name="spawn_min" value="{{ server.spawn_min if server else 60 }}" min="10" max="3600" placeholder="60">
+            <span class="sep">to</span>
+            <input type="number" name="spawn_max" value="{{ server.spawn_max if server else 600 }}" min="10" max="3600" placeholder="600">
+            <span class="sep" style="font-size:0.75rem">sec</span>
+        </div>
+    </div>
+</div>
+
+<div style="display:flex;justify-content:flex-end">
+    <button type="submit" class="btn btn-primary">Save changes</button>
+</div>
+</form>
+
+{% elif active_tab == 'users' %}
+<!-- ─── USERS ─── -->
+<div class="page-header">
+    <div class="page-title">Top Collectors</div>
+    <div class="page-desc">Top 50 users ranked by total cats caught in this server. Click a row to edit their cat counts.</div>
+</div>
+
+<div class="card" style="padding:0">
+    {% if users %}
+    <div class="table-wrap" style="margin:0;padding:0">
+    <table>
+        <thead>
+            <tr>
+                <th style="width:36px;padding-left:1.5rem">#</th>
+                <th>User</th>
+                <th>Total Cats</th>
+                <th>Catnip Level</th>
+                <th style="width:80px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td style="padding-left:1.5rem">
+                    <span class="rank {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% endif %}">
+                        {{ loop.index }}
+                    </span>
+                </td>
+                <td>
+                    <div class="user-row-info">
+                        {% if u.avatar %}
+                        <img src="https://cdn.discordapp.com/avatars/{{ u.user_id }}/{{ u.avatar }}.png" alt="">
+                        {% else %}
+                        <div class="avatar-fallback">🐱</div>
+                        {% endif %}
+                        <div>
+                            <div class="user-name">{{ u.global_name or u.username or 'Unknown' }}</div>
+                            {% if u.username and u.global_name and u.username != u.global_name %}
+                            <div class="user-handle">@{{ u.username }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+                <td><span class="num" id="total-{{ u.user_id }}">{{ u.total_cats }}</span></td>
+                <td><span class="badge badge-amber">Lvl {{ u.catnip_level }}</span></td>
+                <td>
+                    <button class="btn btn-ghost" style="font-size:0.8rem;padding:0.4rem 0.75rem"
+                        onclick="editUserCats({{ u.user_id }}, '{{ u.global_name or u.username or u.user_id }}')">Edit cats</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="icon">🐾</div>
+        <p>No users found in this server yet.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- User cat edit modal -->
+<div id="user-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;width:520px;max-width:92vw;max-height:85vh;overflow-y:auto">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:0.35rem">Edit Cat Counts</div>
+        <div id="user-modal-name" style="color:var(--muted);font-size:0.85rem;margin-bottom:1.25rem"></div>
+        <input type="hidden" id="user-edit-id">
+        <div id="user-cat-fields" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem 1rem"></div>
+        <div id="user-modal-error" style="color:var(--red);font-size:0.85rem;margin-top:0.75rem;display:none"></div>
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.5rem">
+            <button class="btn btn-ghost" onclick="closeUserModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveUserCats()">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var GUILD_ID = {{ guild_id }};
+var CAT_TYPES = ['Fine','Snacc','Nice','Good','Rare','Wild','Kittuh','Baby','Epic','Sus',
+    'Water','Brave','Unknown','Rickroll','Reverse','Superior','Trash','Legendary',
+    'Bloodmoon','Mythic','8bit','Corrupt','Professor','Divine','Space','Real',
+    'Ultimate','eGirl','eBoy'];
+var currentUserCats = {};
+
+async function editUserCats(userId, displayName) {
+    document.getElementById('user-edit-id').value = userId;
+    document.getElementById('user-modal-name').textContent = displayName;
+    document.getElementById('user-modal-error').style.display = 'none';
+    var fieldsEl = document.getElementById('user-cat-fields');
+    fieldsEl.innerHTML = '<div style="grid-column:1/-1;color:var(--muted);font-size:0.85rem">Loading…</div>';
+    document.getElementById('user-modal').style.display = 'flex';
+
+    try {
+        var r = await fetch('/api/guild/' + GUILD_ID + '/user/' + userId + '/cats');
+        var data = await r.json();
+        currentUserCats = data.cats || {};
+        fieldsEl.innerHTML = '';
+        CAT_TYPES.forEach(function(t) {
+            var val = currentUserCats['cat_' + t] || 0;
+            var div = document.createElement('div');
+            div.className = 'form-group';
+            div.style.marginBottom = '0';
+            div.innerHTML = '<label style="font-size:0.8rem">' + t + '</label><input type="number" id="cat-' + t + '" value="' + val + '" min="0" style="padding:0.4rem 0.65rem;font-size:0.85rem">';
+            fieldsEl.appendChild(div);
+        });
+    } catch(e) {
+        fieldsEl.innerHTML = '<div style="color:var(--red)">Failed to load cat data</div>';
+    }
+}
+
+function closeUserModal() { document.getElementById('user-modal').style.display = 'none'; }
+
+async function saveUserCats() {
+    var userId = document.getElementById('user-edit-id').value;
+    var errEl = document.getElementById('user-modal-error');
+    var payload = {};
+    CAT_TYPES.forEach(function(t) {
+        var el = document.getElementById('cat-' + t);
+        if (el) payload['cat_' + t] = parseInt(el.value) || 0;
+    });
+    try {
+        var r = await fetch('/api/guild/' + GUILD_ID + '/user/' + userId + '/cats', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        var data = await r.json();
+        if (data.success) {
+            var total = Object.values(payload).reduce(function(a,b){return a+b;}, 0);
+            var el = document.getElementById('total-' + userId);
+            if (el) el.textContent = total;
+            closeUserModal();
+        } else {
+            errEl.textContent = data.error || 'Save failed'; errEl.style.display = 'block';
+        }
+    } catch(e) { errEl.textContent = 'Network error'; errEl.style.display = 'block'; }
+}
+</script>
+
+{% elif active_tab == 'cats' %}
+<!-- ─── CATS ─── -->
+<div class="page-header">
+    <div class="page-title">Cat Statistics</div>
+    <div class="page-desc">Total cats caught by type across this server.</div>
+</div>
+
+{% if cat_stats %}
+<div class="stat-grid">
+    {% for cat in cat_stats | sort(attribute='count', reverse=True) %}
+    <div class="stat-card">
+        <div class="stat-value">{{ cat.count }}</div>
+        <div class="stat-label">{{ cat.type }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <div class="empty-state">
+        <div class="icon">🐾</div>
+        <p>No cats caught yet in this server!</p>
+    </div>
+</div>
+{% endif %}
+
+{% elif active_tab == 'channels' %}
+<!-- ─── CHANNELS ─── -->
+<div class="page-header">
+    <div class="page-title">Spawn Channels</div>
+    <div class="page-desc">Channels where Cattito is configured to spawn cats. Use /setup in Discord to add channels.</div>
+</div>
+
+<div class="card">
+    {% if channels %}
+    <div class="channel-list" id="channel-list">
+        {% for ch in channels %}
+        <div class="channel-card" id="ch-{{ ch.channel_id }}">
+            <span class="channel-hash">#</span>
+            <div class="channel-info">
+                <div class="channel-name">{{ ch.channel_name }}</div>
+                <div class="channel-meta" id="ch-meta-{{ ch.channel_id }}">Spawns every {{ ch.spawn_times_min }}–{{ ch.spawn_times_max }}s &nbsp;·&nbsp; Type: <strong style="color:var(--text)">{{ ch.cattype or 'random' }}</strong></div>
+            </div>
+            <button class="btn btn-ghost" style="font-size:0.8rem;padding:0.4rem 0.75rem" onclick="editChannel({{ ch.channel_id }}, {{ ch.spawn_times_min }}, {{ ch.spawn_times_max }}, '{{ ch.cattype or '' }}')">Edit</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="icon">#</div>
+        <p>No channels configured yet. Use <code style="background:var(--raised);padding:0.1em 0.4em;border-radius:4px;color:var(--text)">/setup</code> in a channel to add it.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Channel edit modal -->
+<div id="ch-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;width:360px;max-width:90vw">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:1.25rem">Edit Channel</div>
+        <input type="hidden" id="ch-edit-id">
+        <div class="form-group">
+            <label>Min spawn interval (seconds)</label>
+            <input type="number" id="ch-edit-min" min="10" max="3600">
+        </div>
+        <div class="form-group">
+            <label>Max spawn interval (seconds)</label>
+            <input type="number" id="ch-edit-max" min="10" max="3600">
+        </div>
+        <div class="form-group">
+            <label>Force cat type (leave blank for random)</label>
+            <select id="ch-edit-cattype" class="inline-select" style="width:100%;padding:0.65rem 0.875rem">
+                <option value="">random</option>
+                {% for ct in ['Fine','Snacc','Nice','Good','Rare','Wild','Kittuh','Baby','Epic','Sus','Water','Brave','Unknown','Rickroll','Reverse','Superior','Trash','Legendary','Bloodmoon','Mythic','8bit','Corrupt','Professor','Divine','Space','Real','Ultimate','eGirl','eBoy'] %}
+                <option value="{{ ct }}">{{ ct }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="ch-modal-error" style="color:var(--red);font-size:0.85rem;margin-bottom:0.75rem;display:none"></div>
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.25rem">
+            <button class="btn btn-ghost" onclick="closeChModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveChannel()">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var GUILD_ID = {{ guild_id }};
+function editChannel(id, min, max, cattype) {
+    document.getElementById('ch-edit-id').value = id;
+    document.getElementById('ch-edit-min').value = min;
+    document.getElementById('ch-edit-max').value = max;
+    document.getElementById('ch-edit-cattype').value = cattype;
+    document.getElementById('ch-modal-error').style.display = 'none';
+    var m = document.getElementById('ch-modal');
+    m.style.display = 'flex';
+}
+function closeChModal() { document.getElementById('ch-modal').style.display = 'none'; }
+async function saveChannel() {
+    var id = document.getElementById('ch-edit-id').value;
+    var min = parseInt(document.getElementById('ch-edit-min').value);
+    var max = parseInt(document.getElementById('ch-edit-max').value);
+    var cattype = document.getElementById('ch-edit-cattype').value;
+    var errEl = document.getElementById('ch-modal-error');
+    if (min > max) { var t = min; min = max; max = t; }
+    try {
+        var r = await fetch('/api/guild/' + GUILD_ID + '/channel/' + id, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({spawn_times_min: min, spawn_times_max: max, cattype: cattype})
+        });
+        var data = await r.json();
+        if (data.success) {
+            document.getElementById('ch-meta-' + id).innerHTML = 'Spawns every ' + min + '–' + max + 's &nbsp;·&nbsp; Type: <strong style="color:var(--text)">' + (cattype || 'random') + '</strong>';
+            closeChModal();
+        } else {
+            errEl.textContent = data.error || 'Save failed'; errEl.style.display = 'block';
+        }
+    } catch(e) { errEl.textContent = 'Network error'; errEl.style.display = 'block'; }
+}
+</script>
+
+{% endif %}
+
+{% endblock %}

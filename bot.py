@@ -17,16 +17,24 @@
 import asyncio
 import importlib
 import logging
+import os
 import time
+from pathlib import Path
 
+import aiohttp
 import discord
 import sentry_sdk
 import winuvloop
+from aiohttp import web
 from discord.ext import commands
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 import catpg
 import config
 import database
+import dashboard.config as dashboard_config
+import dashboard.database as dashboard_db
+import dashboard_routes
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -34,6 +42,18 @@ handler = logging.StreamHandler()
 handler.setLevel(logging.INFO)
 logger.addHandler(handler)
 log_level = logging.INFO
+
+template_env = Environment(
+    loader=FileSystemLoader(Path(__file__).parent / "dashboard" / "templates"),
+    autoescape=select_autoescape(['html', 'xml'])
+)
+
+
+def render(name: str, **ctx) -> str:
+    ctx.setdefault('user', None)
+    ctx.setdefault('error', None)
+    ctx.setdefault('success', None)
+    return template_env.get_template(name).render(**ctx)
 
 try:
     # this is a messy closed source script which injects into logging module to do statistics
@@ -101,6 +121,42 @@ bot = commands.AutoShardedBot(
 async def setup_hook():
     await database.connect()
     await bot.load_extension("main")
+    await start_dashboard()
+
+
+async def start_dashboard():
+    host = os.getenv("DASHBOARD_HOST", "0.0.0.0")
+    port = int(os.getenv("DASHBOARD_PORT", "5000"))
+    
+    await dashboard_db.connect()
+    await dashboard_db.init_tables()
+    
+    app = aiohttp.web.Application()
+    app['render'] = render
+    app['template_env'] = template_env
+    
+    app.router.add_get("/", dashboard_routes.home)
+    app.router.add_get("/login", dashboard_routes.login)
+    app.router.add_get("/callback", dashboard_routes.callback)
+    app.router.add_get("/logout", dashboard_routes.logout)
+    app.router.add_get("/servers", dashboard_routes.servers)
+    app.router.add_get("/guild/{guild_id}", dashboard_routes.guild)
+    app.router.add_post("/guild/{guild_id}", dashboard_routes.guild)
+    app.router.add_get("/guild/{guild_id}/users", dashboard_routes.guild_users)
+    app.router.add_get("/guild/{guild_id}/cats", dashboard_routes.guild_cats)
+    app.router.add_get("/guild/{guild_id}/channels", dashboard_routes.guild_channels)
+    app.router.add_get("/api/servers", dashboard_routes.api_servers)
+    app.router.add_get("/api/guild/{guild_id}", dashboard_routes.api_guild)
+    app.router.add_post("/api/guild/{guild_id}", dashboard_routes.api_guild_post)
+    
+    dashboard_config.bot = bot
+    
+    runner = aiohttp.web.AppRunner(app)
+    await runner.setup()
+    site = aiohttp.web.TCPSite(runner, host, port)
+    await site.start()
+    
+    logger.info(f"Dashboard started on http://{host}:{port}")
 
 
 async def reload(reload_db):
