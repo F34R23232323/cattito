@@ -14,19 +14,20 @@
 </div>
 
 {% if servers %}
-    {% set accessible = servers | selectattr("has_access") | list %}
+    {% set manageable_with_bot = servers | selectattr("has_access") | selectattr("bot_in_server") | list %}
+    {% set manageable_no_bot = servers | selectattr("has_access") | rejectattr("bot_in_server") | list %}
     {% set locked = servers | rejectattr("has_access") | list %}
 
-    {% if accessible %}
+    {% if manageable_with_bot %}
     <div class="card">
         <div class="card-header">
             <div>
                 <div class="card-title">Manageable Servers</div>
-                <div class="card-subtitle">You have Manage Server permission in these.</div>
+                <div class="card-subtitle">You have Manage Server permission and Cattito is in these servers.</div>
             </div>
         </div>
         <div class="server-grid">
-            {% for server in accessible %}
+            {% for server in manageable_with_bot %}
             <a href="/guild/{{ server.id }}" class="server-card">
                 {% if server.icon %}
                 <img class="server-icon"
@@ -43,15 +44,28 @@
     </div>
     {% endif %}
 
-    {% if locked %}
+    {% if manageable_no_bot or locked %}
     <div class="card">
         <div class="card-header">
             <div>
-                <div class="card-title">Other Servers</div>
-                <div class="card-subtitle">You need Manage Server permission to configure these.</div>
+                <div class="card-title">Unavailable Servers</div>
+                <div class="card-subtitle">You either need Manage Server permission or Cattito needs to be added.</div>
             </div>
         </div>
         <div class="server-grid">
+            {% for server in manageable_no_bot %}
+            <div class="server-card locked">
+                {% if server.icon %}
+                <img class="server-icon"
+                     src="https://cdn.discordapp.com/icons/{{ server.id }}/{{ server.icon }}.png"
+                     alt="{{ server.name }}">
+                {% else %}
+                <div class="server-icon-fallback">🐾</div>
+                {% endif %}
+                <div class="server-name">{{ server.name }}</div>
+                <span class="badge badge-orange" style="align-self:flex-start">⚠️ Bot not added</span>
+            </div>
+            {% endfor %}
             {% for server in locked %}
             <div class="server-card locked">
                 {% if server.icon %}

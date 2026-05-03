@@ -152,17 +152,20 @@ async def servers(request: web.Request) -> web.Response:
     if not session:
         return aiohttp.web.HTTPFound(location="/login")
     
+    bot = config.bot
     guilds_data = json.loads(session.get("guilds_json", "[]"))
     
     servers_list = []
     for g in guilds_data:
         guild_id = int(g["id"])
         has_access = await check_manage_guild(session["user_id"], guild_id, session)
+        bot_in_server = bot and bot.get_guild(guild_id) is not None
         servers_list.append({
             "id": g["id"],
             "name": g["name"],
             "icon": g.get("icon"),
-            "has_access": has_access
+            "has_access": has_access,
+            "bot_in_server": bot_in_server
         })
     
     return web.Response(
@@ -178,6 +181,13 @@ async def guild(request: web.Request) -> web.Response:
         return aiohttp.web.HTTPFound(location="/login")
     
     guild_id = int(request.match_info["guild_id"])
+    
+    bot = config.bot
+    if bot and not bot.get_guild(guild_id):
+        return web.Response(
+            text=await render(request, "guild.html", guild_id=guild_id, error="Bot is not in this server"),
+            content_type="text/html"
+        )
     
     has_access = await check_manage_guild(session["user_id"], guild_id, session)
     if not has_access:
@@ -228,6 +238,13 @@ async def guild_users(request: web.Request) -> web.Response:
         return aiohttp.web.HTTPFound(location="/login")
     
     guild_id = int(request.match_info["guild_id"])
+    
+    bot = config.bot
+    if bot and not bot.get_guild(guild_id):
+        return web.Response(
+            text=await render(request, "guild.html", guild_id=guild_id, error="Bot is not in this server"),
+            content_type="text/html"
+        )
     
     has_access = await check_manage_guild(session["user_id"], guild_id, session)
     if not has_access:
@@ -285,6 +302,13 @@ async def guild_cats(request: web.Request) -> web.Response:
     
     guild_id = int(request.match_info["guild_id"])
     
+    bot = config.bot
+    if bot and not bot.get_guild(guild_id):
+        return web.Response(
+            text=await render(request, "guild.html", guild_id=guild_id, error="Bot is not in this server"),
+            content_type="text/html"
+        )
+    
     has_access = await check_manage_guild(session["user_id"], guild_id, session)
     if not has_access:
         return web.Response(
@@ -317,6 +341,13 @@ async def guild_channels(request: web.Request) -> web.Response:
         return aiohttp.web.HTTPFound(location="/login")
     
     guild_id = int(request.match_info["guild_id"])
+    
+    bot = config.bot
+    if bot and not bot.get_guild(guild_id):
+        return web.Response(
+            text=await render(request, "guild.html", guild_id=guild_id, error="Bot is not in this server"),
+            content_type="text/html"
+        )
     
     has_access = await check_manage_guild(session["user_id"], guild_id, session)
     if not has_access:
@@ -369,12 +400,14 @@ async def api_servers(request: web.Request) -> web.Response:
     for g in guilds_data:
         guild_id = int(g["id"])
         has_access = await check_manage_guild(session["user_id"], guild_id, session)
+        bot_in_server = bot and bot.get_guild(guild_id) is not None
         if has_access:
             server = await database.Server.get_or_none(server_id=guild_id)
             servers.append({
                 "id": str(g["id"]),
                 "name": g["name"],
                 "icon": g.get("icon"),
+                "bot_in_server": bot_in_server,
                 "do_reactions": server.do_reactions if server else True
             })
     
@@ -388,6 +421,10 @@ async def api_guild(request: web.Request) -> web.Response:
         return web.json_response({"error": "Not logged in"}, status=401)
     
     guild_id = int(request.match_info["guild_id"])
+    
+    bot = config.bot
+    if bot and not bot.get_guild(guild_id):
+        return web.json_response({"error": "Bot is not in this server"}, status=404)
     
     has_access = await check_manage_guild(session["user_id"], guild_id, session)
     if not has_access:
@@ -413,6 +450,10 @@ async def api_guild_post(request: web.Request) -> web.Response:
         return web.json_response({"error": "Not logged in"}, status=401)
     
     guild_id = int(request.match_info["guild_id"])
+    
+    bot = config.bot
+    if bot and not bot.get_guild(guild_id):
+        return web.json_response({"error": "Bot is not in this server"}, status=404)
     
     has_access = await check_manage_guild(session["user_id"], guild_id, session)
     if not has_access:
