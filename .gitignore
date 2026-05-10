@@ -136,3 +136,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 backups/
+backups/
+backup.dump
+config.py
+dashboard/config.py
+.env
