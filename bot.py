@@ -35,6 +35,7 @@ import database
 import dashboard.config as dashboard_config
 import dashboard.database as dashboard_db
 import dashboard_routes
+import status_server
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -54,6 +55,7 @@ def render(name: str, **ctx) -> str:
     ctx.setdefault('error', None)
     ctx.setdefault('success', None)
     return template_env.get_template(name).render(**ctx)
+
 
 try:
     # this is a messy closed source script which injects into logging module to do statistics
@@ -122,6 +124,7 @@ async def setup_hook():
     await database.connect()
     await bot.load_extension("main")
     await start_dashboard()
+    asyncio.ensure_future(status_server.start_status_server(bot))
 
 
 async def start_dashboard():
@@ -148,6 +151,9 @@ async def start_dashboard():
     app.router.add_get("/api/servers", dashboard_routes.api_servers)
     app.router.add_get("/api/guild/{guild_id}", dashboard_routes.api_guild)
     app.router.add_post("/api/guild/{guild_id}", dashboard_routes.api_guild_post)
+    app.router.add_post("/api/guild/{guild_id}/channel/{channel_id}", dashboard_routes.api_channel_update)
+    app.router.add_get("/api/guild/{guild_id}/user/{user_id}/cats", dashboard_routes.api_user_cats_get)
+    app.router.add_post("/api/guild/{guild_id}/user/{user_id}/cats", dashboard_routes.api_user_cats_update)
     
     dashboard_config.bot = bot
     

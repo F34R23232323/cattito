@@ -5,7 +5,7 @@ catbot.db-wal
 data/
 app.py
 .vscode
-backup.dump
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -13,7 +13,7 @@ __pycache__/
 
 # C extensions
 *.so
-config.py
+
 # Distribution / packaging
 .Python
 build/
@@ -135,9 +135,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-backups/
-backups/
-backup.dump
+webhook_server.py
+test.py
+schema.sql
+schema_only.sql
+database.example.py
+migration_sessions.sql
+README.ml
+cat_bot_schema.sql
 config.py
 dashboard/config.py
-.env
+backup.dump
+backups/
+*.dump

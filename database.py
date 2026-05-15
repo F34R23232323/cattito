@@ -41,6 +41,7 @@ class Profile(catpg.Model):
         "cat_Wild",
         "cat_Kittuh",
         "cat_Baby",
+        "cat_Princess",
         "cat_Epic",
         "cat_Sus",
         "cat_Water",
@@ -56,12 +57,14 @@ class Profile(catpg.Model):
         "cat_8bit",
         "cat_Corrupt",
         "cat_Professor",
+        "cat_Rainbow",
         "cat_Divine",
         "cat_Space",
         "cat_Real",
         "cat_Ultimate",
         "cat_eGirl",
-        "cat_eBoy"
+        "cat_eBoy",
+        "cat_Angel"
     ]
 
 

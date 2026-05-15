@@ -57,6 +57,9 @@ async def main():
     app.router.add_get("/api/servers", dashboard_routes.api_servers)
     app.router.add_get("/api/guild/{guild_id}", dashboard_routes.api_guild)
     app.router.add_post("/api/guild/{guild_id}", dashboard_routes.api_guild_post)
+    app.router.add_get("/api/guild/{guild_id}/user/{user_id}/cats", dashboard_routes.api_user_cats_get)
+    app.router.add_post("/api/guild/{guild_id}/user/{user_id}/cats", dashboard_routes.api_user_cats_update)
+    app.router.add_post("/api/guild/{guild_id}/channel/{channel_id}", dashboard_routes.api_channel_update)
 
     config.bot = None
 
