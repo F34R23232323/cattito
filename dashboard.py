@@ -727,7 +727,6 @@ class DashboardServer:
 
     async def start(self):
         import config as bot_config
-        import main as bot_main
         
         await self.db.connect(
             user="cat_bot",
